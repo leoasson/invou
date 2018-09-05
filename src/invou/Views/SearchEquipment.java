@@ -112,13 +112,17 @@ public final class SearchEquipment extends javax.swing.JInternalFrame {
         int rowClicked = table.rowAtPoint(point);
         if (mouseEvent.getClickCount() == 2 && table.getSelectedRow() != -1) 
         {
-            view.addModifyEquipment((String) datos.getValueAt(rowClicked, 0));
-            
+            prueba((String) datos.getValueAt(rowClicked, 0));
+            //view.addModifyEquipment((String) datos.getValueAt(rowClicked, 0));
         }
     }
 });
     }   
     
+    private void prueba(String Id_equipment)
+    {
+        view.addModifyEquipment(this, Id_equipment);
+    }
     private void init()
     {
         tableData.setDefaultEditor(Object.class, null);

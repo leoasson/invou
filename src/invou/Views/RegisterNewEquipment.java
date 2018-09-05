@@ -235,14 +235,14 @@ ActionListener actionFloor;
         if(af.existIpAdmin(ipAdmin))
         {
              if(ipAdmin.equals("")){ipAdmin = "";}
-            ipAdmin = af.parseIp(ipAdmin);  
+            ipAdmin = af.parseIpAdmin(ipAdmin);  
         }
         else return false;
         
         if(af.existIpImage(ipImage))
         {
             if(ipImage.equals("")){ipImage = "";}
-            ipImage = af.parseIp(ipImage);  
+            ipImage = af.parseIpAdmin(ipImage);  
         }
         else return false;
         

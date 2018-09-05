@@ -27,9 +27,9 @@ public class View extends javax.swing.JFrame {
 
     
     
-    public void addModifyEquipment(String Id_equipment)
+    public void addModifyEquipment(SearchEquipment se, String Id_equipment)
     {
-        ModifyEquipment equipment = new ModifyEquipment(this, Id_equipment);
+        ModifyEquipment equipment = new ModifyEquipment(this, se, Id_equipment);
         Dimension desktopSize = jDesktopPane1.getSize();
         Dimension jInternalFrameSize = equipment.getSize();
         equipment.setLocation((desktopSize.width - jInternalFrameSize.width)/2,(desktopSize.height- jInternalFrameSize.height)/2);

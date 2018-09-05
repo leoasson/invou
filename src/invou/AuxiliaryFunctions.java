@@ -53,7 +53,7 @@ public class AuxiliaryFunctions
     {
         return sensql.insertRow(data, "insert into `pc`(`nombrePc`, `usuario`, `contraseña`, `cod_ipAdm`, `cod_ipImag`, `descripcion`,`cod_area`, `cod_procesador`, `cod_motherboard`, `cod_ram`, `cod_disco`, `cod_so`) values(?,?,?,?,?,?,?,?,?,?,?,?)");
     }
-    
+        
     public boolean ingressPrintRepair (String dateOut,String code, String failure)
     {
         String datos[] = {dateOut, code, failure};
@@ -143,7 +143,7 @@ public class AuxiliaryFunctions
     public Object [][] getEquipment()
     {
         String[] columnas= {"id_pc", "sucursal", "piso", "area" ,"nombrePc","usuario", "contraseña", "descripcion","ipAdm","ipImag"};
-        Object [][] datos = sensql.GetTable(columnas, "FROM `pc` LEFT JOIN `area` ON `id_area` = `cod_area` LEFT JOIN `piso` ON `id_piso` = `cod_piso` LEFT JOIN `sucursal` ON `id_sucursal` = `cod_sucursal` LEFT JOIN `ipAdm` ON `id_ipAdm` = `cod_ipAdm` LEFT JOIN `ipimage` ON `id_ipImag` = `cod_ipImag` ", "ORDER BY `piso`;");
+        Object [][] datos = sensql.GetTable(columnas, "FROM `pc` LEFT JOIN `area` ON `id_area` = `cod_area` LEFT JOIN `piso` ON `id_piso` = `cod_piso` LEFT JOIN `sucursal` ON `id_sucursal` = `cod_sucursal` LEFT JOIN `ipAdm` ON `id_ipAdm` = `cod_ipAdm` LEFT JOIN `ipimage` ON `id_ipImag` = `cod_ipImag` ", "ORDER BY area, nombrePC;");
         return datos;
     }
     
@@ -203,13 +203,13 @@ public class AuxiliaryFunctions
                     data = sensql.GetTable(columnas, select, "WHERE `id_pc`='"+code+"';");
                     return data;
                 case "[false, true, true, false]":
-                    data = sensql.GetTable(columnas, select, "WHERE `sucursal`='"+branch+"' and `piso`='"+floor+"' ;");
+                    data = sensql.GetTable(columnas, select, "WHERE `sucursal`='"+branch+"' and `piso`='"+floor+"' order by area, nombrePC;");
                     return data;      
                 case "[false, true, false, false]":
                     data = sensql.GetTable(columnas, select, "WHERE `sucursal`='"+branch+"';");
                     return data;
                 case "[false, false, false, true]":
-                    data = sensql.GetTable(columnas, select, "WHERE `ipAdm`='"+ip+"' or `ipImag`='"+ip+"';");
+                    data = sensql.GetTable(columnas, select, "WHERE `ipAdm` LIKE '%"+ip+"%' or `ipImag` LIKE '%"+ip+"%';");
                     return data;
                 default:
                 return data;
@@ -324,9 +324,14 @@ public class AuxiliaryFunctions
         }   
     }
     
-    public boolean isIpAvailable(String id_ipAdm)
+    public boolean isIpAdminAvailable(String id_ipAdm)
     {
         return sensql.existencias(id_ipAdm, " from ipAdm where id_ipAdm='"+id_ipAdm+"' and estado='LIBRE';");
+    }
+    
+    public boolean isIpImageAvailable(String id_ipImage)
+    {
+        return sensql.existencias(id_ipImage, " from ipimage where id_ipImag='"+id_ipImage+"' and estado='LIBRE';");
     }
     
     public boolean existProvider( String id_prov)
@@ -359,7 +364,7 @@ public class AuxiliaryFunctions
         if(ipAdm.equals("")){return true;}
         if(sensql.existencias(ipAdm, " from ipadm where ipAdm='"+ipAdm+"';"))
         {
-            if(isIpAvailable(parseIp(ipAdm)))
+            if(isIpAdminAvailable(parseIpAdmin(ipAdm)))
             {
                 return true;
             }
@@ -380,9 +385,9 @@ public class AuxiliaryFunctions
     public boolean existIpImage(String ipImage)
     {
         if(ipImage.equals("")){return true;}
-        if(sensql.existencias(ipImage, " from ipadm where ipAdm='"+ipImage+"';"))
+        if(sensql.existencias(ipImage, " from ipimage where ipimag='"+ipImage+"';"))
         {
-            if(isIpAvailable(parseIp(ipImage)))
+            if(isIpImageAvailable(parseIpImage(ipImage)))
             {
                 return true;
             }
@@ -400,11 +405,15 @@ public class AuxiliaryFunctions
            
     }
     
-    public String parseIp(String ip)
+    public String parseIpAdmin(String ip)
     {
         return sensql.getData("id_ipAdm", "select id_ipAdm from ipadm where ipAdm='"+ip+"';");
     }
     
+    public String parseIpImage(String ipImage)
+    {
+        return sensql.getData("id_ipImag", "select id_ipImag from ipimage where ipImag='"+ipImage+"';");
+    }
      /* Mapea el el nombre comercial del proveedor con el id correspondiente.
      */
      public String parseProvider(String nombre_comercial)
@@ -485,6 +494,44 @@ public class AuxiliaryFunctions
             return sensql.getData("id_puesto", "select id_puesto from puesto where puesto='"+position+"';");
          }
      }
+     
+    public boolean deleteEquipment(String id_equipment)
+    {
+        String ipAdmin = sensql.getData("ipAdm", "select ipAdm from pc LEFT JOIN `ipAdm` ON `id_ipAdm` = `cod_ipAdm` where id_pc='"+id_equipment+"';");
+        String ipImage = sensql.getData("ipImag", "select ipImag from pc LEFT JOIN `ipImage` ON `id_ipImag` = `cod_ipImag` where id_pc='"+id_equipment+"';");
+        if(!ipAdmin.equals(""))
+        {
+        ipAdmin=parseIpAdmin(ipAdmin);
+        }
+        if(ipImage != null && !ipImage.equals(""))
+        {
+        ipImage=parseIpImage(ipImage);
+        }
+        updateStateIpAdmin("LIBRE", ipAdmin);
+        updateStateIpImage("LIBRE", ipImage);
+        return sensql.deleteRow("pc", "id_pc = "+id_equipment +";");  
+    }
+    
+    public boolean modifyEquipment(String data[])
+    {
+        if(deleteEquipment(data[0]))
+        {
+            if (sensql.insertRow(data, "insert into `pc`(`id_pc`, `nombrePc`, `usuario`, `contraseña`, `cod_ipAdm`, `cod_ipImag`, `descripcion`,`cod_area`, `cod_procesador`, `cod_motherboard`, `cod_ram`, `cod_disco`, `cod_so`) values(?,?,?,?,?,?,?,?,?,?,?,?,?)"))
+            {
+                updateStateIpAdmin("USADA", data[4]);
+                updateStateIpImage("USADA", data[5]);
+                return true;
+            }
+            else
+            {
+                    return false;
+            }
+        }
+        else
+        {    
+            return false;    
+        }
+    }
      
     //cuenta la cantidad de entradas en la tabla de ingresos y en la tabla de egresos en base a esas cantidades calcula el Stock
     public boolean updateIngressTableAndEgressTable(String stockActual, String nuevoStock, String cod_articulo)
