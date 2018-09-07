@@ -49,6 +49,12 @@ public class AuxiliaryFunctions
         return sensql.insertRow(datos, "insert into `ingresotonner`(`cod_tonner`, `cod_proveedor`, `detalle`, `fecha`, `cantidad`) values(?,?,?,?,?)") && updateStockConBusqueda(cod_articulo);
     }
     
+    public boolean ingressNewEquipmentRepair(String code, String fecha, String detail)
+    {
+        String datos[] = {code, fecha, detail};
+        return sensql.insertRow(datos, "insert into `reparacionpc`(`cod_pc`, `fecha`, `detalle`) values(?,?,?)");
+    }
+    
     public boolean ingressNewEquipment(String data[])
     {
         return sensql.insertRow(data, "insert into `pc`(`nombrePc`, `usuario`, `contraseña`, `cod_ipAdm`, `cod_ipImag`, `descripcion`,`cod_area`, `cod_procesador`, `cod_motherboard`, `cod_ram`, `cod_disco`, `cod_so`) values(?,?,?,?,?,?,?,?,?,?,?,?)");
@@ -159,6 +165,42 @@ public class AuxiliaryFunctions
         return sensql.getData("id_reparacion", "select id_reparacion from reparacion where cod_impresora ='"+code+"' and fechaRetorno IS NULL;");
     }
 
+    public Object [][] getPcsRepair()
+    {
+        String[] columnas= {"id_reparacion","cod_pc","nombrePC", "area","fecha","detalle"};
+        Object [][] datos = sensql.GetTable(columnas, "FROM `reparacionPc` LEFT JOIN `pc` on `cod_pc` = `id_pc` LEFT JOIN `area` ON `cod_area` = `id_area`", "ORDER BY `fecha` DESC;");
+        return datos;
+    }
+    
+    public Object[][] filterPcRepair (String code, int month, int year, boolean[] filter)
+    {
+        String[] columnas= {"id_reparacion","cod_pc","nombrePC", "area","fecha","detalle"};
+        Object [][] datos = getPcsRepair();
+        String select="FROM `reparacionPc` LEFT JOIN `pc` on `cod_pc` = `id_pc` LEFT JOIN `area` ON `cod_area` = `id_area`";
+            switch(Arrays.toString(filter))
+            {
+                case "[false, false, false]":
+                datos = getPcsRepair();
+                return datos;
+                case "[false, false, true]":
+                datos = sensql.GetTable(columnas, select, "WHERE YEAR(fecha) = '"+year+"' ORDER BY `id_reparacion` DESC;");
+                return datos;
+                case "[false, true, true]":
+                datos = sensql.GetTable(columnas, select, "WHERE YEAR(fecha) = '"+year+"' and MONTH(fechaSalida) = '"+month+"' ORDER BY `id_reparacion` DESC;");
+                return datos;
+                case "[true, false, false]":
+                datos = sensql.GetTable(columnas, select, "WHERE `cod_pc`='"+code+"' ORDER BY `id_reparacion` DESC;");
+                return datos;
+                case "[true, false, true]":
+                datos = sensql.GetTable(columnas, select, "WHERE `cod_pc`='"+code+"' and YEAR(fecha) = '"+year+"' ORDER BY `id_reparacion` DESC;");
+                return datos;
+                case "[true, true, true]":
+                datos = sensql.GetTable(columnas, select, "WHERE `cod_pc`='"+code+"' and YEAR(fecha) = '"+year+"' and MONTH(fecha) = '"+month+"' ORDER BY `id_reparacion` DESC;");
+                return datos;
+                default:
+                return datos;
+            }
+    }
     
     public Object[][] filterPrinterRepair (String code, int month, int year, boolean[] filter)
     {
@@ -358,6 +400,11 @@ public class AuxiliaryFunctions
     {
         return sensql.existencias(name, " from pc where nombrePc='"+name+"';");
     }
+    
+    public boolean existIdEquipment(String id)
+    {
+        return sensql.existencias(id, " from pc where id_pc='"+id+"';");
+    }
             
     public boolean existIpAdmin(String ipAdm)
     {
@@ -499,7 +546,7 @@ public class AuxiliaryFunctions
     {
         String ipAdmin = sensql.getData("ipAdm", "select ipAdm from pc LEFT JOIN `ipAdm` ON `id_ipAdm` = `cod_ipAdm` where id_pc='"+id_equipment+"';");
         String ipImage = sensql.getData("ipImag", "select ipImag from pc LEFT JOIN `ipImage` ON `id_ipImag` = `cod_ipImag` where id_pc='"+id_equipment+"';");
-        if(!ipAdmin.equals(""))
+        if(ipImage != null && !ipAdmin.equals(""))
         {
         ipAdmin=parseIpAdmin(ipAdmin);
         }

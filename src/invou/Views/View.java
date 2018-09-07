@@ -5,12 +5,16 @@
  */
 package invou.Views;
 
+import invou.PrintLabel;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.awt.Desktop;
 import java.awt.Dimension;
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import javax.swing.JOptionPane;
 /**
  *
  * @author leoas
@@ -30,6 +34,26 @@ public class View extends javax.swing.JFrame {
     public void addModifyEquipment(SearchEquipment se, String Id_equipment)
     {
         ModifyEquipment equipment = new ModifyEquipment(this, se, Id_equipment);
+        Dimension desktopSize = jDesktopPane1.getSize();
+        Dimension jInternalFrameSize = equipment.getSize();
+        equipment.setLocation((desktopSize.width - jInternalFrameSize.width)/2,(desktopSize.height- jInternalFrameSize.height)/2);
+        jDesktopPane1.add(equipment);
+        equipment.show();
+    }
+    
+    public void addSearchEquipment(ModifyEquipment me)
+    {
+        SearchEquipment equipment = new SearchEquipment(me);
+        Dimension desktopSize = jDesktopPane1.getSize();
+        Dimension jInternalFrameSize = equipment.getSize();
+        equipment.setLocation((desktopSize.width - jInternalFrameSize.width)/2,(desktopSize.height- jInternalFrameSize.height)/2);
+        jDesktopPane1.add(equipment);
+        equipment.show();
+    }
+    
+    public void addSearchEquipment(IngressEquipmentRepair ier)
+    {
+        SearchEquipment equipment = new SearchEquipment(ier);
         Dimension desktopSize = jDesktopPane1.getSize();
         Dimension jInternalFrameSize = equipment.getSize();
         equipment.setLocation((desktopSize.width - jInternalFrameSize.width)/2,(desktopSize.height- jInternalFrameSize.height)/2);
@@ -82,7 +106,13 @@ public class View extends javax.swing.JFrame {
         newPagesPrinted = new javax.swing.JMenuItem();
         monitorMenu1 = new javax.swing.JMenu();
         jMenuItem5 = new javax.swing.JMenuItem();
+        jMenuItem6 = new javax.swing.JMenuItem();
         ListEquipment = new javax.swing.JMenuItem();
+        jSeparator9 = new javax.swing.JPopupMenu.Separator();
+        registerRepair = new javax.swing.JMenuItem();
+        ListRepairEquipment = new javax.swing.JMenuItem();
+        jSeparator10 = new javax.swing.JPopupMenu.Separator();
+        print = new javax.swing.JMenuItem();
         monitorMenu = new javax.swing.JMenu();
         jMenuItem4 = new javax.swing.JMenuItem();
         jMenuItem3 = new javax.swing.JMenuItem();
@@ -322,7 +352,7 @@ public class View extends javax.swing.JFrame {
         monitorMenu1.setText("Equipos");
 
         jMenuItem5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/invou/imagenes/monitorAdd16 .png"))); // NOI18N
-        jMenuItem5.setText("Registrar equipo");
+        jMenuItem5.setText("Registrar nuevo");
         jMenuItem5.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem5ActionPerformed(evt);
@@ -330,14 +360,52 @@ public class View extends javax.swing.JFrame {
         });
         monitorMenu1.add(jMenuItem5);
 
+        jMenuItem6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/invou/imagenes/monitorAdd16 .png"))); // NOI18N
+        jMenuItem6.setText("Modificar/Borrar");
+        jMenuItem6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem6ActionPerformed(evt);
+            }
+        });
+        monitorMenu1.add(jMenuItem6);
+
         ListEquipment.setIcon(new javax.swing.ImageIcon(getClass().getResource("/invou/imagenes/monitorAdd16 .png"))); // NOI18N
-        ListEquipment.setText("Listar equipos");
+        ListEquipment.setText("Listar equipamiento");
         ListEquipment.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ListEquipmentActionPerformed(evt);
             }
         });
         monitorMenu1.add(ListEquipment);
+        monitorMenu1.add(jSeparator9);
+
+        registerRepair.setIcon(new javax.swing.ImageIcon(getClass().getResource("/invou/imagenes/monitorAdd16 .png"))); // NOI18N
+        registerRepair.setText("Registrar reparación");
+        registerRepair.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                registerRepairActionPerformed(evt);
+            }
+        });
+        monitorMenu1.add(registerRepair);
+
+        ListRepairEquipment.setIcon(new javax.swing.ImageIcon(getClass().getResource("/invou/imagenes/monitorAdd16 .png"))); // NOI18N
+        ListRepairEquipment.setText("Listar Reparaciones");
+        ListRepairEquipment.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ListRepairEquipmentActionPerformed(evt);
+            }
+        });
+        monitorMenu1.add(ListRepairEquipment);
+        monitorMenu1.add(jSeparator10);
+
+        print.setIcon(new javax.swing.ImageIcon(getClass().getResource("/invou/imagenes/monitorAdd16 .png"))); // NOI18N
+        print.setText("Imprimir etiqueta");
+        print.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                printActionPerformed(evt);
+            }
+        });
+        monitorMenu1.add(print);
 
         jMenuBar1.add(monitorMenu1);
 
@@ -556,6 +624,43 @@ public class View extends javax.swing.JFrame {
         equipment.show();
     }//GEN-LAST:event_ListEquipmentActionPerformed
 
+    private void registerRepairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registerRepairActionPerformed
+        IngressEquipmentRepair equipment = new IngressEquipmentRepair(this);
+        Dimension desktopSize = jDesktopPane1.getSize();
+        Dimension jInternalFrameSize = equipment.getSize();
+        equipment.setLocation((desktopSize.width - jInternalFrameSize.width)/2,(desktopSize.height- jInternalFrameSize.height)/2);
+        jDesktopPane1.add(equipment);
+        equipment.show();
+    }//GEN-LAST:event_registerRepairActionPerformed
+
+    private void printActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_printActionPerformed
+        
+        SearchEquipment equipment = new SearchEquipment();
+        Dimension desktopSize = jDesktopPane1.getSize();
+        Dimension jInternalFrameSize = equipment.getSize();
+        equipment.setLocation((desktopSize.width - jInternalFrameSize.width)/2,(desktopSize.height- jInternalFrameSize.height)/2);
+        jDesktopPane1.add(equipment);
+        equipment.show();
+    }//GEN-LAST:event_printActionPerformed
+
+    private void jMenuItem6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem6ActionPerformed
+        ModifyEquipment equipment = new ModifyEquipment(this);
+        Dimension desktopSize = jDesktopPane1.getSize();
+        Dimension jInternalFrameSize = equipment.getSize();
+        equipment.setLocation((desktopSize.width - jInternalFrameSize.width)/2,(desktopSize.height- jInternalFrameSize.height)/2);
+        jDesktopPane1.add(equipment);
+        equipment.show();
+    }//GEN-LAST:event_jMenuItem6ActionPerformed
+
+    private void ListRepairEquipmentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ListRepairEquipmentActionPerformed
+        SearchEquipmentRepair equipment = new SearchEquipmentRepair();
+        Dimension desktopSize = jDesktopPane1.getSize();
+        Dimension jInternalFrameSize = equipment.getSize();
+        equipment.setLocation((desktopSize.width - jInternalFrameSize.width)/2,(desktopSize.height- jInternalFrameSize.height)/2);
+        jDesktopPane1.add(equipment);
+        equipment.show();
+    }//GEN-LAST:event_ListRepairEquipmentActionPerformed
+
     /**
      * @param args the command line arguments
      * @throws java.io.IOException
@@ -596,6 +701,7 @@ public class View extends javax.swing.JFrame {
     private javax.swing.JButton ButtonEnviarAReparacion;
     private javax.swing.JButton ButtonRegresoDeReparacion;
     private javax.swing.JMenuItem ListEquipment;
+    private javax.swing.JMenuItem ListRepairEquipment;
     private javax.swing.JMenuItem StockList;
     private javax.swing.JMenuItem addTonner;
     private javax.swing.JMenuItem deleteTonner;
@@ -612,7 +718,9 @@ public class View extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JMenuItem jMenuItem5;
+    private javax.swing.JMenuItem jMenuItem6;
     private javax.swing.JPopupMenu.Separator jSeparator1;
+    private javax.swing.JPopupMenu.Separator jSeparator10;
     private javax.swing.JPopupMenu.Separator jSeparator2;
     private javax.swing.JToolBar.Separator jSeparator3;
     private javax.swing.JToolBar.Separator jSeparator4;
@@ -620,6 +728,7 @@ public class View extends javax.swing.JFrame {
     private javax.swing.JPopupMenu.Separator jSeparator6;
     private javax.swing.JPopupMenu.Separator jSeparator7;
     private javax.swing.JPopupMenu.Separator jSeparator8;
+    private javax.swing.JPopupMenu.Separator jSeparator9;
     private javax.swing.JToolBar jToolBar2;
     private javax.swing.JMenuItem listPrint;
     private javax.swing.JMenu listPrinter;
@@ -630,7 +739,9 @@ public class View extends javax.swing.JFrame {
     private javax.swing.JMenu monitorMenu;
     private javax.swing.JMenu monitorMenu1;
     private javax.swing.JMenuItem newPagesPrinted;
+    private javax.swing.JMenuItem print;
     private javax.swing.JMenu printerMenu;
+    private javax.swing.JMenuItem registerRepair;
     private javax.swing.JMenuItem registrarImpresora;
     private javax.swing.JMenuItem registrarProveedor;
     private javax.swing.JMenuItem registryTonner;

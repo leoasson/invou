@@ -19,12 +19,10 @@ ActionListener actionMotherboard;
 ActionListener actionBranch;
 ActionListener actionFloor;
 
-    public ModifyEquipment(View view, SearchEquipment searchEquipment, String id_equipment) 
+    public ModifyEquipment(View view)
     {
-        this.id_equipment = id_equipment;
         this.view = view;
-        this.searchEquipment = searchEquipment;
-        initComponents();    
+        initComponents();  
         completeComboBranch();
         completeComboProcessor();
         completeComboMaker();
@@ -32,14 +30,10 @@ ActionListener actionFloor;
         completeComboRam();
         completeComboStorage();
         clean();
-        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
-                addWindowListener(new java.awt.event.WindowAdapter() {
-            @Override
-            public void windowClosing(java.awt.event.WindowEvent evt) {
-                close();
-            }
-        });
-                
+        buttonId.setEnabled(true);
+        fieldId.setEnabled(true);
+        block_UnblockButton(false);
+        block_UnblockField(false);
         this.actionMotherboard = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae)
@@ -85,14 +79,69 @@ ActionListener actionFloor;
         comboFloor.addActionListener(actionFloor);
         getValuesOfDatabase(id_equipment);
         setValuesInView();
-    }
-    
-    private void close()
+    } 
+    public ModifyEquipment(View view, SearchEquipment searchEquipment, String id_equipment)
     {
-        getValuesForCheckChanges();
-        VerifyIfExistChanges();
-    }        
-    
+        this.id_equipment = id_equipment;
+        this.view = view;
+        this.searchEquipment = searchEquipment;
+        initComponents();  
+        buttonId.setEnabled(false);
+        fieldId.setEnabled(false);
+        fieldId.setText(id_equipment);
+        completeComboBranch();
+        completeComboProcessor();
+        completeComboMaker();
+        completeComboSo();
+        completeComboRam();
+        completeComboStorage();
+        clean();               
+        this.actionMotherboard = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae)
+            {
+                if(comboMotherboarMaker.getSelectedItem()!= null)
+                {
+                    comboMotherboardModel.setEnabled(true);
+                    String idMaker = af.parseMakerMotherboard(comboMotherboarMaker.getSelectedItem().toString());
+                    completeComboMotherboardModel("`cod_marca` = '"+idMaker+"';");
+                }
+            }
+        };
+        comboMotherboarMaker.addActionListener(actionMotherboard);
+        this.actionBranch = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae)
+            {
+                if(comboBranch.getSelectedItem()!= null)
+                {     
+                    String idBranch = af.parseBranch(comboBranch.getSelectedItem().toString());
+                    completeComboFloor("`cod_sucursal` = '"+idBranch+"'");
+                    comboSector.setEnabled(false);
+                    comboSector.removeAllItems();
+                    comboFloor.setSelectedItem(null);
+                    comboFloor.setEnabled(true);
+                }
+            }
+        };
+        comboBranch.addActionListener(actionBranch);
+        this.actionFloor = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae)
+            {
+                if(comboFloor.getSelectedItem()!= null)
+                {
+                    String idBranch = af.parseBranch(comboBranch.getSelectedItem().toString());
+                    String idPiso = af.parseFloor(comboFloor.getSelectedItem().toString());
+                    completeComboSector("`cod_sucursal` = '"+idBranch+"' and `cod_piso` = '"+ idPiso +"'");
+                    comboSector.setEnabled(true);
+                }
+            }
+        };
+        comboFloor.addActionListener(actionFloor);
+        getValuesOfDatabase(id_equipment);
+        setValuesInView();
+    }         
     private void completeComboBranch()
     {
         Object[] branch_;
@@ -219,6 +268,33 @@ ActionListener actionFloor;
         comboSector.setEnabled(false);
         
     }
+    
+    private void block_UnblockField(boolean state)
+    {
+        fieldName.setEnabled(state);
+        fieldUser.setEnabled(state);
+        fieldPassword.setEnabled(state);
+        fieldAdminIP.setEnabled(state);
+        fieldImageIP.setEnabled(state);
+        fieldDescription.setEnabled(state);
+        fieldName.requestFocus();
+        comboProcessor.setEnabled(state);
+        comboStorage.setEnabled(state);
+        comboSo.setEnabled(state);
+        comboRam.setEnabled(state);
+        comboMotherboardModel.setEnabled(state);
+        comboMotherboarMaker.setEnabled(state);
+        comboBranch.setEnabled(state);
+        comboFloor.setEnabled(state);
+        comboSector.setEnabled(state);
+    }
+    
+    private void block_UnblockButton(boolean status)
+    {
+        saveButton.setEnabled(status);
+        deleteButton.setEnabled(status);
+    }
+    
     
     public void setCode(String id_toner)
     {
@@ -425,7 +501,17 @@ ActionListener actionFloor;
             }
         }
     }
-     
+    public void setIdEquipment(String id)
+    {
+            fieldId.setText(id);
+            id_equipment = fieldId.getText();
+            block_UnblockField(true);
+            block_UnblockButton(true);
+            clean();
+            getValuesOfDatabase(id_equipment);
+            setValuesInView();
+    
+    }
     
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -433,8 +519,8 @@ ActionListener actionFloor;
 
         labelCodigo = new javax.swing.JLabel();
         fieldName = new javax.swing.JTextField();
-        ButtonExit = new javax.swing.JButton();
-        buttonSave = new javax.swing.JButton();
+        exitButton = new javax.swing.JButton();
+        saveButton = new javax.swing.JButton();
         fieldUser = new javax.swing.JTextField();
         labelCantidad = new javax.swing.JLabel();
         fieldPassword = new javax.swing.JTextField();
@@ -469,10 +555,12 @@ ActionListener actionFloor;
         comboRam = new javax.swing.JComboBox<>();
         comboStorage = new javax.swing.JComboBox<>();
         comboSo = new javax.swing.JComboBox<>();
-        deleteEquipment = new javax.swing.JButton();
+        deleteButton = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        fieldId = new javax.swing.JTextField();
+        buttonId = new javax.swing.JButton();
 
         setClosable(true);
-        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("Detalles equipamiento");
 
         labelCodigo.setText("Nombre del equipo*");
@@ -483,17 +571,17 @@ ActionListener actionFloor;
             }
         });
 
-        ButtonExit.setText("Salir");
-        ButtonExit.addActionListener(new java.awt.event.ActionListener() {
+        exitButton.setText("Salir");
+        exitButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ButtonExitActionPerformed(evt);
+                exitButtonActionPerformed(evt);
             }
         });
 
-        buttonSave.setText("Guardar");
-        buttonSave.addActionListener(new java.awt.event.ActionListener() {
+        saveButton.setText("Guardar");
+        saveButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonSaveActionPerformed(evt);
+                saveButtonActionPerformed(evt);
             }
         });
 
@@ -572,10 +660,25 @@ ActionListener actionFloor;
 
         comboSo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
-        deleteEquipment.setText("Borrar");
-        deleteEquipment.addActionListener(new java.awt.event.ActionListener() {
+        deleteButton.setText("Borrar");
+        deleteButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                deleteEquipmentActionPerformed(evt);
+                deleteButtonActionPerformed(evt);
+            }
+        });
+
+        jLabel1.setText("Id del Equipo");
+
+        fieldId.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                fieldIdActionPerformed(evt);
+            }
+        });
+
+        buttonId.setText("Buscar Id");
+        buttonId.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonIdActionPerformed(evt);
             }
         });
 
@@ -586,16 +689,6 @@ ActionListener actionFloor;
             .addGroup(layout.createSequentialGroup()
                 .addGap(22, 22, 22)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel16)
-                            .addComponent(jLabel17)
-                            .addComponent(jLabel19)
-                            .addComponent(fieldDescription, javax.swing.GroupLayout.PREFERRED_SIZE, 514, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel21)
-                            .addComponent(jLabel22)
-                            .addComponent(comboRam, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addComponent(jSeparator3, javax.swing.GroupLayout.Alignment.LEADING)
@@ -650,18 +743,39 @@ ActionListener actionFloor;
                                                     .addComponent(comboMotherboardModel, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE))
                                                 .addGap(0, 0, Short.MAX_VALUE))))
                                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                        .addComponent(deleteEquipment)
+                                        .addComponent(deleteButton)
                                         .addGap(18, 18, 18)
-                                        .addComponent(buttonSave)
+                                        .addComponent(saveButton)
                                         .addGap(18, 18, 18)
-                                        .addComponent(ButtonExit)))
+                                        .addComponent(exitButton)))
                                 .addComponent(jLabel27)))
-                        .addContainerGap(20, Short.MAX_VALUE))))
+                        .addContainerGap(20, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel1)
+                            .addComponent(jLabel16)
+                            .addComponent(jLabel17)
+                            .addComponent(jLabel19)
+                            .addComponent(fieldDescription, javax.swing.GroupLayout.PREFERRED_SIZE, 514, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel21)
+                            .addComponent(jLabel22)
+                            .addComponent(comboRam, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(fieldId, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(54, 54, 54)
+                                .addComponent(buttonId)))
+                        .addGap(0, 0, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(fieldId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(buttonId))
+                .addGap(18, 18, 18)
                 .addComponent(jLabel16)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 2, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -687,7 +801,7 @@ ActionListener actionFloor;
                 .addComponent(jLabel17)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(fieldDescription, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(27, 27, 27)
+                .addGap(18, 18, 18)
                 .addComponent(jLabel21)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 2, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -701,7 +815,7 @@ ActionListener actionFloor;
                     .addComponent(comboBranch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(comboFloor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(comboSector, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(34, 34, 34)
+                .addGap(18, 18, 18)
                 .addComponent(jLabel22)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 2, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -725,11 +839,11 @@ ActionListener actionFloor;
                     .addComponent(comboRam, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(comboStorage, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(comboSo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 67, Short.MAX_VALUE)
+                .addGap(28, 28, 28)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(ButtonExit)
-                    .addComponent(buttonSave)
-                    .addComponent(deleteEquipment))
+                    .addComponent(exitButton)
+                    .addComponent(saveButton)
+                    .addComponent(deleteButton))
                 .addContainerGap())
         );
 
@@ -740,18 +854,19 @@ ActionListener actionFloor;
         fieldUser.requestFocus();
     }//GEN-LAST:event_fieldNameActionPerformed
 
-    private void ButtonExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonExitActionPerformed
+    private void exitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitButtonActionPerformed
         getValuesForCheckChanges();
         VerifyIfExistChanges();
-    }//GEN-LAST:event_ButtonExitActionPerformed
+    }//GEN-LAST:event_exitButtonActionPerformed
     
-    private void buttonSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSaveActionPerformed
+    private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
         modifyEquipment();
+        if(searchEquipment != null)
         searchEquipment.filterTable();
-    }//GEN-LAST:event_buttonSaveActionPerformed
+    }//GEN-LAST:event_saveButtonActionPerformed
 
     private void fieldUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fieldUserActionPerformed
-        buttonSave.requestFocus();
+        saveButton.requestFocus();
     }//GEN-LAST:event_fieldUserActionPerformed
 
     private void fieldPasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fieldPasswordActionPerformed
@@ -766,7 +881,7 @@ ActionListener actionFloor;
         // TODO add your handling code here:
     }//GEN-LAST:event_comboMotherboarMakerActionPerformed
 
-    private void deleteEquipmentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteEquipmentActionPerformed
+    private void deleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteButtonActionPerformed
         int jo = JOptionPane.showConfirmDialog(null, "¿Esta seguro que desea borrar el equipo: "+ name +" definitivamente?", "Advertencia",JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
         if(jo == 0) 
         {
@@ -777,11 +892,38 @@ ActionListener actionFloor;
                 this.dispose();
             }
         }
-    }//GEN-LAST:event_deleteEquipmentActionPerformed
+    }//GEN-LAST:event_deleteButtonActionPerformed
+
+    private void fieldIdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fieldIdActionPerformed
+
+        if(af.existIdEquipment(fieldId.getText()))
+        {
+            id_equipment = fieldId.getText();
+            block_UnblockField(true);
+            block_UnblockButton(true);
+            clean();
+            getValuesOfDatabase(id_equipment);
+            setValuesInView();
+        }
+        else
+        {
+            clean();
+            block_UnblockField(false);
+            block_UnblockButton(false);
+            JOptionPane.showMessageDialog(null, "El equipo no existe en la base de datos.", "Mensaje", JOptionPane.INFORMATION_MESSAGE);
+            fieldId.requestFocus();
+        }
+        
+        
+        
+    }//GEN-LAST:event_fieldIdActionPerformed
+
+    private void buttonIdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonIdActionPerformed
+        view.addSearchEquipment(this);
+    }//GEN-LAST:event_buttonIdActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton ButtonExit;
-    private javax.swing.JButton buttonSave;
+    private javax.swing.JButton buttonId;
     private javax.swing.JComboBox<String> comboBranch;
     private javax.swing.JComboBox<String> comboFloor;
     private javax.swing.JComboBox<String> comboMotherboarMaker;
@@ -791,13 +933,16 @@ ActionListener actionFloor;
     private javax.swing.JComboBox<String> comboSector;
     private javax.swing.JComboBox<String> comboSo;
     private javax.swing.JComboBox<String> comboStorage;
-    private javax.swing.JButton deleteEquipment;
+    private javax.swing.JButton deleteButton;
+    private javax.swing.JButton exitButton;
     private javax.swing.JTextField fieldAdminIP;
     private javax.swing.JTextField fieldDescription;
+    private javax.swing.JTextField fieldId;
     private javax.swing.JTextField fieldImageIP;
     private javax.swing.JTextField fieldName;
     private javax.swing.JTextField fieldPassword;
     private javax.swing.JTextField fieldUser;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
@@ -819,5 +964,6 @@ ActionListener actionFloor;
     private javax.swing.JSeparator jSeparator3;
     private javax.swing.JLabel labelCantidad;
     private javax.swing.JLabel labelCodigo;
+    private javax.swing.JButton saveButton;
     // End of variables declaration//GEN-END:variables
 }

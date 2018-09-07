@@ -16,7 +16,7 @@ ActionListener actionMotherboard;
 ActionListener actionBranch;
 ActionListener actionFloor;
 
-    public RegisterNewEquipment(View view) 
+    public RegisterNewEquipment(View view)
     {
         this.view = view;
         initComponents();    

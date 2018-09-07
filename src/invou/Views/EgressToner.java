@@ -2,15 +2,12 @@ package invou.Views;
 
 import javax.swing.JOptionPane;
 import invou.AuxiliaryFunctions;
-import invou.prueba;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 
 public class EgressToner extends javax.swing.JInternalFrame {
-AuxiliaryFunctions ca = new AuxiliaryFunctions();
-
- 
+AuxiliaryFunctions ca = new AuxiliaryFunctions();;
 
     public EgressToner() 
     {

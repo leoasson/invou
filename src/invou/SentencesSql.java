@@ -15,7 +15,8 @@ public class SentencesSql {
     PreparedStatement ps;
     ResultSet res;
 
-    public SentencesSql() {
+    public SentencesSql() 
+    {
         con = new connection();
     }
     

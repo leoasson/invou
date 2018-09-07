@@ -3,6 +3,7 @@ package invou.Views;
 import javax.swing.JOptionPane;
 import invou.AuxiliaryFunctions;
 import invou.SentencesSql;
+import java.io.IOException;
 
 /**
  *
@@ -10,7 +11,7 @@ import invou.SentencesSql;
  */
 public class RegisterNewPrint extends javax.swing.JInternalFrame {
      AuxiliaryFunctions af = new AuxiliaryFunctions();
-     SentencesSql sen = new SentencesSql();
+     SentencesSql sen;
      String code, model, count, date, branch, position;
      String state="DISPONIBLE";
      
@@ -18,6 +19,7 @@ public class RegisterNewPrint extends javax.swing.JInternalFrame {
 
     public RegisterNewPrint()
     {
+        this.sen = new SentencesSql();
         initComponents();
         completeComboBranch();
         fieldModel.setEnabled(false);

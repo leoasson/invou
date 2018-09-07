@@ -1,6 +1,7 @@
 package invou.Views;
 
 import invou.AuxiliaryFunctions;
+import invou.PrintLabel;
 import invou.SentencesSql;
 import invou.Views.View;
 import java.awt.Point;
@@ -8,6 +9,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
@@ -17,10 +21,12 @@ import javax.swing.table.DefaultTableModel;
  * @author leoasson
  */
 public final class SearchEquipment extends javax.swing.JInternalFrame {
-    AuxiliaryFunctions af = new AuxiliaryFunctions();
-    SentencesSql sensql = new SentencesSql();
+    AuxiliaryFunctions af;
+    SentencesSql sensql;
     private Object[][] tableDate; 
     private View view;
+    private ModifyEquipment equipment;
+    IngressEquipmentRepair ier;
     Object[] channel;
     Object[] name;
     int state = 0;
@@ -30,10 +36,12 @@ public final class SearchEquipment extends javax.swing.JInternalFrame {
     
     public SearchEquipment()
     {
+        this.af = new AuxiliaryFunctions();
+        this.sensql = new SentencesSql();
         initComponents();
         init();
-        state = 0;
-        buttonAcept.setEnabled(false);
+        labelInfo.setVisible(false);
+        buttonAcept.setEnabled(true);
         this.ActionFloor = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae)
@@ -77,11 +85,13 @@ public final class SearchEquipment extends javax.swing.JInternalFrame {
     
     public SearchEquipment(View view)
     {
+        this.af = new AuxiliaryFunctions();
+        this.sensql = new SentencesSql();
         this.view = view;
         initComponents();
         init();
-        state = 0;
-        buttonAcept.setEnabled(false);
+        buttonAcept.setVisible(false);
+        labelInfo.setVisible(true);
         this.ActionFloor = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae)
@@ -112,14 +122,111 @@ public final class SearchEquipment extends javax.swing.JInternalFrame {
         int rowClicked = table.rowAtPoint(point);
         if (mouseEvent.getClickCount() == 2 && table.getSelectedRow() != -1) 
         {
-            prueba((String) datos.getValueAt(rowClicked, 0));
-            //view.addModifyEquipment((String) datos.getValueAt(rowClicked, 0));
+            modifyEquipmentInView((String) datos.getValueAt(rowClicked, 0));
         }
     }
 });
     }   
     
-    private void prueba(String Id_equipment)
+    public SearchEquipment(ModifyEquipment modifyEquipment)
+    {
+        this.af = new AuxiliaryFunctions();
+        this.sensql = new SentencesSql();
+        this.equipment = modifyEquipment;
+        initComponents();
+        init();
+        labelInfo.setVisible(false);
+        buttonAcept.setVisible(false);
+        buttonAcept.setEnabled(true);
+        this.ActionFloor = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae)
+            {
+               filterTable(); 
+            }
+        };
+        this.ActionBranch = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae)
+            {
+                if(comboBranch.getSelectedItem()!= null)
+                {     
+                    String idBranch = af.parseBranch(comboBranch.getSelectedItem().toString());
+                    completeComboFloor("`cod_sucursal` = '"+idBranch+"'");
+                    comboFloor.setEnabled(true);
+                    filterTable(); 
+                }
+            }
+        };
+        comboBranch.addActionListener(ActionBranch);
+        comboFloor.addActionListener(ActionFloor);
+        tableData.addMouseListener(new MouseAdapter() {
+        @Override
+        public void mousePressed(MouseEvent mouseEvent) {
+        JTable table =(JTable) mouseEvent.getSource();
+        Point point = mouseEvent.getPoint();
+        int rowClicked = table.rowAtPoint(point);
+        if (mouseEvent.getClickCount() == 2 && table.getSelectedRow() != -1) 
+        {
+            modifyEquipment.setIdEquipment((String) datos.getValueAt(rowClicked, 0));
+            closeWindows();
+        }
+    }
+        });
+    }  
+    
+    public SearchEquipment(IngressEquipmentRepair ier)
+    {
+        this.af = new AuxiliaryFunctions();
+        this.sensql = new SentencesSql();
+        this.ier = ier;
+        initComponents();
+        init();
+        labelInfo.setVisible(false);
+        buttonAcept.setVisible(false);
+        buttonAcept.setEnabled(true);
+        this.ActionFloor = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae)
+            {
+               filterTable(); 
+            }
+        };
+        this.ActionBranch = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae)
+            {
+                if(comboBranch.getSelectedItem()!= null)
+                {     
+                    String idBranch = af.parseBranch(comboBranch.getSelectedItem().toString());
+                    completeComboFloor("`cod_sucursal` = '"+idBranch+"'");
+                    comboFloor.setEnabled(true);
+                    filterTable(); 
+                }
+            }
+        };
+        comboBranch.addActionListener(ActionBranch);
+        comboFloor.addActionListener(ActionFloor);
+        tableData.addMouseListener(new MouseAdapter() {
+        @Override
+        public void mousePressed(MouseEvent mouseEvent) {
+        JTable table =(JTable) mouseEvent.getSource();
+        Point point = mouseEvent.getPoint();
+        int rowClicked = table.rowAtPoint(point);
+        if (mouseEvent.getClickCount() == 2 && table.getSelectedRow() != -1) 
+        {
+            ier.setIdEquipment((String) datos.getValueAt(rowClicked, 0));
+            closeWindows();
+        }
+    }
+        });
+    }  
+    
+    private void closeWindows()
+    {
+        this.dispose();
+    }
+    private void modifyEquipmentInView(String Id_equipment)
     {
         view.addModifyEquipment(this, Id_equipment);
     }
@@ -237,6 +344,7 @@ public final class SearchEquipment extends javax.swing.JInternalFrame {
         ButtonExit = new javax.swing.JButton();
         fieldIp = new javax.swing.JTextField();
         boxIp = new javax.swing.JCheckBox();
+        labelInfo = new javax.swing.JLabel();
 
         setClosable(true);
         setTitle("Equipamiento");
@@ -262,7 +370,7 @@ public final class SearchEquipment extends javax.swing.JInternalFrame {
             }
         });
 
-        buttonAcept.setText("Aceptar");
+        buttonAcept.setText("Imprimir etiqueta");
         buttonAcept.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buttonAceptActionPerformed(evt);
@@ -321,6 +429,8 @@ public final class SearchEquipment extends javax.swing.JInternalFrame {
             }
         });
 
+        labelInfo.setText("* Haciendo doble click sobre un elemento puede ampliar detalles del equipo.");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -339,16 +449,19 @@ public final class SearchEquipment extends javax.swing.JInternalFrame {
                     .addComponent(fieldIp, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(boxIp))
                 .addContainerGap(258, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(28, 28, 28)
+                .addComponent(labelInfo)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(buttonAcept)
+                .addGap(18, 18, 18)
+                .addComponent(ButtonExit)
+                .addGap(25, 25, 25))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
                     .addGap(28, 28, 28)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                         .addComponent(jSeparator1)
-                        .addGroup(layout.createSequentialGroup()
-                            .addGap(0, 0, Short.MAX_VALUE)
-                            .addComponent(buttonAcept)
-                            .addGap(18, 18, 18)
-                            .addComponent(ButtonExit))
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 772, Short.MAX_VALUE)
                         .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -361,17 +474,26 @@ public final class SearchEquipment extends javax.swing.JInternalFrame {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(69, 69, 69)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(boxBranch)
-                    .addComponent(boxFloor)
-                    .addComponent(boxIp))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(comboBranch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(comboFloor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(fieldIp, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(396, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(69, 69, 69)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(boxBranch)
+                            .addComponent(boxFloor)
+                            .addComponent(boxIp))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(comboBranch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(comboFloor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(fieldIp, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 366, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(buttonAcept)
+                            .addComponent(ButtonExit)))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(labelInfo)))
+                .addContainerGap())
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
                     .addGap(37, 37, 37)
@@ -383,12 +505,8 @@ public final class SearchEquipment extends javax.swing.JInternalFrame {
                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                     .addComponent(fieldCode, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGap(18, 18, 18)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 295, Short.MAX_VALUE)
-                    .addGap(18, 18, 18)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(ButtonExit)
-                        .addComponent(buttonAcept))
-                    .addGap(37, 37, 37)))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 320, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(61, Short.MAX_VALUE)))
         );
 
         pack();
@@ -453,7 +571,22 @@ public final class SearchEquipment extends javax.swing.JInternalFrame {
             JOptionPane.showMessageDialog(null,"Seleccione la fila deseada."," ",JOptionPane.WARNING_MESSAGE);
         }
         else
-        {/*
+        {
+            String id_equipment = tableDate[row][0].toString();
+            
+            String name_ = sensql.getData("nombrePc", "select nombrePc from pc where id_pc='"+id_equipment+"';"); 
+            String ipAdmin_ = sensql.getData("ipAdm", "select ipAdm from pc LEFT JOIN `ipAdm` ON `id_ipAdm` = `cod_ipAdm` where id_pc='"+id_equipment+"';");
+            String ipImage_ = sensql.getData("ipImag", "select ipImag from pc LEFT JOIN `ipImage` ON `id_ipImag` = `cod_ipImag` where id_pc='"+id_equipment+"';");
+            
+            PrintLabel printLabel = new PrintLabel(name_, ipAdmin_, ipImage_, id_equipment);
+            try
+            {
+                printLabel.printLabel();
+            } catch (IOException ex) 
+            {
+                Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            /*
             switch(state)
             {
                 case 1:
@@ -536,6 +669,7 @@ public final class SearchEquipment extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel13;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JLabel labelInfo;
     private javax.swing.JTable tableData;
     // End of variables declaration//GEN-END:variables
 }
