@@ -2,6 +2,10 @@ package invou.Views;
 
 import javax.swing.table.DefaultTableModel;
 import invou.AuxiliaryFunctions;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 /**
  *
@@ -11,6 +15,8 @@ public final class SearchExitsToner extends javax.swing.JInternalFrame {
 
     AuxiliaryFunctions af = new AuxiliaryFunctions();
     private Object[][] tableDate; 
+    ActionListener ActionModel;
+    PropertyChangeListener ActListener;
     
     public SearchExitsToner()
     {
@@ -19,7 +25,23 @@ public final class SearchExitsToner extends javax.swing.JInternalFrame {
         comboModel.setEnabled(false);
         comboYear.setEnabled(false);
         showTable();
-        completeComboModel();   
+        completeComboModel(); 
+        this.ActionModel = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae)
+            {
+               filterTable(); 
+            }
+        };
+        comboModel.addActionListener(ActionModel);
+        this.ActListener = new PropertyChangeListener() {
+            @Override
+            public void propertyChange(PropertyChangeEvent pce) {
+                filterTable();
+            }
+    };
+        comboMonth.addPropertyChangeListener(ActListener);
+        comboYear.addPropertyChangeListener(ActListener);
     }
     
     public void showTable()
@@ -36,6 +58,15 @@ public final class SearchExitsToner extends javax.swing.JInternalFrame {
         {
             comboModel.addItem(String.valueOf(codigo1));
         }
+    }
+    public void filterTable()
+    {
+        boolean[] filtro = {boxModel.isSelected(), boxMonth.isSelected(), boxYear.isSelected()};
+        int mes = comboMonth.getMonth()+1;
+        int ano = comboYear.getYear();  
+        String modelo = comboModel.getSelectedItem().toString();
+        tableDate = af.filterToner("egresotonner", modelo, ano, mes, filtro);
+        generateTableData(tableDate);
     }
     
     public void generateTableData(Object [][] datostabla)
@@ -54,7 +85,6 @@ public final class SearchExitsToner extends javax.swing.JInternalFrame {
     private void initComponents() {
 
         ButtonExit = new javax.swing.JButton();
-        buttonFilter = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable2 = new javax.swing.JTable();
         comboMonth = new com.toedter.calendar.JMonthChooser();
@@ -77,13 +107,6 @@ public final class SearchExitsToner extends javax.swing.JInternalFrame {
         ButtonExit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ButtonExitActionPerformed(evt);
-            }
-        });
-
-        buttonFilter.setText("Filtrar");
-        buttonFilter.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonFilterActionPerformed(evt);
             }
         });
 
@@ -131,24 +154,21 @@ public final class SearchExitsToner extends javax.swing.JInternalFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(ButtonExit)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addGroup(layout.createSequentialGroup()
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGroup(layout.createSequentialGroup()
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(comboModel, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(boxModel))
-                                    .addGap(55, 55, 55)
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(boxMonth)
-                                        .addComponent(comboMonth, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGap(55, 55, 55)
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(boxYear)
-                                        .addComponent(comboYear, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGap(0, 120, Short.MAX_VALUE)))
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 124, Short.MAX_VALUE)
-                            .addComponent(buttonFilter))
+                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(comboModel, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(boxModel))
+                                .addGap(55, 55, 55)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(boxMonth)
+                                    .addComponent(comboMonth, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(55, 55, 55)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(boxYear)
+                                    .addComponent(comboYear, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(0, 305, Short.MAX_VALUE)))
                         .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.LEADING)))
                 .addGap(25, 25, 25))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -171,12 +191,11 @@ public final class SearchExitsToner extends javax.swing.JInternalFrame {
                     .addComponent(boxYear))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(buttonFilter)
                     .addComponent(comboModel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                         .addComponent(comboYear, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(comboMonth, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 307, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 314, Short.MAX_VALUE)
                 .addComponent(ButtonExit)
                 .addContainerGap())
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -193,30 +212,43 @@ public final class SearchExitsToner extends javax.swing.JInternalFrame {
     this.dispose();
     }//GEN-LAST:event_ButtonExitActionPerformed
 
-    private void buttonFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonFilterActionPerformed
-
-        boolean[] filtro = {boxModel.isSelected(), boxMonth.isSelected(), boxYear.isSelected()};
-        int mes = comboMonth.getMonth()+1;
-        int ano = comboYear.getYear();  
-        String modelo = comboModel.getSelectedItem().toString();
-        tableDate = af.filterToner("egresotonner", modelo, ano, mes, filtro);
-        generateTableData(tableDate);
-  
-    }//GEN-LAST:event_buttonFilterActionPerformed
-
     private void boxModelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boxModelActionPerformed
-        if(boxModel.isSelected()){ comboModel.setEnabled(true);}
-        else{comboModel.setEnabled(false);}  
+        if(boxModel.isSelected())
+        { 
+            comboModel.setEnabled(true);
+            filterTable();
+        }
+        else
+        {
+            comboModel.setEnabled(false);
+            filterTable();
+        }  
     }//GEN-LAST:event_boxModelActionPerformed
 
     private void boxMonthActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boxMonthActionPerformed
-        if(boxMonth.isSelected()){ comboMonth.setEnabled(true);}
-        else{comboMonth.setEnabled(false);}    
+        if(boxMonth.isSelected())
+        { 
+            comboMonth.setEnabled(true);
+            filterTable();
+        }
+        else
+        {
+            comboMonth.setEnabled(false);
+            filterTable();
+        }    
     }//GEN-LAST:event_boxMonthActionPerformed
 
     private void boxYearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boxYearActionPerformed
-      if(boxYear.isSelected()){ comboYear.setEnabled(true);}
-        else{comboYear.setEnabled(false);}    
+      if(boxYear.isSelected())
+      {
+          comboYear.setEnabled(true);
+          filterTable();
+      }
+      else
+      {
+          comboYear.setEnabled(false);
+          filterTable();
+      }    
     }//GEN-LAST:event_boxYearActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -224,7 +256,6 @@ public final class SearchExitsToner extends javax.swing.JInternalFrame {
     private javax.swing.JCheckBox boxModel;
     private javax.swing.JCheckBox boxMonth;
     private javax.swing.JCheckBox boxYear;
-    private javax.swing.JButton buttonFilter;
     private javax.swing.JComboBox<String> comboModel;
     private com.toedter.calendar.JMonthChooser comboMonth;
     private com.toedter.calendar.JYearChooser comboYear;

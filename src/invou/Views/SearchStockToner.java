@@ -1,6 +1,8 @@
 package invou.Views;
 
 import invou.AuxiliaryFunctions;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.text.Normalizer.Form;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -17,12 +19,21 @@ public final class SearchStockToner extends javax.swing.JFrame {
     int state=0;
     EgressToner et = new EgressToner();
     IngressToner it = new IngressToner();
+    ActionListener ActionModel;
             
     public SearchStockToner()
     {
         initComponents();
         init();
         buttonAcept.setEnabled(false);
+        this.ActionModel = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae)
+            {
+               filterTable(); 
+            }
+        };
+        comboModel.addActionListener(ActionModel);
     }
     
     public SearchStockToner(EgressToner et)
@@ -53,8 +64,17 @@ public final class SearchStockToner extends javax.swing.JFrame {
         showTable();
     }
     
+    public void filterTable()
+    {
+            if(boxModel.isSelected())
+        {
+            tableDate = af.filterStockToner(comboModel.getSelectedItem().toString());
+            generateTableData(tableDate);
+            
+        }
+    }
     
-public void showTable()
+    public void showTable()
     {
         tableDate = af.getStockToner();
         generateTableData(tableDate);
@@ -87,9 +107,8 @@ public void showTable()
 
         jLabel1 = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JSeparator();
-        boxName = new javax.swing.JCheckBox();
+        boxModel = new javax.swing.JCheckBox();
         comboModel = new javax.swing.JComboBox<>();
-        buttonFilter = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         ButtonExit = new javax.swing.JButton();
@@ -100,10 +119,10 @@ public void showTable()
 
         jLabel1.setText("Filtrar por:");
 
-        boxName.setText("Modelo");
-        boxName.addActionListener(new java.awt.event.ActionListener() {
+        boxModel.setText("Modelo");
+        boxModel.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                boxNameActionPerformed(evt);
+                boxModelActionPerformed(evt);
             }
         });
 
@@ -111,13 +130,6 @@ public void showTable()
         comboModel.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 comboModelActionPerformed(evt);
-            }
-        });
-
-        buttonFilter.setText("Filtrar");
-        buttonFilter.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonFilterActionPerformed(evt);
             }
         });
 
@@ -158,18 +170,13 @@ public void showTable()
                         .addComponent(buttonAcept)
                         .addGap(18, 18, 18)
                         .addComponent(ButtonExit))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 772, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(comboModel, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(boxName)
-                                .addGap(112, 112, 112)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(buttonFilter))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 772, Short.MAX_VALUE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(comboModel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(boxModel, javax.swing.GroupLayout.Alignment.LEADING))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addGap(34, 34, 34))
         );
         layout.setVerticalGroup(
@@ -180,12 +187,9 @@ public void showTable()
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 4, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(4, 4, 4)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(buttonFilter)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(boxName)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(comboModel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addComponent(boxModel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(comboModel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 259, Short.MAX_VALUE)
                 .addGap(18, 18, 18)
@@ -200,31 +204,18 @@ public void showTable()
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void boxNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boxNameActionPerformed
-        if(boxName.isSelected()){ comboModel.setEnabled(true);}
+    private void boxModelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boxModelActionPerformed
+        if(boxModel.isSelected()){ 
+            comboModel.setEnabled(true);
+            filterTable();
+        }
         else
         {
             comboModel.setEnabled(false);
             showTable();
+            filterTable();
         }
-    }//GEN-LAST:event_boxNameActionPerformed
-
-    private void buttonFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonFilterActionPerformed
-        /*
-        if(boxDNI.isSelected() && !fieldDNI.getText().equals("") || boxName.isSelected())
-        {
-            boolean[] filter = {boxDNI.isSelected(), boxName.isSelected()};
-            String nameAndLastName, DNI;
-            DNI = fieldDNI.getText();
-            nameAndLastName = comboName.getSelectedItem().toString();
-            tableDate = af.filterLessee(DNI, nameAndLastName, filter);
-            generateTableData(tableDate);
-        }
-        else
-        {     
-            JOptionPane.showMessageDialog(null,"Asegurese de haber completado los campos para el filtrado.","",JOptionPane.WARNING_MESSAGE);
-        }*/
-    }//GEN-LAST:event_buttonFilterActionPerformed
+    }//GEN-LAST:event_boxModelActionPerformed
 
     private void ButtonExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonExitActionPerformed
         this.dispose();
@@ -259,9 +250,8 @@ public void showTable()
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton ButtonExit;
-    private javax.swing.JCheckBox boxName;
+    private javax.swing.JCheckBox boxModel;
     private javax.swing.JButton buttonAcept;
-    private javax.swing.JButton buttonFilter;
     private javax.swing.JComboBox<String> comboModel;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;

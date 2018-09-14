@@ -8,7 +8,7 @@
     <Property name="resizable" type="boolean" value="true"/>
     <Property name="title" type="java.lang.String" value="Listar reparaciones de PCs"/>
     <Property name="frameIcon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-      <Image iconType="3" name="/invou/imagenes/list16.png"/>
+      <Image iconType="3" name="/invou/imagenes/listRepair16.png"/>
     </Property>
   </Properties>
   <SyntheticProperties>

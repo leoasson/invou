@@ -694,6 +694,9 @@
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="fieldAdminIP">
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="fieldAdminIPActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel14">
       <Properties>

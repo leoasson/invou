@@ -232,19 +232,35 @@ ActionListener actionFloor;
             return false;
         }
         
-        if(af.existIpAdmin(ipAdmin))
+        if(af.existIp(ipAdmin))
         {
              if(ipAdmin.equals("")){ipAdmin = "";}
-            ipAdmin = af.parseIpAdmin(ipAdmin);  
+            ipAdmin = af.parseIp(ipAdmin);  
         }
         else return false;
         
-        if(af.existIpImage(ipImage))
+        
+        if(af.existIp(ipImage))
         {
             if(ipImage.equals("")){ipImage = "";}
-            ipImage = af.parseIpAdmin(ipImage);  
+            ipImage = af.parseIp(ipImage);  
         }
         else return false;
+        
+        
+//        if(af.existIpAdmin(ipAdmin))
+//        {
+//             if(ipAdmin.equals("")){ipAdmin = "";}
+//            ipAdmin = af.parseIpAdmin(ipAdmin);  
+//        }
+//        else return false;
+//        
+//        if(af.existIpImage(ipImage))
+//        {
+//            if(ipImage.equals("")){ipImage = "";}
+//            ipImage = af.parseIpAdmin(ipImage);  
+//        }
+//        else return false;
         
         if(comboBranch.getSelectedItem() == null)
         {
@@ -281,8 +297,10 @@ ActionListener actionFloor;
             String data[] = {name, user, password, ipAdmin, ipImage, description, area, processor, motherboard, ram, disc, so};
             if(af.ingressNewEquipment(data))
             {
-                af.updateStateIpAdmin("USADA", ipAdmin);
-                af.updateStateIpImage("USADA", ipImage);
+                af.updateStateIp("USADA", ipAdmin);
+                af.updateStateIp("USADA", ipImage);
+//                af.updateStateIpAdmin("USADA", ipAdmin);
+//                af.updateStateIpImage("USADA", ipImage);
                 JOptionPane.showMessageDialog(null,"El equipo se registró correctamente.","Mensaje",JOptionPane.INFORMATION_MESSAGE);
                 clean();
             }
@@ -652,6 +670,12 @@ ActionListener actionFloor;
 
         jLabel13.setText("Contraseña*");
 
+        fieldAdminIP.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                fieldAdminIPActionPerformed(evt);
+            }
+        });
+
         jLabel14.setText("IP administrativa");
 
         jLabel15.setText("IP Imagen");
@@ -938,6 +962,10 @@ ActionListener actionFloor;
     private void comboMotherboarMakerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboMotherboarMakerActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_comboMotherboarMakerActionPerformed
+
+    private void fieldAdminIPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fieldAdminIPActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_fieldAdminIPActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton ButtonClean;

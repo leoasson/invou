@@ -11,20 +11,20 @@ import java.io.IOException;
  */
 public class RegisterNewPrint extends javax.swing.JInternalFrame {
      AuxiliaryFunctions af = new AuxiliaryFunctions();
+     View view = new View();
      SentencesSql sen;
-     String code, model, count, date, branch, position;
+     String code, model, count, date, cod_pc;
      String state="DISPONIBLE";
      
      
 
-    public RegisterNewPrint()
+    public RegisterNewPrint(View view)
     {
+        this.view = view;
         this.sen = new SentencesSql();
         initComponents();
-        completeComboBranch();
         fieldModel.setEnabled(false);
         fieldDate.setDate(af.getActualDate());
-        completeComboPositions();
         clean();
     }
 
@@ -32,35 +32,18 @@ public class RegisterNewPrint extends javax.swing.JInternalFrame {
     {
        verifyRadioButton();
        setPrintPosition.setSelected(false);
-       comboBranch.setSelectedItem(null);
-       comboPosition.setSelectedItem(null);
        fieldCode.setText("");
        fieldPart.setText("");
        fieldModel.setText("");
        fieldCount.setText("");
+       fieldCodePc.setText("");
        fieldCode.requestFocus();
     }
-    
-    private void completeComboBranch()
+        
+    public void setIdEquipment(String code)
     {
-        Object[] branch;
-        branch = af.combox("sucursal", "sucursal");
-        comboBranch.removeAllItems();
-        for (Object branchs : branch) 
-        {
-            comboBranch.addItem(branchs.toString());
-        }
-    }
-    
-    private void completeComboPositions()
-    {
-        Object[] position;
-        position = af.combox("puesto", "puesto");
-        comboPosition.removeAllItems();
-        for (Object positions : position) 
-        {
-            comboPosition.addItem(positions.toString());
-        }
+        fieldCodePc.setText(code);
+        cod_pc = code;
     }
     
     private boolean verifyModel()
@@ -82,19 +65,19 @@ public class RegisterNewPrint extends javax.swing.JInternalFrame {
     {
     if(setPrintPosition.isSelected())
        {
-            comboBranch.setEnabled(true);
-            comboPosition.setEnabled(true);
+            fieldCodePc.setEnabled(true);
+            searchButton.setEnabled(true);
        }
        else
        {
-            comboBranch.setEnabled(false);
-            comboPosition.setEnabled(false);
+            fieldCodePc.setEnabled(false);
+            searchButton.setEnabled(false);
        }
     }
     
     private void insertPrinter(String state)
     {
-        if(af.registerNewPrint(code, model, branch, position, state) && af.ingressPagesPrinted(code, date, count))
+        if(af.registerNewPrint(code, model, cod_pc, state) && af.ingressPagesPrinted(code, date, count))
         {
             JOptionPane.showMessageDialog(null,"La impresora se registró correctamente.");
             clean();
@@ -110,6 +93,7 @@ public class RegisterNewPrint extends javax.swing.JInternalFrame {
         model = fieldPart.getText();
         count = fieldCount.getText();
         date = af.getDateToString(fieldDate.getDate());
+        cod_pc = fieldCodePc.getText();
     }
     
     @SuppressWarnings("unchecked")
@@ -127,9 +111,6 @@ public class RegisterNewPrint extends javax.swing.JInternalFrame {
         buttonExit = new javax.swing.JButton();
         buttonRegister = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
-        comboBranch = new javax.swing.JComboBox<>();
-        jLabel5 = new javax.swing.JLabel();
-        comboPosition = new javax.swing.JComboBox<>();
         jLabel6 = new javax.swing.JLabel();
         fieldCount = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
@@ -138,6 +119,8 @@ public class RegisterNewPrint extends javax.swing.JInternalFrame {
         jLabel8 = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JSeparator();
         setPrintPosition = new javax.swing.JRadioButton();
+        fieldCodePc = new javax.swing.JTextField();
+        searchButton = new javax.swing.JButton();
 
         javax.swing.GroupLayout jDialog1Layout = new javax.swing.GroupLayout(jDialog1.getContentPane());
         jDialog1.getContentPane().setLayout(jDialog1Layout);
@@ -204,13 +187,7 @@ public class RegisterNewPrint extends javax.swing.JInternalFrame {
             }
         });
 
-        jLabel4.setText("Sucursal");
-
-        comboBranch.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
-        jLabel5.setText("Puesto");
-
-        comboPosition.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jLabel4.setText("Id del equipo instalada");
 
         jLabel6.setText("Cantidad de impresiones");
 
@@ -234,6 +211,25 @@ public class RegisterNewPrint extends javax.swing.JInternalFrame {
         setPrintPosition.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 setPrintPositionActionPerformed(evt);
+            }
+        });
+
+        fieldCodePc.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                fieldCodePcActionPerformed(evt);
+            }
+        });
+
+        searchButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/invou/imagenes/searchPc-28.png"))); // NOI18N
+        searchButton.setToolTipText("Buscar número de padrón");
+        searchButton.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        searchButton.setBorderPainted(false);
+        searchButton.setContentAreaFilled(false);
+        searchButton.setFocusable(false);
+        searchButton.setRequestFocusEnabled(false);
+        searchButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                searchButtonActionPerformed(evt);
             }
         });
 
@@ -267,15 +263,13 @@ public class RegisterNewPrint extends javax.swing.JInternalFrame {
                         .addComponent(buttonRegister, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(buttonExit, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jSeparator1)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(comboBranch, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel4))
-                        .addGap(62, 62, 62)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel5)
-                            .addComponent(comboPosition, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(jSeparator1))
+                            .addComponent(jLabel4)
+                            .addComponent(fieldCodePc, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(30, 30, 30)
+                        .addComponent(searchButton, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(24, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -308,16 +302,14 @@ public class RegisterNewPrint extends javax.swing.JInternalFrame {
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 7, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel4)
-                            .addComponent(jLabel5))
+                        .addComponent(jLabel4)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(comboBranch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(comboPosition, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 52, Short.MAX_VALUE))
+                        .addComponent(fieldCodePc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(searchButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 31, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(buttonRegister)
                             .addComponent(buttonExit))))
@@ -351,20 +343,28 @@ public class RegisterNewPrint extends javax.swing.JInternalFrame {
         }
         
 
-        if(setPrintPosition.isSelected() && comboBranch.getSelectedItem()!=null && comboPosition.getSelectedItem()!=null)
+        if(setPrintPosition.isSelected())
         {
             //el usuario desea configurar una ubicacion de la impresora.
-            branch = af.parseBranch(comboBranch.getSelectedItem().toString());
-            position = af.parsePosition(comboPosition.getSelectedItem().toString());
-            getValues();
-            insertPrinter("EN USO");
-            
+            if(!af.existIdEquipment(fieldCodePc.getText()))
+            {
+                JOptionPane.showMessageDialog(null,"El codigo de la pc no esta registardo en la base de datos");
+                fieldCode.requestFocus();
+                return;          
+            }
+            else
+            {
+                getValues();
+                insertPrinter("EN USO");
+            }
         }
+            
+            
+        
         else
         {
             //La impresora se agraga sin una ubicacion especifica.
-            branch = null;
-            position = null;
+            cod_pc = null;
             getValues();    
             insertPrinter("DISPONIBLE");
         }
@@ -397,12 +397,19 @@ public class RegisterNewPrint extends javax.swing.JInternalFrame {
         verifyRadioButton();       
     }//GEN-LAST:event_setPrintPositionActionPerformed
 
+    private void fieldCodePcActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fieldCodePcActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_fieldCodePcActionPerformed
+
+    private void searchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchButtonActionPerformed
+        view.addSearchEquipment(this);
+    }//GEN-LAST:event_searchButtonActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonExit;
     private javax.swing.JButton buttonRegister;
-    private javax.swing.JComboBox<String> comboBranch;
-    private javax.swing.JComboBox<String> comboPosition;
     private javax.swing.JTextField fieldCode;
+    private javax.swing.JTextField fieldCodePc;
     private javax.swing.JTextField fieldCount;
     private com.toedter.calendar.JDateChooser fieldDate;
     private javax.swing.JTextField fieldModel;
@@ -414,11 +421,11 @@ public class RegisterNewPrint extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JButton searchButton;
     private javax.swing.JRadioButton setPrintPosition;
     // End of variables declaration//GEN-END:variables
 }

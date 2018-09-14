@@ -1,10 +1,18 @@
 package invou.Views;
 
 import invou.AuxiliaryFunctions;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -14,12 +22,13 @@ import javax.swing.table.DefaultTableModel;
 public final class SearchPrinter extends javax.swing.JFrame {
     AuxiliaryFunctions af = new AuxiliaryFunctions();
     private Object[][] tableDate; 
+    DefaultTableModel datos;
     Object[] channel;
     Object[] name;
     int state = 0;
     ActionListener ActListener;
+    ChangePrint changePrint;
  
-    
     public SearchPrinter()
     {
         initComponents();
@@ -36,26 +45,55 @@ public final class SearchPrinter extends javax.swing.JFrame {
         fieldState.addActionListener(ActListener);
         fieldModel.addActionListener(ActListener);
     }
-    /*
-    public SearchPadron(AssociateLesse lessee1) {
+    
+    public SearchPrinter(ChangePrint changePrint)
+    {
         initComponents();
         init();
-        this.lessee1 = lessee1;
-        buttonAcept.setEnabled(true);
+        this.changePrint = changePrint;
         state = 1;
-    }  
-    */
+        buttonAcept.setEnabled(true);
+        this.ActListener = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae)
+            {
+                filterTable();
+            }
+        };
+        fieldState.addActionListener(ActListener);
+        fieldModel.addActionListener(ActListener);
+        tableData.addMouseListener(new MouseAdapter() {
+        @Override
+        public void mousePressed(MouseEvent mouseEvent) {
+        JTable table =(JTable) mouseEvent.getSource();
+        Point point = mouseEvent.getPoint();
+        int rowClicked = table.rowAtPoint(point);
+        if (mouseEvent.getClickCount() == 2 && table.getSelectedRow() != -1) 
+        {
+            changePrint.setSerialNumber((String) datos.getValueAt(rowClicked, 0));
+            closeWindows();
+        }
+    }
+        });
+    }
+    
+    private void closeWindows()
+    {
+        this.dispose();
+    }
     
     private void init()
     {
         //this.setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/icon/searchCensus16.png")));
         this.setLocationRelativeTo(null);
+        tableData.setDefaultEditor(Object.class, null);
         fieldModel.setEnabled(false);
         fieldState.setEnabled(false);
         fieldCode.setEnabled(false);
         completeComboState();
         completeComboModel();
         showTable();
+        fieldState.setSelectedItem("DISPONIBLE");
 
     }
     
@@ -87,25 +125,54 @@ public final class SearchPrinter extends javax.swing.JFrame {
     
     public void generateTableData(Object [][] datostabla)
     {    
-        String[] columnas = {"N° de serie", "N° de parte", "Modelo", "Sucursal", "Puesto","Impresiones", "Fecha", "Estado"};
-        DefaultTableModel datos = new DefaultTableModel(datostabla,columnas);
-        jTable1.setModel(datos);
-        jTable1.getColumnModel().getColumn(0).setPreferredWidth(90);
-        jTable1.getColumnModel().getColumn(0).setMaxWidth(100);
-        jTable1.getColumnModel().getColumn(1).setPreferredWidth(70);
-        jTable1.getColumnModel().getColumn(1).setMaxWidth(80);
-        jTable1.getColumnModel().getColumn(2).setPreferredWidth(110);
-        jTable1.getColumnModel().getColumn(3).setPreferredWidth(90);
-        jTable1.getColumnModel().getColumn(3).setMaxWidth(110);
-        jTable1.getColumnModel().getColumn(4).setPreferredWidth(80);
-        jTable1.getColumnModel().getColumn(4).setMaxWidth(90);
-        jTable1.getColumnModel().getColumn(5).setPreferredWidth(70);
-        jTable1.getColumnModel().getColumn(5).setMaxWidth(80);
-        jTable1.getColumnModel().getColumn(6).setPreferredWidth(70);
-        jTable1.getColumnModel().getColumn(6).setMaxWidth(80);
-        jTable1.getColumnModel().getColumn(7).setPreferredWidth(90);
-        jTable1.getColumnModel().getColumn(7).setMaxWidth(100);
+        String[] columnas = {"N° de serie", "N° de parte", "Modelo","Sucursal", "Piso", "Sector", "Equipo","Impresiones", "Fecha", "Estado"};
+        datos = new DefaultTableModel(datostabla,columnas);
+        tableData.setModel(datos);
+        tableData.getColumnModel().getColumn(0).setPreferredWidth(80);
+        tableData.getColumnModel().getColumn(0).setMaxWidth(90);
+        tableData.getColumnModel().getColumn(1).setPreferredWidth(70);
+        tableData.getColumnModel().getColumn(1).setMaxWidth(80);
+        tableData.getColumnModel().getColumn(2).setPreferredWidth(120);
+        tableData.getColumnModel().getColumn(3).setPreferredWidth(70);
+        tableData.getColumnModel().getColumn(3).setMaxWidth(80);
+        tableData.getColumnModel().getColumn(4).setPreferredWidth(50);
+        tableData.getColumnModel().getColumn(4).setMaxWidth(60);
+        tableData.getColumnModel().getColumn(5).setPreferredWidth(70);
+        tableData.getColumnModel().getColumn(5).setMaxWidth(80);
+        tableData.getColumnModel().getColumn(6).setPreferredWidth(80);
+        tableData.getColumnModel().getColumn(6).setMaxWidth(90);
+        tableData.getColumnModel().getColumn(7).setPreferredWidth(80);
+        tableData.getColumnModel().getColumn(7).setMaxWidth(90);
+        tableData.getColumnModel().getColumn(9).setPreferredWidth(100);
+        tableData.getColumnModel().getColumn(9).setMaxWidth(110);
+        tableData.getColumnModel().getColumn(9).setCellRenderer(new StatusColumnCellRenderer());
     }
+    
+    
+     public class StatusColumnCellRenderer extends DefaultTableCellRenderer {
+     @Override
+     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int col) 
+     {  
+        JLabel l = (JLabel) super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, col);
+
+          //Get the status for the current row.
+          switch (value.toString()) {
+              case "EN USO":
+                  l.setBackground(Color.RED);
+                  break;
+              case "DISPONIBLE":
+                  l.setBackground(Color.GREEN);
+                  break;
+              case "EN REPARACION":
+                  l.setBackground(Color.YELLOW);
+                  break;                  
+              default:
+                  l.setBackground(Color.WHITE);
+                  break;
+          }
+      return l;
+    }}
+    
     
     public void filterTable()
     {
@@ -132,7 +199,7 @@ public final class SearchPrinter extends javax.swing.JFrame {
         fieldState = new javax.swing.JComboBox<>();
         buttonFilter = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tableData = new javax.swing.JTable();
         ButtonExit = new javax.swing.JButton();
         buttonAcept = new javax.swing.JButton();
         fieldCode = new javax.swing.JTextField();
@@ -184,7 +251,7 @@ public final class SearchPrinter extends javax.swing.JFrame {
             }
         });
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tableData.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -192,7 +259,7 @@ public final class SearchPrinter extends javax.swing.JFrame {
 
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(tableData);
 
         ButtonExit.setText("Salir");
         ButtonExit.addActionListener(new java.awt.event.ActionListener() {
@@ -328,25 +395,25 @@ public final class SearchPrinter extends javax.swing.JFrame {
     }//GEN-LAST:event_fieldStateActionPerformed
 
     private void buttonAceptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonAceptActionPerformed
-        int row = jTable1.getSelectedRow();
+        int row = tableData.getSelectedRow();
         if(row < 0)
         {
         JOptionPane.showMessageDialog(null,"Seleccione la fila deseada."," ",JOptionPane.WARNING_MESSAGE);
         }
         else
-        {/*
+        {
             switch(state)
             {
-                case 1:
-                        lessee1.setFieldPadron(tableDate[row][0].toString());
-                        this.dispose();
+                case 0:
+                        //lessee1.setFieldPadron(tableDate[row][0].toString());
+                        //this.dispose();
                         break;
-                case 2:
-                        modCensus.setFieldPadron(tableDate[row][0].toString());
+                case 1:
+                        changePrint.setSerialNumber(tableDate[row][0].toString());
                         this.dispose();
                         break;       
             }
-        */}
+        }
     }//GEN-LAST:event_buttonAceptActionPerformed
 
     private void fieldCodeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fieldCodeActionPerformed
@@ -373,6 +440,6 @@ public final class SearchPrinter extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JTable tableData;
     // End of variables declaration//GEN-END:variables
 }

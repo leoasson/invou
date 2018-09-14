@@ -37,10 +37,10 @@ public class AuxiliaryFunctions
         return sensql.insertRow(datos, "insert into tonner(id_tonner, modelo, descripcion, stock) values(?,?,?,?)");
     }
     
-    public boolean registerNewPrint(String id_sn, String cod_pn, String cod_sucursal, String cod_puesto, String estado)
+    public boolean registerNewPrint(String id_sn, String cod_pn, String cod_pc, String estado)
     {
-        String datos[] = {id_sn,cod_pn, cod_sucursal, cod_puesto, estado};
-        return sensql.insertRow(datos, "insert into `impresora`(`id_sn`, `cod_pn`, `cod_sucursal`, `cod_puesto`, `estado` ) values(?,?,?,?,?)");
+        String datos[] = {id_sn,cod_pn, cod_pc, estado};
+        return sensql.insertRow(datos, "insert into `impresora`(`id_sn`, `cod_pn`, `cod_pc`, `estado` ) values(?,?,?,?)");
     }
     
     public boolean ingressToner(String cod_articulo, String cod_proveedor,String detalle, String fecha, String cantidad)
@@ -141,15 +141,15 @@ public class AuxiliaryFunctions
     
     public Object [][] getPrinters()
     {
-        String[] columnas= {"id_sn", "cod_pn","modelo", "sucursal","puesto","cantidad","fecha", "estado"};
-        Object [][] datos = sensql.GetTable(columnas, "FROM `impresora` LEFT JOIN `modeloimpresora` ON `cod_pn` = `id_pn` LEFT JOIN `impresiones` ON `cod_impresion` = `id_impresion` LEFT JOIN `sucursal` on `cod_sucursal` = `id_sucursal` LEFT JOIN `puesto` on `cod_puesto` = `id_puesto`", "ORDER BY `modelo`;");
+        String[] columnas= {"id_sn", "cod_pn","modelo","sucursal", "piso", "area", "nombrePC","cantidad","fecha", "estado"};
+        Object [][] datos = sensql.GetTable(columnas, "FROM `impresora` LEFT JOIN `modeloimpresora` ON `cod_pn` = `id_pn` LEFT JOIN `impresiones` ON `cod_impresion` = `id_impresion` LEFT JOIN `pc` on `cod_pc` = `id_pc` LEFT JOIN `area` ON `id_area` = `cod_area` LEFT JOIN `piso` ON `id_piso` = `cod_piso` LEFT JOIN `sucursal` ON `id_sucursal` = `cod_sucursal`", "ORDER BY `modelo`;");
         return datos;
     }
     
     public Object [][] getEquipment()
     {
-        String[] columnas= {"id_pc", "sucursal", "piso", "area" ,"nombrePc","usuario", "contraseña", "descripcion","ipAdm","ipImag"};
-        Object [][] datos = sensql.GetTable(columnas, "FROM `pc` LEFT JOIN `area` ON `id_area` = `cod_area` LEFT JOIN `piso` ON `id_piso` = `cod_piso` LEFT JOIN `sucursal` ON `id_sucursal` = `cod_sucursal` LEFT JOIN `ipAdm` ON `id_ipAdm` = `cod_ipAdm` LEFT JOIN `ipimage` ON `id_ipImag` = `cod_ipImag` ", "ORDER BY area, nombrePC;");
+        String[] columnas= {"result.id_pc", "sucursal", "piso", "area" ,"nombrePc","usuario", "contraseña", "descripcion","ipadmin","ip"};
+        Object [][] datos = sensql.GetTable(columnas, "FROM (SELECT `id_pc`,`sucursal`,`piso`,`area`,`nombrePc`,`usuario`,`contraseña`,`descripcion`,`ip` as ipadmin,`cod_ipImag` FROM `pc` LEFT JOIN `area` ON `id_area`=`cod_area` LEFT JOIN `piso` ON `id_piso`=`cod_piso` LEFT JOIN `sucursal` ON `id_sucursal`=`cod_sucursal` LEFT JOIN `ip` ON `id_ip`=`cod_ipAdm`) as `result` LEFT JOIN ip ON `id_ip`=`cod_ipImag`", "ORDER BY area, nombrePC;");
         return datos;
     }
     
@@ -169,6 +169,13 @@ public class AuxiliaryFunctions
     {
         String[] columnas= {"id_reparacion","cod_pc","nombrePC", "area","fecha","detalle"};
         Object [][] datos = sensql.GetTable(columnas, "FROM `reparacionPc` LEFT JOIN `pc` on `cod_pc` = `id_pc` LEFT JOIN `area` ON `cod_area` = `id_area`", "ORDER BY `fecha` DESC;");
+        return datos;
+    }
+    
+    public Object [][] getPcsRepairFilter(String cod_pc)
+    {
+        String[] columnas= {"id_reparacion","cod_pc","fecha","detalle"};
+        Object [][] datos = sensql.GetTable(columnas, "FROM `reparacionPc` WHERE cod_pc = '" +cod_pc +"'", "ORDER BY `fecha` DESC;");
         return datos;
     }
     
@@ -234,9 +241,9 @@ public class AuxiliaryFunctions
     }
     public Object[][] filterEquipment(String code, String branch, String floor, String ip, boolean[] filter)
     {
-        String[] columnas= {"id_pc", "sucursal", "piso", "area" ,"nombrePc","usuario", "contraseña", "descripcion","ipAdm","ipImag"};
+        String[] columnas= {"id_pc", "sucursal", "piso", "area" ,"nombrePc","usuario", "contraseña", "descripcion","ipadmin","ip"};
         Object[][] data = getEquipment();
-        String select = "FROM `pc` LEFT JOIN `area` ON `id_area` = `cod_area` LEFT JOIN `piso` ON `id_piso` = `cod_piso` LEFT JOIN `sucursal` ON `id_sucursal` = `cod_sucursal` LEFT JOIN `ipAdm` ON `id_ipAdm` = `cod_ipAdm` LEFT JOIN `ipImage` ON `id_ipImag` = `cod_ipImag`";
+        String select = "FROM (SELECT `id_pc`,`sucursal`,`piso`,`area`,`nombrePc`,`usuario`,`contraseña`,`descripcion`,`ip` as ipadmin,`cod_ipImag` FROM `pc` LEFT JOIN `area` ON `id_area`=`cod_area` LEFT JOIN `piso` ON `id_piso`=`cod_piso` LEFT JOIN `sucursal` ON `id_sucursal`=`cod_sucursal` LEFT JOIN `ip` ON `id_ip`=`cod_ipAdm`) as `result` LEFT JOIN ip ON `id_ip`=`cod_ipImag`";
         switch(Arrays.toString(filter))
             {
                 case "[false, false, false, false]":
@@ -251,7 +258,7 @@ public class AuxiliaryFunctions
                     data = sensql.GetTable(columnas, select, "WHERE `sucursal`='"+branch+"';");
                     return data;
                 case "[false, false, false, true]":
-                    data = sensql.GetTable(columnas, select, "WHERE `ipAdm` LIKE '%"+ip+"%' or `ipImag` LIKE '%"+ip+"%';");
+                    data = sensql.GetTable(columnas, select, "WHERE `ipAdmin` LIKE '%"+ip+"%' or `ip` LIKE '%"+ip+"%';");
                     return data;
                 default:
                 return data;
@@ -260,9 +267,9 @@ public class AuxiliaryFunctions
     
     public Object[][] filterPrint(String code, String model, String state, boolean[] filter)
     {
-        String[] columnas= {"id_sn", "cod_pn","modelo", "sucursal","puesto","cantidad","fecha", "estado"};
+        String[] columnas= {"id_sn", "cod_pn","modelo","sucursal", "piso", "area", "nombrePC","cantidad","fecha", "estado"};
         Object [][] datos = getPrinters();
-        String select="FROM `impresora` LEFT JOIN `modeloimpresora` ON `cod_pn` = `id_pn` LEFT JOIN `impresiones` ON `cod_impresion` = `id_impresion` LEFT JOIN `sucursal` on `cod_sucursal` = `id_sucursal` LEFT JOIN `puesto` on `cod_puesto` = `id_puesto`";
+        String select="FROM `impresora` LEFT JOIN `modeloimpresora` ON `cod_pn` = `id_pn` LEFT JOIN `impresiones` ON `cod_impresion` = `id_impresion` LEFT JOIN `pc` on `cod_pc` = `id_pc` LEFT JOIN `area` ON `id_area` = `cod_area` LEFT JOIN `piso` ON `id_piso` = `cod_piso` LEFT JOIN `sucursal` ON `id_sucursal` = `cod_sucursal`";
         switch(Arrays.toString(filter))
             {
                 case "[false, false, false]":
@@ -292,6 +299,13 @@ public class AuxiliaryFunctions
                 default:
                 return datos;
             }
+    }
+    
+    public Object[][] filterStockToner(String model)
+    {
+    String[] columnas={"id_tonner", "modelo", "descripcion","stock"};
+    Object[][] datos = sensql.GetTable(columnas, "from `tonner`","WHERE modelo = '"+model+"';");
+    return datos;
     }
     
     public Object[][] filterToner(String tabla, String modelo, int ano, int mes, boolean [] filter)
@@ -366,16 +380,11 @@ public class AuxiliaryFunctions
         }   
     }
     
-    public boolean isIpAdminAvailable(String id_ipAdm)
+    public boolean isIpAvailable(String id_ip)
     {
-        return sensql.existencias(id_ipAdm, " from ipAdm where id_ipAdm='"+id_ipAdm+"' and estado='LIBRE';");
+        return sensql.existencias(id_ip, " from ip where id_ip='"+id_ip+"' and estado='LIBRE';");
     }
-    
-    public boolean isIpImageAvailable(String id_ipImage)
-    {
-        return sensql.existencias(id_ipImage, " from ipimage where id_ipImag='"+id_ipImage+"' and estado='LIBRE';");
-    }
-    
+        
     public boolean existProvider( String id_prov)
     {
         return sensql.existencias(id_prov, " from proveedor where No_documento='"+id_prov+"';");
@@ -405,62 +414,52 @@ public class AuxiliaryFunctions
     {
         return sensql.existencias(id, " from pc where id_pc='"+id+"';");
     }
-            
-    public boolean existIpAdmin(String ipAdm)
+    
+    public boolean existEquipmentWithPrint(String id)
     {
-        if(ipAdm.equals("")){return true;}
-        if(sensql.existencias(ipAdm, " from ipadm where ipAdm='"+ipAdm+"';"))
+        return sensql.existencias(id, " from impresora LEFT JOIN pc ON id_pc = cod_pc where id_pc='"+id+"';");
+    }
+    
+    public boolean existPrintCode(String id, String state)
+    {
+        return sensql.existencias(id, " from impresora where id_sn='"+id+"' and estado = '"+state+"';");
+    }
+         
+    
+    public boolean existIp(String ip)
+    {
+        if(ip.equals("")){return true;}
+        if(sensql.existencias(ip, " from ip where ip='"+ip+"';"))
         {
-            if(isIpAdminAvailable(parseIpAdmin(ipAdm)))
+            if(isIpAvailable(parseIp(ip)))
             {
                 return true;
             }
             else
             {
-                JOptionPane.showMessageDialog(null, "La ip administrativa: "+ ipAdm +", ya esta siendo usada por otro equipo.", "Advertencia", JOptionPane.WARNING_MESSAGE); 
+                JOptionPane.showMessageDialog(null, "La ip: "+ ip +", ya esta siendo usada por otro equipo.", "Advertencia", JOptionPane.WARNING_MESSAGE); 
                 return false;
             }
         }
         else
         {
-            JOptionPane.showMessageDialog(null, "La ip administrativa: "+ ipAdm +", no existe en la base de datos.", "Advertencia", JOptionPane.WARNING_MESSAGE); 
+            JOptionPane.showMessageDialog(null, "La ip: "+ ip +", no existe en la base de datos.", "Advertencia", JOptionPane.WARNING_MESSAGE); 
             return false;
         }
            
     }
     
-    public boolean existIpImage(String ipImage)
+    public String parsePrint(String id_equipment)
     {
-        if(ipImage.equals("")){return true;}
-        if(sensql.existencias(ipImage, " from ipimage where ipimag='"+ipImage+"';"))
-        {
-            if(isIpImageAvailable(parseIpImage(ipImage)))
-            {
-                return true;
-            }
-            else
-            {
-                JOptionPane.showMessageDialog(null, "La ip de imagen: "+ ipImage +", ya esta siendo usada por otro equipo.", "Advertencia", JOptionPane.WARNING_MESSAGE); 
-                return false;
-            }
-        }
-        else
-        {
-            JOptionPane.showMessageDialog(null, "La ip de imagen: "+ ipImage +", no existe en la base de datos.", "Advertencia", JOptionPane.WARNING_MESSAGE); 
-            return false;
-        }
-           
+        return sensql.getData("id_sn", "select id_sn from impresora LEFT JOIN pc ON id_pc = cod_pc where id_pc='"+id_equipment+"';");
+
     }
     
-    public String parseIpAdmin(String ip)
+    public String parseIp(String ip)
     {
-        return sensql.getData("id_ipAdm", "select id_ipAdm from ipadm where ipAdm='"+ip+"';");
+        return sensql.getData("id_ip", "select id_ip from ip where ip='"+ip+"';");
     }
     
-    public String parseIpImage(String ipImage)
-    {
-        return sensql.getData("id_ipImag", "select id_ipImag from ipimage where ipImag='"+ipImage+"';");
-    }
      /* Mapea el el nombre comercial del proveedor con el id correspondiente.
      */
      public String parseProvider(String nombre_comercial)
@@ -528,8 +527,6 @@ public class AuxiliaryFunctions
             return sensql.getData("id_marca", "select id_marca from marcamotherboard where fabricante='"+maker+"';");
      }
      
-     
-     
      public String parsePosition(String position)
      {
          if(position == null)
@@ -544,18 +541,18 @@ public class AuxiliaryFunctions
      
     public boolean deleteEquipment(String id_equipment)
     {
-        String ipAdmin = sensql.getData("ipAdm", "select ipAdm from pc LEFT JOIN `ipAdm` ON `id_ipAdm` = `cod_ipAdm` where id_pc='"+id_equipment+"';");
-        String ipImage = sensql.getData("ipImag", "select ipImag from pc LEFT JOIN `ipImage` ON `id_ipImag` = `cod_ipImag` where id_pc='"+id_equipment+"';");
-        if(ipImage != null && !ipAdmin.equals(""))
+        String ipAdmin = sensql.getData("ip", "select ip from pc LEFT JOIN `ip` ON `id_ip` = `cod_ipAdm` where id_pc='"+id_equipment+"';");
+        String ipImage = sensql.getData("ip", "select ip from pc LEFT JOIN `ip` ON `id_ip` = `cod_ipImag` where id_pc='"+id_equipment+"';");
+        if(ipAdmin != null && !ipAdmin.equals(""))
         {
-        ipAdmin=parseIpAdmin(ipAdmin);
+            ipAdmin=parseIp(ipAdmin);
         }
         if(ipImage != null && !ipImage.equals(""))
         {
-        ipImage=parseIpImage(ipImage);
+            ipImage=parseIp(ipImage);
         }
-        updateStateIpAdmin("LIBRE", ipAdmin);
-        updateStateIpImage("LIBRE", ipImage);
+        updateStateIp("LIBRE", ipAdmin);
+        updateStateIp("LIBRE", ipImage);
         return sensql.deleteRow("pc", "id_pc = "+id_equipment +";");  
     }
     
@@ -565,8 +562,8 @@ public class AuxiliaryFunctions
         {
             if (sensql.insertRow(data, "insert into `pc`(`id_pc`, `nombrePc`, `usuario`, `contraseña`, `cod_ipAdm`, `cod_ipImag`, `descripcion`,`cod_area`, `cod_procesador`, `cod_motherboard`, `cod_ram`, `cod_disco`, `cod_so`) values(?,?,?,?,?,?,?,?,?,?,?,?,?)"))
             {
-                updateStateIpAdmin("USADA", data[4]);
-                updateStateIpImage("USADA", data[5]);
+                updateStateIp("USADA", data[4]);
+                updateStateIp("USADA", data[5]);
                 return true;
             }
             else
@@ -618,6 +615,11 @@ public class AuxiliaryFunctions
         return sensql.modifiedRow("impresora", "estado", state, "id_sn = '"+ code +"'");
     }
     
+    public boolean updateStateIp(String state,String id)
+    {
+        return sensql.modifiedRow("ip", "estado", state, "id_ip = '"+ id +"'");
+    }
+    
     public boolean updateStateIpAdmin(String state,String id_ipAdm)
     {
         return sensql.modifiedRow("ipadm", "estado", state, "id_ipAdm = '"+ id_ipAdm +"'");
@@ -638,11 +640,13 @@ public class AuxiliaryFunctions
         return sensql.modifiedRow("reparacion", "detalleReparacion", detail, "id_reparacion = '"+idRepair+"'");
     }
     
-    public boolean cleanBranchAndPosition(String code)
+    public boolean updatePrint(String id_sn, String id_equipment)
     {
-       boolean val1 = sensql.modifiedRow("impresora", "cod_puesto", "", "id_sn = '"+ code +"';");
-       boolean val2 = sensql.modifiedRow("impresora", "cod_sucursal", "", "id_sn = '"+ code +"';");
-       return val1 && val2;
+        return sensql.modifiedRow("impresora", "cod_pc", id_equipment, "id_sn = '"+id_sn+"'");
+    }
+    public boolean cleanPosition(String serialNumber)
+    {
+       return sensql.modifiedRow("impresora", "cod_pc", "", "id_sn = '"+ serialNumber +"';");
     }
     
     public boolean printerIsUnderRepair(String code)
@@ -672,5 +676,7 @@ public class AuxiliaryFunctions
         
         return (stock-stockARetirar) >= 0;
     }
+    
+
     
 }

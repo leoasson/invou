@@ -53,13 +53,13 @@ public final class SearchEquipmentRepair extends javax.swing.JInternalFrame {
     
    public void generateTableData(Object [][] datostabla)
    {          
-        String[] columnas = {"N° rep.","codigo", "Nombre del equipo", "Area", "Fecha", "Detalle de reparación"};
+        String[] columnas = {"N° rep.","Id de PC", "Nombre del equipo", "Area", "Fecha", "Detalle de reparación"};
         DefaultTableModel datos = new DefaultTableModel(datostabla,columnas);
         jTable1.setModel(datos);
         jTable1.getColumnModel().getColumn(0).setPreferredWidth(50);
         jTable1.getColumnModel().getColumn(0).setMaxWidth(60);
-        jTable1.getColumnModel().getColumn(1).setPreferredWidth(80);
-        jTable1.getColumnModel().getColumn(1).setMaxWidth(90);
+        jTable1.getColumnModel().getColumn(1).setPreferredWidth(60);
+        jTable1.getColumnModel().getColumn(1).setMaxWidth(70);
         jTable1.getColumnModel().getColumn(2).setPreferredWidth(100);
         jTable1.getColumnModel().getColumn(2).setMaxWidth(120);
         jTable1.getColumnModel().getColumn(3).setPreferredWidth(80);
@@ -91,7 +91,7 @@ public final class SearchEquipmentRepair extends javax.swing.JInternalFrame {
         setMaximizable(true);
         setResizable(true);
         setTitle("Listar reparaciones de PCs");
-        setFrameIcon(new javax.swing.ImageIcon(getClass().getResource("/invou/imagenes/list16.png"))); // NOI18N
+        setFrameIcon(new javax.swing.ImageIcon(getClass().getResource("/invou/imagenes/listRepair16.png"))); // NOI18N
 
         buttonExit.setText("Salir");
         buttonExit.addActionListener(new java.awt.event.ActionListener() {

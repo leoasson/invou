@@ -3,7 +3,6 @@ package invou.Views;
 import invou.AuxiliaryFunctions;
 import invou.PrintLabel;
 import invou.SentencesSql;
-import invou.Views.View;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -25,8 +24,11 @@ public final class SearchEquipment extends javax.swing.JInternalFrame {
     SentencesSql sensql;
     private Object[][] tableDate; 
     private View view;
-    private ModifyEquipment equipment;
-    IngressEquipmentRepair ier;
+    private ModifyEquipment modifyEquipment;
+    RegisterEquipmentRepair registerEquipmentRepair;
+    RegisterNewPrint registerNewPrint;
+    ChangePrint changePrint;
+    PrintReport printReport;
     Object[] channel;
     Object[] name;
     int state = 0;
@@ -42,45 +44,21 @@ public final class SearchEquipment extends javax.swing.JInternalFrame {
         init();
         labelInfo.setVisible(false);
         buttonAcept.setEnabled(true);
-        this.ActionFloor = new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent ae)
-            {
-               filterTable(); 
-            }
+        state = 2;
+        this.ActionFloor = (ActionEvent ae) -> {
+            filterTable();
         };
-        this.ActionBranch = new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent ae)
+        this.ActionBranch = (ActionEvent ae) -> {
+            if(comboBranch.getSelectedItem()!= null)
             {
-                if(comboBranch.getSelectedItem()!= null)
-                {     
-                    String idBranch = af.parseBranch(comboBranch.getSelectedItem().toString());
-                    completeComboFloor("`cod_sucursal` = '"+idBranch+"'");
-                    comboFloor.setEnabled(true);
-                    filterTable(); 
-                }
+                String idBranch = af.parseBranch(comboBranch.getSelectedItem().toString());
+                completeComboFloor("`cod_sucursal` = '"+idBranch+"'");
+                comboFloor.setEnabled(true);
+                filterTable();
             }
         };
         comboBranch.addActionListener(ActionBranch);
         comboFloor.addActionListener(ActionFloor);
-//        tableData.addMouseListener(new MouseAdapter() {
-//        @Override
-//        public void mousePressed(MouseEvent mouseEvent) {
-//        JTable table =(JTable) mouseEvent.getSource();
-//        Point point = mouseEvent.getPoint();
-//        int rowClicked = table.rowAtPoint(point);
-//        if (mouseEvent.getClickCount() == 2 && table.getSelectedRow() != -1) 
-//        {
-//            JOptionPane.showMessageDialog(null,"aca sale la ventana."," ",JOptionPane.WARNING_MESSAGE);
-//            //fieldCedulon.setText((String) model.getValueAt(rowClicked, 0));
-//            //isRowClicked = true;
-//            //getValues();
-//            //setValues();
-//            
-//        }
-//    }
-//});
     }
     
     public SearchEquipment(View view)
@@ -92,24 +70,16 @@ public final class SearchEquipment extends javax.swing.JInternalFrame {
         init();
         buttonAcept.setVisible(false);
         labelInfo.setVisible(true);
-        this.ActionFloor = new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent ae)
-            {
-               filterTable(); 
-            }
+        this.ActionFloor = (ActionEvent ae) -> {
+            filterTable();
         };
-        this.ActionBranch = new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent ae)
+        this.ActionBranch = (ActionEvent ae) -> {
+            if(comboBranch.getSelectedItem()!= null)
             {
-                if(comboBranch.getSelectedItem()!= null)
-                {     
-                    String idBranch = af.parseBranch(comboBranch.getSelectedItem().toString());
-                    completeComboFloor("`cod_sucursal` = '"+idBranch+"'");
-                    comboFloor.setEnabled(true);
-                    filterTable(); 
-                }
+                String idBranch = af.parseBranch(comboBranch.getSelectedItem().toString());
+                completeComboFloor("`cod_sucursal` = '"+idBranch+"'");
+                comboFloor.setEnabled(true);
+                filterTable();
             }
         };
         comboBranch.addActionListener(ActionBranch);
@@ -132,30 +102,23 @@ public final class SearchEquipment extends javax.swing.JInternalFrame {
     {
         this.af = new AuxiliaryFunctions();
         this.sensql = new SentencesSql();
-        this.equipment = modifyEquipment;
+        this.modifyEquipment = modifyEquipment;
         initComponents();
+        state=3;
+        buttonAcept.setLabel("Seleccionar");
         init();
         labelInfo.setVisible(false);
-        buttonAcept.setVisible(false);
         buttonAcept.setEnabled(true);
-        this.ActionFloor = new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent ae)
-            {
-               filterTable(); 
-            }
+        this.ActionFloor = (ActionEvent ae) -> {
+            filterTable();
         };
-        this.ActionBranch = new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent ae)
+        this.ActionBranch = (ActionEvent ae) -> {
+            if(comboBranch.getSelectedItem()!= null)
             {
-                if(comboBranch.getSelectedItem()!= null)
-                {     
-                    String idBranch = af.parseBranch(comboBranch.getSelectedItem().toString());
-                    completeComboFloor("`cod_sucursal` = '"+idBranch+"'");
-                    comboFloor.setEnabled(true);
-                    filterTable(); 
-                }
+                String idBranch = af.parseBranch(comboBranch.getSelectedItem().toString());
+                completeComboFloor("`cod_sucursal` = '"+idBranch+"'");
+                comboFloor.setEnabled(true);
+                filterTable();
             }
         };
         comboBranch.addActionListener(ActionBranch);
@@ -175,34 +138,27 @@ public final class SearchEquipment extends javax.swing.JInternalFrame {
         });
     }  
     
-    public SearchEquipment(IngressEquipmentRepair ier)
+    public SearchEquipment(ChangePrint changePrint)
     {
         this.af = new AuxiliaryFunctions();
         this.sensql = new SentencesSql();
-        this.ier = ier;
+        this.changePrint = changePrint;
         initComponents();
         init();
+        state=1;
         labelInfo.setVisible(false);
-        buttonAcept.setVisible(false);
         buttonAcept.setEnabled(true);
-        this.ActionFloor = new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent ae)
-            {
-               filterTable(); 
-            }
+        buttonAcept.setLabel("Seleccionar");
+        this.ActionFloor = (ActionEvent ae) -> {
+            filterTable();
         };
-        this.ActionBranch = new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent ae)
+        this.ActionBranch = (ActionEvent ae) -> {
+            if(comboBranch.getSelectedItem()!= null)
             {
-                if(comboBranch.getSelectedItem()!= null)
-                {     
-                    String idBranch = af.parseBranch(comboBranch.getSelectedItem().toString());
-                    completeComboFloor("`cod_sucursal` = '"+idBranch+"'");
-                    comboFloor.setEnabled(true);
-                    filterTable(); 
-                }
+                String idBranch = af.parseBranch(comboBranch.getSelectedItem().toString());
+                completeComboFloor("`cod_sucursal` = '"+idBranch+"'");
+                comboFloor.setEnabled(true);
+                filterTable();
             }
         };
         comboBranch.addActionListener(ActionBranch);
@@ -215,7 +171,127 @@ public final class SearchEquipment extends javax.swing.JInternalFrame {
         int rowClicked = table.rowAtPoint(point);
         if (mouseEvent.getClickCount() == 2 && table.getSelectedRow() != -1) 
         {
-            ier.setIdEquipment((String) datos.getValueAt(rowClicked, 0));
+            changePrint.setIdEquipment((String) datos.getValueAt(rowClicked, 0));
+            closeWindows();
+        }
+    }
+        });
+    } 
+    
+    public SearchEquipment(PrintReport printReport)
+    {
+        this.af = new AuxiliaryFunctions();
+        this.sensql = new SentencesSql();
+        this.printReport = printReport;
+        initComponents();
+        init();
+        state=4;
+        buttonAcept.setLabel("Seleccionar");
+        labelInfo.setVisible(false);
+        buttonAcept.setEnabled(true);
+        this.ActionFloor = (ActionEvent ae) -> {
+            filterTable();
+        };
+        this.ActionBranch = (ActionEvent ae) -> {
+            if(comboBranch.getSelectedItem()!= null)
+            {
+                String idBranch = af.parseBranch(comboBranch.getSelectedItem().toString());
+                completeComboFloor("`cod_sucursal` = '"+idBranch+"'");
+                comboFloor.setEnabled(true);
+                filterTable();
+            }
+        };
+        comboBranch.addActionListener(ActionBranch);
+        comboFloor.addActionListener(ActionFloor);
+        tableData.addMouseListener(new MouseAdapter() {
+        @Override
+        public void mousePressed(MouseEvent mouseEvent) {
+        JTable table =(JTable) mouseEvent.getSource();
+        Point point = mouseEvent.getPoint();
+        int rowClicked = table.rowAtPoint(point);
+        if (mouseEvent.getClickCount() == 2 && table.getSelectedRow() != -1) 
+        {
+            printReport.setIdEquipment((String) datos.getValueAt(rowClicked, 0));
+            closeWindows();
+        }
+    }
+        });
+    }  
+        
+    public SearchEquipment(RegisterNewPrint registerNewPrint)
+    {
+        this.af = new AuxiliaryFunctions();
+        this.sensql = new SentencesSql();
+        this.registerNewPrint = registerNewPrint;
+        initComponents();
+        init();
+        state=6;
+        buttonAcept.setLabel("Seleccionar");
+        labelInfo.setVisible(false);
+        buttonAcept.setEnabled(true);
+        this.ActionFloor = (ActionEvent ae) -> {
+            filterTable();
+        };
+        this.ActionBranch = (ActionEvent ae) -> {
+            if(comboBranch.getSelectedItem()!= null)
+            {
+                String idBranch = af.parseBranch(comboBranch.getSelectedItem().toString());
+                completeComboFloor("`cod_sucursal` = '"+idBranch+"'");
+                comboFloor.setEnabled(true);
+                filterTable();
+            }
+        };
+        comboBranch.addActionListener(ActionBranch);
+        comboFloor.addActionListener(ActionFloor);
+        tableData.addMouseListener(new MouseAdapter() {
+        @Override
+        public void mousePressed(MouseEvent mouseEvent) {
+        JTable table =(JTable) mouseEvent.getSource();
+        Point point = mouseEvent.getPoint();
+        int rowClicked = table.rowAtPoint(point);
+        if (mouseEvent.getClickCount() == 2 && table.getSelectedRow() != -1) 
+        {
+            registerNewPrint.setIdEquipment((String) datos.getValueAt(rowClicked, 0));
+            closeWindows();
+        }
+    }
+        });
+    }      
+    
+    public SearchEquipment(RegisterEquipmentRepair registerEquipmentRepair)
+    {
+        this.af = new AuxiliaryFunctions();
+        this.sensql = new SentencesSql();
+        this.registerEquipmentRepair = registerEquipmentRepair;
+        initComponents();
+        init();
+        state=5;
+        buttonAcept.setLabel("Seleccionar");
+        labelInfo.setVisible(false);
+        buttonAcept.setEnabled(true);
+        this.ActionFloor = (ActionEvent ae) -> {
+            filterTable();
+        };
+        this.ActionBranch = (ActionEvent ae) -> {
+            if(comboBranch.getSelectedItem()!= null)
+            {
+                String idBranch = af.parseBranch(comboBranch.getSelectedItem().toString());
+                completeComboFloor("`cod_sucursal` = '"+idBranch+"'");
+                comboFloor.setEnabled(true);
+                filterTable();
+            }
+        };
+        comboBranch.addActionListener(ActionBranch);
+        comboFloor.addActionListener(ActionFloor);
+        tableData.addMouseListener(new MouseAdapter() {
+        @Override
+        public void mousePressed(MouseEvent mouseEvent) {
+        JTable table =(JTable) mouseEvent.getSource();
+        Point point = mouseEvent.getPoint();
+        int rowClicked = table.rowAtPoint(point);
+        if (mouseEvent.getClickCount() == 2 && table.getSelectedRow() != -1) 
+        {
+            registerEquipmentRepair.setIdEquipment((String) datos.getValueAt(rowClicked, 0));
             closeWindows();
         }
     }
@@ -569,36 +645,45 @@ public final class SearchEquipment extends javax.swing.JInternalFrame {
         if(row < 0)
         {
             JOptionPane.showMessageDialog(null,"Seleccione la fila deseada."," ",JOptionPane.WARNING_MESSAGE);
-        }
-        else
-        {
-            String id_equipment = tableDate[row][0].toString();
-            
-            String name_ = sensql.getData("nombrePc", "select nombrePc from pc where id_pc='"+id_equipment+"';"); 
-            String ipAdmin_ = sensql.getData("ipAdm", "select ipAdm from pc LEFT JOIN `ipAdm` ON `id_ipAdm` = `cod_ipAdm` where id_pc='"+id_equipment+"';");
-            String ipImage_ = sensql.getData("ipImag", "select ipImag from pc LEFT JOIN `ipImage` ON `id_ipImag` = `cod_ipImag` where id_pc='"+id_equipment+"';");
-            
-            PrintLabel printLabel = new PrintLabel(name_, ipAdmin_, ipImage_, id_equipment);
-            try
-            {
-                printLabel.printLabel();
-            } catch (IOException ex) 
-            {
-                Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            /*
+            return;
+        }           
             switch(state)
             {
                 case 1:
-                lessee1.setFieldPadron(tableDate[row][0].toString());
+                changePrint.setIdEquipment(tableDate[row][0].toString());
                 this.dispose();
                 break;
+                
                 case 2:
-                modCensus.setFieldPadron(tableDate[row][0].toString());
+                String id_equipment = tableDate[row][0].toString();
+                String name_ = sensql.getData("nombrePc", "select nombrePc from pc where id_pc='"+id_equipment+"';"); 
+                String ipAdmin_ = sensql.getData("ip", "select ip from pc LEFT JOIN `ip` ON `id_ip` = `cod_ipAdm` where id_pc='"+id_equipment+"';");
+                String ipImage_ = sensql.getData("ip", "select ip from pc LEFT JOIN `ip` ON `id_ip` = `cod_ipImag` where id_pc='"+id_equipment+"';");
+                PrintLabel printLabel = new PrintLabel(name_, ipAdmin_, ipImage_, id_equipment);
+                
+                try
+                {
+                    printLabel.printLabel();
+                } 
+                catch (IOException ex) {Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);}
+                break;
+                                case 3:
+                modifyEquipment.setIdEquipment(tableDate[row][0].toString());
                 this.dispose();
                 break;
-            }
-            */}
+                                case 4:
+                printReport.setIdEquipment(tableDate[row][0].toString());
+                this.dispose();
+                break;
+                                case 5:
+                registerEquipmentRepair.setIdEquipment(tableDate[row][0].toString());
+                this.dispose();
+                break;
+                                case 6:
+                registerNewPrint.setIdEquipment(tableDate[row][0].toString());
+                this.dispose();
+                break;
+            }     
     }//GEN-LAST:event_buttonAceptActionPerformed
 
     private void comboBranchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboBranchActionPerformed
