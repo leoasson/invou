@@ -7,6 +7,7 @@ package invou.Views;
 
 import invou.AuxiliaryFunctions;
 import invou.PrintLabel;
+import invou.ip;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.awt.Desktop;
@@ -15,6 +16,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.util.ArrayList;
 import javax.swing.JOptionPane;
 /**
  *
@@ -23,10 +25,12 @@ import javax.swing.JOptionPane;
 public class View extends javax.swing.JFrame {
 
     AuxiliaryFunctions af = new AuxiliaryFunctions();
-    public View() {
+    public View() 
+    {
         initComponents();
         this.setLocationRelativeTo(null);
         jToolBar2.setFloatable(false);
+        
     }
 
     
@@ -102,6 +106,17 @@ public class View extends javax.swing.JFrame {
         repair.show();
     }
     
+    public void addSearchIp(ReserveIp reserveip) 
+    {
+        SearchIp searchIp = new SearchIp(reserveip);
+        Dimension desktopSize = jDesktopPane1.getSize();
+        Dimension jInternalFrameSize = searchIp.getSize();
+        searchIp.setLocation((desktopSize.width - jInternalFrameSize.width)/2,(desktopSize.height- jInternalFrameSize.height)/2);
+        jDesktopPane1.add(searchIp);
+        searchIp.show();
+    }
+    
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -112,6 +127,7 @@ public class View extends javax.swing.JFrame {
         jSeparator3 = new javax.swing.JToolBar.Separator();
         ButtonEnviarAReparacion = new javax.swing.JButton();
         ButtonRegresoDeReparacion = new javax.swing.JButton();
+        ButtonRegresoDeReparacion1 = new javax.swing.JButton();
         jSeparator4 = new javax.swing.JToolBar.Separator();
         jButton7 = new javax.swing.JButton();
         jButton8 = new javax.swing.JButton();
@@ -119,9 +135,10 @@ public class View extends javax.swing.JFrame {
         jButton6 = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
         jDesktopPane1 = new javax.swing.JDesktopPane();
+        jLabel2 = new javax.swing.JLabel();
         fieldCode = new javax.swing.JTextField();
         jMenuBar1 = new javax.swing.JMenuBar();
-        tonnerMenu = new javax.swing.JMenu();
+        printLabeltonnerMenu = new javax.swing.JMenu();
         addTonner = new javax.swing.JMenuItem();
         deleteTonner = new javax.swing.JMenuItem();
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
@@ -133,10 +150,11 @@ public class View extends javax.swing.JFrame {
         jSeparator6 = new javax.swing.JPopupMenu.Separator();
         registryTonner = new javax.swing.JMenuItem();
         updateStock = new javax.swing.JMenuItem();
+        updateStock1 = new javax.swing.JMenuItem();
         printerMenu = new javax.swing.JMenu();
         enviarImpresoraAReparacion1 = new javax.swing.JMenuItem();
-        enviarImpresoraAReparacion = new javax.swing.JMenuItem();
         regresoDeReparacion = new javax.swing.JMenuItem();
+        enviarImpresoraAReparacion = new javax.swing.JMenuItem();
         jSeparator8 = new javax.swing.JPopupMenu.Separator();
         listPrinter = new javax.swing.JMenu();
         listRepair = new javax.swing.JMenuItem();
@@ -158,6 +176,12 @@ public class View extends javax.swing.JFrame {
         jMenuItem4 = new javax.swing.JMenuItem();
         jMenuItem3 = new javax.swing.JMenuItem();
         equiposMenu = new javax.swing.JMenu();
+        jMenuItem5 = new javax.swing.JMenuItem();
+        jSeparator12 = new javax.swing.JPopupMenu.Separator();
+        jMenuItem6 = new javax.swing.JMenuItem();
+        jSeparator11 = new javax.swing.JPopupMenu.Separator();
+        jMenuItem7 = new javax.swing.JMenuItem();
+        jMenuItem8 = new javax.swing.JMenuItem();
         menu_proveedores = new javax.swing.JMenu();
         listarProveedor = new javax.swing.JMenuItem();
         registrarProveedor = new javax.swing.JMenuItem();
@@ -168,7 +192,7 @@ public class View extends javax.swing.JFrame {
 
         jToolBar2.setRollover(true);
 
-        jButton3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/invou/imagenes/tonnerAdd28.png"))); // NOI18N
+        jButton3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/invou/imagenes/addToner26.png"))); // NOI18N
         jButton3.setToolTipText("Ingreso de tonner");
         jButton3.setFocusable(false);
         jButton3.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -180,7 +204,7 @@ public class View extends javax.swing.JFrame {
         });
         jToolBar2.add(jButton3);
 
-        jButton4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/invou/imagenes/tonnerDelete28.png"))); // NOI18N
+        jButton4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/invou/imagenes/deleteTonner26.png"))); // NOI18N
         jButton4.setToolTipText("Egreso de tonner");
         jButton4.setFocusable(false);
         jButton4.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -193,8 +217,8 @@ public class View extends javax.swing.JFrame {
         jToolBar2.add(jButton4);
         jToolBar2.add(jSeparator3);
 
-        ButtonEnviarAReparacion.setIcon(new javax.swing.ImageIcon(getClass().getResource("/invou/imagenes/printerRepair28.png"))); // NOI18N
-        ButtonEnviarAReparacion.setToolTipText("Impresora en reparacion");
+        ButtonEnviarAReparacion.setIcon(new javax.swing.ImageIcon(getClass().getResource("/invou/imagenes/changePrint26.png"))); // NOI18N
+        ButtonEnviarAReparacion.setToolTipText("Cambiar impresora");
         ButtonEnviarAReparacion.setAlignmentX(0.5F);
         ButtonEnviarAReparacion.setFocusable(false);
         ButtonEnviarAReparacion.addActionListener(new java.awt.event.ActionListener() {
@@ -204,8 +228,8 @@ public class View extends javax.swing.JFrame {
         });
         jToolBar2.add(ButtonEnviarAReparacion);
 
-        ButtonRegresoDeReparacion.setIcon(new javax.swing.ImageIcon(getClass().getResource("/invou/imagenes/printerOk.png"))); // NOI18N
-        ButtonRegresoDeReparacion.setToolTipText("Impresora reparada");
+        ButtonRegresoDeReparacion.setIcon(new javax.swing.ImageIcon(getClass().getResource("/invou/imagenes/printerOk26.png"))); // NOI18N
+        ButtonRegresoDeReparacion.setToolTipText("Ingresar impresora reparada");
         ButtonRegresoDeReparacion.setAlignmentX(0.5F);
         ButtonRegresoDeReparacion.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         ButtonRegresoDeReparacion.setFocusable(false);
@@ -218,6 +242,22 @@ public class View extends javax.swing.JFrame {
             }
         });
         jToolBar2.add(ButtonRegresoDeReparacion);
+
+        ButtonRegresoDeReparacion1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/invou/imagenes/searchPrint26.png"))); // NOI18N
+        ButtonRegresoDeReparacion1.setToolTipText("Buscar Impresoras");
+        ButtonRegresoDeReparacion1.setAlignmentX(0.5F);
+        ButtonRegresoDeReparacion1.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        ButtonRegresoDeReparacion1.setFocusable(false);
+        ButtonRegresoDeReparacion1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        ButtonRegresoDeReparacion1.setName("gfgbb"); // NOI18N
+        ButtonRegresoDeReparacion1.setNextFocusableComponent(ButtonEnviarAReparacion);
+        ButtonRegresoDeReparacion1.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        ButtonRegresoDeReparacion1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ButtonRegresoDeReparacion1ActionPerformed(evt);
+            }
+        });
+        jToolBar2.add(ButtonRegresoDeReparacion1);
         jToolBar2.add(jSeparator4);
 
         jButton7.setIcon(new javax.swing.ImageIcon("C:\\Users\\leoas\\Documents\\NetBeansProjects\\InvOu\\src\\invou\\imagenes\\newPc-28.png")); // NOI18N
@@ -245,7 +285,8 @@ public class View extends javax.swing.JFrame {
         jToolBar2.add(jButton8);
         jToolBar2.add(jSeparator5);
 
-        jButton6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/invou/imagenes/monitorDelete.png"))); // NOI18N
+        jButton6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/invou/imagenes/listIp26.png"))); // NOI18N
+        jButton6.setToolTipText("Listar direcciones IP");
         jButton6.setFocusable(false);
         jButton6.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jButton6.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -266,15 +307,21 @@ public class View extends javax.swing.JFrame {
         jDesktopPane1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         jDesktopPane1.setForeground(new java.awt.Color(255, 255, 255));
 
+        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/invou/imagenes/logo-oulton (1).png"))); // NOI18N
+
+        jDesktopPane1.setLayer(jLabel2, javax.swing.JLayeredPane.DEFAULT_LAYER);
+
         javax.swing.GroupLayout jDesktopPane1Layout = new javax.swing.GroupLayout(jDesktopPane1);
         jDesktopPane1.setLayout(jDesktopPane1Layout);
         jDesktopPane1Layout.setHorizontalGroup(
             jDesktopPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1048, Short.MAX_VALUE)
+            .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         jDesktopPane1Layout.setVerticalGroup(
             jDesktopPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 588, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jDesktopPane1Layout.createSequentialGroup()
+                .addGap(0, 379, Short.MAX_VALUE)
+                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 229, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         fieldCode.setToolTipText("Generar reporte de pc");
@@ -284,26 +331,26 @@ public class View extends javax.swing.JFrame {
             }
         });
 
-        tonnerMenu.setText("Tonner");
+        printLabeltonnerMenu.setText("Tonner");
 
-        addTonner.setIcon(new javax.swing.ImageIcon(getClass().getResource("/invou/imagenes/tonnerAdd16.png"))); // NOI18N
+        addTonner.setIcon(new javax.swing.ImageIcon(getClass().getResource("/invou/imagenes/addToner16.png"))); // NOI18N
         addTonner.setText("Ingresar");
         addTonner.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 addTonnerActionPerformed(evt);
             }
         });
-        tonnerMenu.add(addTonner);
+        printLabeltonnerMenu.add(addTonner);
 
-        deleteTonner.setIcon(new javax.swing.ImageIcon(getClass().getResource("/invou/imagenes/tonnerDelete16.png"))); // NOI18N
+        deleteTonner.setIcon(new javax.swing.ImageIcon(getClass().getResource("/invou/imagenes/deleteToner16.png"))); // NOI18N
         deleteTonner.setText("Retirar ");
         deleteTonner.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 deleteTonnerActionPerformed(evt);
             }
         });
-        tonnerMenu.add(deleteTonner);
-        tonnerMenu.add(jSeparator1);
+        printLabeltonnerMenu.add(deleteTonner);
+        printLabeltonnerMenu.add(jSeparator1);
 
         listTonner.setIcon(new javax.swing.ImageIcon(getClass().getResource("/invou/imagenes/list16.png"))); // NOI18N
         listTonner.setText("Listar");
@@ -336,8 +383,8 @@ public class View extends javax.swing.JFrame {
         });
         listTonner.add(StockList);
 
-        tonnerMenu.add(listTonner);
-        tonnerMenu.add(jSeparator6);
+        printLabeltonnerMenu.add(listTonner);
+        printLabeltonnerMenu.add(jSeparator6);
 
         registryTonner.setIcon(new javax.swing.ImageIcon(getClass().getResource("/invou/imagenes/registryEditor16.png"))); // NOI18N
         registryTonner.setText("Registrar nuevo código");
@@ -346,7 +393,7 @@ public class View extends javax.swing.JFrame {
                 registryTonnerActionPerformed(evt);
             }
         });
-        tonnerMenu.add(registryTonner);
+        printLabeltonnerMenu.add(registryTonner);
 
         updateStock.setIcon(new javax.swing.ImageIcon(getClass().getResource("/invou/imagenes/updateStock16.png"))); // NOI18N
         updateStock.setText("Actualizar stock");
@@ -355,12 +402,22 @@ public class View extends javax.swing.JFrame {
                 updateStockActionPerformed(evt);
             }
         });
-        tonnerMenu.add(updateStock);
+        printLabeltonnerMenu.add(updateStock);
 
-        jMenuBar1.add(tonnerMenu);
+        updateStock1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/invou/imagenes/print-16.png"))); // NOI18N
+        updateStock1.setText("Imprimir códigos");
+        updateStock1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                updateStock1ActionPerformed(evt);
+            }
+        });
+        printLabeltonnerMenu.add(updateStock1);
+
+        jMenuBar1.add(printLabeltonnerMenu);
 
         printerMenu.setText("Impresoras");
 
+        enviarImpresoraAReparacion1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/invou/imagenes/changePrint16.png"))); // NOI18N
         enviarImpresoraAReparacion1.setText("Cambio de impresora");
         enviarImpresoraAReparacion1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -369,14 +426,7 @@ public class View extends javax.swing.JFrame {
         });
         printerMenu.add(enviarImpresoraAReparacion1);
 
-        enviarImpresoraAReparacion.setText("Enviar a reparacion");
-        enviarImpresoraAReparacion.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                enviarImpresoraAReparacionActionPerformed(evt);
-            }
-        });
-        printerMenu.add(enviarImpresoraAReparacion);
-
+        regresoDeReparacion.setIcon(new javax.swing.ImageIcon(getClass().getResource("/invou/imagenes/printerOk16.png"))); // NOI18N
         regresoDeReparacion.setText("Regreso de reparacion");
         regresoDeReparacion.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -384,6 +434,15 @@ public class View extends javax.swing.JFrame {
             }
         });
         printerMenu.add(regresoDeReparacion);
+
+        enviarImpresoraAReparacion.setIcon(new javax.swing.ImageIcon(getClass().getResource("/invou/imagenes/repairPrint16.png"))); // NOI18N
+        enviarImpresoraAReparacion.setText("Enviar a reparacion");
+        enviarImpresoraAReparacion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                enviarImpresoraAReparacionActionPerformed(evt);
+            }
+        });
+        printerMenu.add(enviarImpresoraAReparacion);
         printerMenu.add(jSeparator8);
 
         listPrinter.setIcon(new javax.swing.ImageIcon(getClass().getResource("/invou/imagenes/list16.png"))); // NOI18N
@@ -419,6 +478,7 @@ public class View extends javax.swing.JFrame {
         });
         printerMenu.add(registrarImpresora);
 
+        newPagesPrinted.setIcon(new javax.swing.ImageIcon(getClass().getResource("/invou/imagenes/update16.png"))); // NOI18N
         newPagesPrinted.setText("Actualizar paginas impresas");
         newPagesPrinted.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -502,6 +562,11 @@ public class View extends javax.swing.JFrame {
 
         jMenuItem4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/invou/imagenes/monitorAdd16 .png"))); // NOI18N
         jMenuItem4.setText("Ingreso de Monitor");
+        jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem4ActionPerformed(evt);
+            }
+        });
         monitorMenu.add(jMenuItem4);
 
         jMenuItem3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/invou/imagenes/monitorDelete16.png"))); // NOI18N
@@ -515,7 +580,46 @@ public class View extends javax.swing.JFrame {
 
         jMenuBar1.add(monitorMenu);
 
-        equiposMenu.setText("Edit");
+        equiposMenu.setText("IP");
+
+        jMenuItem5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/invou/imagenes/listIp16.png"))); // NOI18N
+        jMenuItem5.setText("Listar IP");
+        jMenuItem5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem5ActionPerformed(evt);
+            }
+        });
+        equiposMenu.add(jMenuItem5);
+        equiposMenu.add(jSeparator12);
+
+        jMenuItem6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/invou/imagenes/rangeIp16.png"))); // NOI18N
+        jMenuItem6.setText("Registrar rango de ip");
+        jMenuItem6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem6ActionPerformed(evt);
+            }
+        });
+        equiposMenu.add(jMenuItem6);
+        equiposMenu.add(jSeparator11);
+
+        jMenuItem7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/invou/imagenes/reserveIp16.png"))); // NOI18N
+        jMenuItem7.setText("Reservar ip");
+        jMenuItem7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem7ActionPerformed(evt);
+            }
+        });
+        equiposMenu.add(jMenuItem7);
+
+        jMenuItem8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/invou/imagenes/liberateIp16.png"))); // NOI18N
+        jMenuItem8.setText("Liberar ip reservada");
+        jMenuItem8.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem8ActionPerformed(evt);
+            }
+        });
+        equiposMenu.add(jMenuItem8);
+
         jMenuBar1.add(equiposMenu);
 
         menu_proveedores.setText("Proveedores");
@@ -547,20 +651,19 @@ public class View extends javax.swing.JFrame {
             .addComponent(jDesktopPane1)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jToolBar2, javax.swing.GroupLayout.PREFERRED_SIZE, 756, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 125, Short.MAX_VALUE)
                 .addComponent(fieldCode, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(0, 0, 0)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jToolBar2, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(fieldCode, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jDesktopPane1)
-                .addGap(21, 21, 21))
+                .addGap(25, 25, 25))
         );
 
         pack();
@@ -579,7 +682,12 @@ public class View extends javax.swing.JFrame {
     }//GEN-LAST:event_ButtonRegresoDeReparacionActionPerformed
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
-        // TODO add your handling code here:
+        SearchIp searchIp = new SearchIp();
+        Dimension desktopSize = jDesktopPane1.getSize();
+        Dimension jInternalFrameSize = searchIp.getSize();
+        searchIp.setLocation((desktopSize.width - jInternalFrameSize.width)/2,(desktopSize.height- jInternalFrameSize.height)/2);
+        jDesktopPane1.add(searchIp);
+        searchIp.show();
     }//GEN-LAST:event_jButton6ActionPerformed
 
     private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
@@ -629,7 +737,7 @@ public class View extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void updateStockActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateStockActionPerformed
-        InterfazActualizarStock stock = new InterfazActualizarStock();
+        UpdateStockToner stock = new UpdateStockToner();
         jDesktopPane1.add(stock);
         stock.show(); 
     }//GEN-LAST:event_updateStockActionPerformed
@@ -810,6 +918,65 @@ public class View extends javax.swing.JFrame {
         changePrint.show();
     }//GEN-LAST:event_enviarImpresoraAReparacion1ActionPerformed
 
+    private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem5ActionPerformed
+        SearchIp searchIp = new SearchIp();
+        Dimension desktopSize = jDesktopPane1.getSize();
+        Dimension jInternalFrameSize = searchIp.getSize();
+        searchIp.setLocation((desktopSize.width - jInternalFrameSize.width)/2,(desktopSize.height- jInternalFrameSize.height)/2);
+        jDesktopPane1.add(searchIp);
+        searchIp.show();
+    }//GEN-LAST:event_jMenuItem5ActionPerformed
+
+    private void jMenuItem6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem6ActionPerformed
+        RegisterNewRangeIp range = new RegisterNewRangeIp();
+        Dimension desktopSize = jDesktopPane1.getSize();
+        Dimension jInternalFrameSize = range.getSize();
+        range.setLocation((desktopSize.width - jInternalFrameSize.width)/2,(desktopSize.height- jInternalFrameSize.height)/2);
+        jDesktopPane1.add(range);
+        range.show();
+    }//GEN-LAST:event_jMenuItem6ActionPerformed
+
+    private void jMenuItem7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem7ActionPerformed
+
+        ReserveIp ip = new ReserveIp(this);
+        Dimension desktopSize = jDesktopPane1.getSize();
+        Dimension jInternalFrameSize = ip.getSize();
+        ip.setLocation((desktopSize.width - jInternalFrameSize.width)/2,(desktopSize.height- jInternalFrameSize.height)/2);
+        jDesktopPane1.add(ip);
+        ip.show();
+    }//GEN-LAST:event_jMenuItem7ActionPerformed
+
+    private void jMenuItem8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem8ActionPerformed
+        ReserveIp ip = new ReserveIp(this,1);
+        Dimension desktopSize = jDesktopPane1.getSize();
+        Dimension jInternalFrameSize = ip.getSize();
+        ip.setLocation((desktopSize.width - jInternalFrameSize.width)/2,(desktopSize.height- jInternalFrameSize.height)/2);
+        jDesktopPane1.add(ip);
+        ip.show();
+    }//GEN-LAST:event_jMenuItem8ActionPerformed
+
+    private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
+
+    }//GEN-LAST:event_jMenuItem4ActionPerformed
+
+    private void updateStock1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateStock1ActionPerformed
+        PrintLabelToner toner = new PrintLabelToner();
+        Dimension desktopSize = jDesktopPane1.getSize();
+        Dimension jInternalFrameSize = toner.getSize();
+        toner.setLocation((desktopSize.width - jInternalFrameSize.width)/2,(desktopSize.height- jInternalFrameSize.height)/2);
+        jDesktopPane1.add(toner);
+        toner.show();   
+    }//GEN-LAST:event_updateStock1ActionPerformed
+
+    private void ButtonRegresoDeReparacion1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonRegresoDeReparacion1ActionPerformed
+        SearchPrinter printers = new SearchPrinter();
+        printers.show();
+    }//GEN-LAST:event_ButtonRegresoDeReparacion1ActionPerformed
+
+    
+    
+    
+    
     /**
      * @param args the command line arguments
      * @throws java.io.IOException
@@ -849,6 +1016,7 @@ public class View extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton ButtonEnviarAReparacion;
     private javax.swing.JButton ButtonRegresoDeReparacion;
+    private javax.swing.JButton ButtonRegresoDeReparacion1;
     private javax.swing.JMenuItem ListEquipmentMenu;
     private javax.swing.JMenuItem ListRepairEquipmentMenu;
     private javax.swing.JMenuItem RegisterNewMenu;
@@ -869,11 +1037,18 @@ public class View extends javax.swing.JFrame {
     private javax.swing.JButton jButton7;
     private javax.swing.JButton jButton8;
     private javax.swing.JDesktopPane jDesktopPane1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
+    private javax.swing.JMenuItem jMenuItem5;
+    private javax.swing.JMenuItem jMenuItem6;
+    private javax.swing.JMenuItem jMenuItem7;
+    private javax.swing.JMenuItem jMenuItem8;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JPopupMenu.Separator jSeparator10;
+    private javax.swing.JPopupMenu.Separator jSeparator11;
+    private javax.swing.JPopupMenu.Separator jSeparator12;
     private javax.swing.JPopupMenu.Separator jSeparator2;
     private javax.swing.JToolBar.Separator jSeparator3;
     private javax.swing.JToolBar.Separator jSeparator4;
@@ -894,13 +1069,15 @@ public class View extends javax.swing.JFrame {
     private javax.swing.JMenuItem newPagesPrinted;
     private javax.swing.JMenuItem print1;
     private javax.swing.JMenuItem printLabelMenu;
+    private javax.swing.JMenu printLabeltonnerMenu;
     private javax.swing.JMenu printerMenu;
     private javax.swing.JMenuItem registerRepairMenu;
     private javax.swing.JMenuItem registrarImpresora;
     private javax.swing.JMenuItem registrarProveedor;
     private javax.swing.JMenuItem registryTonner;
     private javax.swing.JMenuItem regresoDeReparacion;
-    private javax.swing.JMenu tonnerMenu;
     private javax.swing.JMenuItem updateStock;
+    private javax.swing.JMenuItem updateStock1;
     // End of variables declaration//GEN-END:variables
+
 }

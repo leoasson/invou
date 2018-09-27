@@ -1,10 +1,15 @@
 package invou.Views;
 
 import invou.AuxiliaryFunctions;
+import java.awt.Point;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.text.Normalizer.Form;
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 
@@ -15,10 +20,13 @@ import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 public final class SearchStockToner extends javax.swing.JFrame {
     AuxiliaryFunctions af = new AuxiliaryFunctions();
     private Object[][] tableDate; 
+    DefaultTableModel datos;
     Object[] model;
     int state=0;
     EgressToner et = new EgressToner();
     IngressToner it = new IngressToner();
+    PrintLabelToner plt = new PrintLabelToner();
+    UpdateStockToner ust = new UpdateStockToner();
     ActionListener ActionModel;
             
     public SearchStockToner()
@@ -38,32 +46,87 @@ public final class SearchStockToner extends javax.swing.JFrame {
     
     public SearchStockToner(EgressToner et)
     {
+        state = 1;
         initComponents();
         init();
         this.et = et;
-        state = 1;
         setTitle("Seleccionar codigo de toner");
     }
     
+    
     public SearchStockToner(IngressToner it)
     {
+        state = 2;
         initComponents();
         init();
         this.it = it;
-        state = 2;
+        setTitle("Seleccionar codigo de toner");
+    }
+    
+    public SearchStockToner(PrintLabelToner plt)
+    {
+        state = 3;
+        initComponents();
+        init();
+        this.plt = plt;
+        setTitle("Seleccionar codigo de toner");
+    }
+    
+    public SearchStockToner(UpdateStockToner ust)
+    {
+        state = 4;
+        initComponents();
+        init();
+        this.ust = ust;
         setTitle("Seleccionar codigo de toner");
     }
     
     
     public void init()
     {
-        //this.setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/icon/searchLessee16.png")));
+        this.setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/invou/imagenes/stock16.png")));
         this.setLocationRelativeTo(null);
         comboModel.setEnabled(false);
         completeComboModel();
         showTable();
+        jTable1.addMouseListener(new MouseAdapter() {
+        @Override
+        public void mousePressed(MouseEvent mouseEvent) {
+        JTable table =(JTable) mouseEvent.getSource();
+        Point point = mouseEvent.getPoint();
+        int rowClicked = table.rowAtPoint(point);
+        if (mouseEvent.getClickCount() == 2 && table.getSelectedRow() != -1) 
+        {
+            switch(state)
+            {
+                case 1:
+                        et.setCode((String) datos.getValueAt(rowClicked, 0));
+                        closeWindows();
+                        break;       
+                case 3:
+                        plt.setCode((String) datos.getValueAt(rowClicked, 0));
+                        closeWindows();
+                        break; 
+                case 4:
+                        ust.setCode((String) datos.getValueAt(rowClicked, 0));
+                        closeWindows();
+                        break;                         
+                        
+                default:
+                        it.setCode((String) datos.getValueAt(rowClicked, 0));
+                        closeWindows();
+                        break;
+            }
+        }
+    }
+        });
     }
     
+    
+    private void closeWindows()
+    {
+        this.dispose();
+    }
     public void filterTable()
     {
             if(boxModel.isSelected())
@@ -95,7 +158,7 @@ public final class SearchStockToner extends javax.swing.JFrame {
     public void generateTableData(Object [][] datostabla)
     {   
         String[] columnas = {"Codigo_articulo","modelo", "Descripcion", "Stock"};
-        DefaultTableModel datos = new DefaultTableModel(tableDate,columnas);
+        datos = new DefaultTableModel(tableDate,columnas);
         jTable1.setModel(datos);
         //jTable1.getColumnModel().getColumn(0).setMaxWidth(80);
         //jTable1.getColumnModel().getColumn(4).setMaxWidth(80);
@@ -234,7 +297,15 @@ public final class SearchStockToner extends javax.swing.JFrame {
                 case 1:
                         et.setCode(tableDate[row][0].toString());
                         this.dispose();
-                        break;                       
+                        break;       
+                case 3:
+                        plt.setCode(tableDate[row][0].toString());
+                        this.dispose();
+                        break; 
+                case 4:
+                        ust.setCode(tableDate[row][0].toString());
+                        this.dispose();
+                        break; 
                 default:
                         it.setCode(tableDate[row][0].toString());
                         this.dispose();

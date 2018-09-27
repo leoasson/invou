@@ -1,8 +1,0 @@
-//Print config(defalutValue: LeftBorder:40, UpBorder=40)
-PrintPath:>\\leoasson\zebra
-PrintLeftBorder:>40
-PrintUpBorder:>40
-//Data base config
-Url:>jdbc:mysql://localhost/Invou
-User:>admin
-password:>administrador

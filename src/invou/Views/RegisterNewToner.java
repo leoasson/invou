@@ -76,6 +76,7 @@ public class RegisterNewToner extends javax.swing.JInternalFrame {
         );
 
         setTitle("Registrar codigo de tonner");
+        setFrameIcon(new javax.swing.ImageIcon(getClass().getResource("/invou/imagenes/registryEditor16.png"))); // NOI18N
 
         fieldCode.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

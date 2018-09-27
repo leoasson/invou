@@ -130,10 +130,8 @@ AuxiliaryFunctions ca = new AuxiliaryFunctions();;
         searchButton = new javax.swing.JButton();
 
         setClosable(true);
-        setIconifiable(true);
-        setMaximizable(true);
-        setResizable(true);
         setTitle("Retirar tonner");
+        setFrameIcon(new javax.swing.ImageIcon(getClass().getResource("/invou/imagenes/deleteToner16.png"))); // NOI18N
 
         jInternalFrame1.setIconifiable(true);
         jInternalFrame1.setMaximizable(true);
@@ -412,7 +410,7 @@ AuxiliaryFunctions ca = new AuxiliaryFunctions();;
 
         LabelFecha.setText("Fecha");
 
-        searchButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/invou/imagenes/printerRepair28.png"))); // NOI18N
+        searchButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/invou/imagenes/searchBar.png"))); // NOI18N
         searchButton.setToolTipText("Buscar número de padrón");
         searchButton.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         searchButton.setBorderPainted(false);
@@ -443,9 +441,9 @@ AuxiliaryFunctions ca = new AuxiliaryFunctions();;
                             .addComponent(labelCodigo)
                             .addComponent(fieldCode)
                             .addComponent(dateFecha, javax.swing.GroupLayout.DEFAULT_SIZE, 160, Short.MAX_VALUE))
-                        .addGap(18, 18, 18)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(searchButton, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(33, 33, 33)
+                        .addGap(45, 45, 45)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(labelCantidad)
                             .addComponent(fieldQuantity, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -486,7 +484,7 @@ AuxiliaryFunctions ca = new AuxiliaryFunctions();;
                     .addComponent(ButtonSalir)
                     .addComponent(ButtonLimpiar)
                     .addComponent(buttonEgress))
-                .addContainerGap(15, Short.MAX_VALUE))
+                .addContainerGap(19, Short.MAX_VALUE))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
                     .addGap(0, 102, Short.MAX_VALUE)
@@ -520,8 +518,8 @@ AuxiliaryFunctions ca = new AuxiliaryFunctions();;
 
     private void fieldCodeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fieldCodeActionPerformed
      //fieldQuantity.setText("1");
-     //buttonEgress.requestFocus();
-     register();
+     buttonEgress.requestFocus();
+     //register();
              
     }//GEN-LAST:event_fieldCodeActionPerformed
 

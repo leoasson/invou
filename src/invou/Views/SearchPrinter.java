@@ -44,6 +44,7 @@ public final class SearchPrinter extends javax.swing.JFrame {
         };
         fieldState.addActionListener(ActListener);
         fieldModel.addActionListener(ActListener);
+        table.setEnabled(false);
     }
     
     public SearchPrinter(ChangePrint changePrint)
@@ -62,7 +63,7 @@ public final class SearchPrinter extends javax.swing.JFrame {
         };
         fieldState.addActionListener(ActListener);
         fieldModel.addActionListener(ActListener);
-        tableData.addMouseListener(new MouseAdapter() {
+        table.addMouseListener(new MouseAdapter() {
         @Override
         public void mousePressed(MouseEvent mouseEvent) {
         JTable table =(JTable) mouseEvent.getSource();
@@ -86,7 +87,7 @@ public final class SearchPrinter extends javax.swing.JFrame {
     {
         //this.setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/icon/searchCensus16.png")));
         this.setLocationRelativeTo(null);
-        tableData.setDefaultEditor(Object.class, null);
+        table.setDefaultEditor(Object.class, null);
         fieldModel.setEnabled(false);
         fieldState.setEnabled(false);
         fieldCode.setEnabled(false);
@@ -127,25 +128,25 @@ public final class SearchPrinter extends javax.swing.JFrame {
     {    
         String[] columnas = {"N° de serie", "N° de parte", "Modelo","Sucursal", "Piso", "Sector", "Equipo","Impresiones", "Fecha", "Estado"};
         datos = new DefaultTableModel(datostabla,columnas);
-        tableData.setModel(datos);
-        tableData.getColumnModel().getColumn(0).setPreferredWidth(80);
-        tableData.getColumnModel().getColumn(0).setMaxWidth(90);
-        tableData.getColumnModel().getColumn(1).setPreferredWidth(70);
-        tableData.getColumnModel().getColumn(1).setMaxWidth(80);
-        tableData.getColumnModel().getColumn(2).setPreferredWidth(120);
-        tableData.getColumnModel().getColumn(3).setPreferredWidth(70);
-        tableData.getColumnModel().getColumn(3).setMaxWidth(80);
-        tableData.getColumnModel().getColumn(4).setPreferredWidth(50);
-        tableData.getColumnModel().getColumn(4).setMaxWidth(60);
-        tableData.getColumnModel().getColumn(5).setPreferredWidth(70);
-        tableData.getColumnModel().getColumn(5).setMaxWidth(80);
-        tableData.getColumnModel().getColumn(6).setPreferredWidth(80);
-        tableData.getColumnModel().getColumn(6).setMaxWidth(90);
-        tableData.getColumnModel().getColumn(7).setPreferredWidth(80);
-        tableData.getColumnModel().getColumn(7).setMaxWidth(90);
-        tableData.getColumnModel().getColumn(9).setPreferredWidth(100);
-        tableData.getColumnModel().getColumn(9).setMaxWidth(110);
-        tableData.getColumnModel().getColumn(9).setCellRenderer(new StatusColumnCellRenderer());
+        table.setModel(datos);
+        table.getColumnModel().getColumn(0).setPreferredWidth(80);
+        table.getColumnModel().getColumn(0).setMaxWidth(90);
+        table.getColumnModel().getColumn(1).setPreferredWidth(70);
+        table.getColumnModel().getColumn(1).setMaxWidth(80);
+        table.getColumnModel().getColumn(2).setPreferredWidth(120);
+        table.getColumnModel().getColumn(3).setPreferredWidth(70);
+        table.getColumnModel().getColumn(3).setMaxWidth(80);
+        table.getColumnModel().getColumn(4).setPreferredWidth(50);
+        table.getColumnModel().getColumn(4).setMaxWidth(60);
+        table.getColumnModel().getColumn(5).setPreferredWidth(70);
+        table.getColumnModel().getColumn(5).setMaxWidth(80);
+        table.getColumnModel().getColumn(6).setPreferredWidth(80);
+        table.getColumnModel().getColumn(6).setMaxWidth(90);
+        table.getColumnModel().getColumn(7).setPreferredWidth(80);
+        table.getColumnModel().getColumn(7).setMaxWidth(90);
+        table.getColumnModel().getColumn(9).setPreferredWidth(100);
+        table.getColumnModel().getColumn(9).setMaxWidth(110);
+        table.getColumnModel().getColumn(9).setCellRenderer(new StatusColumnCellRenderer());
     }
     
     
@@ -199,7 +200,7 @@ public final class SearchPrinter extends javax.swing.JFrame {
         fieldState = new javax.swing.JComboBox<>();
         buttonFilter = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        tableData = new javax.swing.JTable();
+        table = new javax.swing.JTable();
         ButtonExit = new javax.swing.JButton();
         buttonAcept = new javax.swing.JButton();
         fieldCode = new javax.swing.JTextField();
@@ -251,7 +252,7 @@ public final class SearchPrinter extends javax.swing.JFrame {
             }
         });
 
-        tableData.setModel(new javax.swing.table.DefaultTableModel(
+        table.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -259,7 +260,7 @@ public final class SearchPrinter extends javax.swing.JFrame {
 
             }
         ));
-        jScrollPane1.setViewportView(tableData);
+        jScrollPane1.setViewportView(table);
 
         ButtonExit.setText("Salir");
         ButtonExit.addActionListener(new java.awt.event.ActionListener() {
@@ -395,7 +396,7 @@ public final class SearchPrinter extends javax.swing.JFrame {
     }//GEN-LAST:event_fieldStateActionPerformed
 
     private void buttonAceptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonAceptActionPerformed
-        int row = tableData.getSelectedRow();
+        int row = table.getSelectedRow();
         if(row < 0)
         {
         JOptionPane.showMessageDialog(null,"Seleccione la fila deseada."," ",JOptionPane.WARNING_MESSAGE);
@@ -440,6 +441,6 @@ public final class SearchPrinter extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JTable tableData;
+    private javax.swing.JTable table;
     // End of variables declaration//GEN-END:variables
 }

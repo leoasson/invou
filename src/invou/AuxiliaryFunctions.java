@@ -43,6 +43,12 @@ public class AuxiliaryFunctions
         return sensql.insertRow(datos, "insert into `impresora`(`id_sn`, `cod_pn`, `cod_pc`, `estado` ) values(?,?,?,?)");
     }
     
+    public boolean registerNewIp(String ip)
+    {
+        String datos[] = {ip, "DISPONIBLE"};
+        return sensql.insertRow(datos, "insert into `ip`(`ip`,`estado` ) values(?,?)");
+    }
+    
     public boolean ingressToner(String cod_articulo, String cod_proveedor,String detalle, String fecha, String cantidad)
     {
         String datos[] = {cod_articulo, cod_proveedor,detalle, fecha, cantidad};
@@ -53,6 +59,13 @@ public class AuxiliaryFunctions
     {
         String datos[] = {code, fecha, detail};
         return sensql.insertRow(datos, "insert into `reparacionpc`(`cod_pc`, `fecha`, `detalle`) values(?,?,?)");
+    }
+    
+    public boolean ingressReserveIp(String name, String ip)
+    {
+        String datos[] = {name, ip};
+        updateStateIp("RESERVADA", ip);
+        return sensql.insertRow(datos, "insert into `reservasip`(`nombrePc`, `cod_ip`) values(?,?)");
     }
     
     public boolean ingressNewEquipment(String data[])
@@ -128,14 +141,14 @@ public class AuxiliaryFunctions
     public Object [][] getIngressToner()
     {
     String[] columnas= {"id_ingresoTonner", "cod_tonner","modelo", "detalle","nombre_comercial","fecha", "cantidad"};
-    Object [][] datos = sensql.GetTable(columnas, "FROM `ingresotonner`,`proveedor`,`tonner`", "WHERE id_proveedor=cod_proveedor and id_tonner=cod_tonner");
+    Object [][] datos = sensql.GetTable(columnas, "FROM `ingresotonner`,`proveedor`,`tonner`", "WHERE id_proveedor=cod_proveedor and id_tonner=cod_tonner ORDER BY `fecha` DESC;");
     return datos;
     }
     
     public Object [][] getEgressToner()
     {
     String[] columnas= {"id_egresoTonner","cod_tonner","modelo","detalle","fecha","cantidad"};
-    Object [][] datos = sensql.GetTable(columnas, "FROM `egresotonner`,`tonner`", "WHERE cod_tonner=id_tonner");
+    Object [][] datos = sensql.GetTable(columnas, "FROM `egresotonner`,`tonner`", "WHERE cod_tonner=id_tonner ORDER BY `fecha` DESC;");
     return datos;
     }
     
@@ -150,6 +163,20 @@ public class AuxiliaryFunctions
     {
         String[] columnas= {"result.id_pc", "sucursal", "piso", "area" ,"nombrePc","usuario", "contraseña", "descripcion","ipadmin","ip"};
         Object [][] datos = sensql.GetTable(columnas, "FROM (SELECT `id_pc`,`sucursal`,`piso`,`area`,`nombrePc`,`usuario`,`contraseña`,`descripcion`,`ip` as ipadmin,`cod_ipImag` FROM `pc` LEFT JOIN `area` ON `id_area`=`cod_area` LEFT JOIN `piso` ON `id_piso`=`cod_piso` LEFT JOIN `sucursal` ON `id_sucursal`=`cod_sucursal` LEFT JOIN `ip` ON `id_ip`=`cod_ipAdm`) as `result` LEFT JOIN ip ON `id_ip`=`cod_ipImag`", "ORDER BY area, nombrePC;");
+        return datos;
+    }
+    
+//    public Object [][] getIp()
+//    {
+//        String[] columnas= {"ip", "nombrePC", "estado"};
+//        Object [][] datos = sensql.GetTable(columnas, "FROM `ip` LEFT JOIN `pc` ON `id_ip` = `cod_ipAdm` or `id_ip` = `cod_ipImag`", "Order by id_ip");
+//        return datos;
+//    }
+    
+    public Object [][] getIp()
+    {
+        String[] columnas= {"ip", "nombrePC", "estado"};
+        Object [][] datos = sensql.GetTable(columnas, "FROM (SELECT `id_ip`,`ip`,`nombrePc`,`estado` FROM `ip` LEFT JOIN `reservasip` on `id_ip`=`cod_ip` where `estado`='DISPONIBLE' UNION SELECT `id_ip`,`ip`,`nombrePc`, `estado` FROM `ip`,`pc` WHERE `id_ip` = `cod_ipAdm` or `id_ip` = `cod_ipImag` UNION SELECT `id_ip`,`ip`,`nombrePc`, `estado` FROM `ip`,`reservasip` where `id_ip` = `cod_ip` ORDER BY id_ip) as `result`", "Order by id_ip");
         return datos;
     }
     
@@ -313,11 +340,11 @@ public class AuxiliaryFunctions
         if(tabla.equals("ingresotonner"))
         {
             String[] columnas= {"id_ingresoTonner", "cod_tonner","modelo", "detalle","nombre_comercial","fecha", "cantidad"};
-            Object [][] datos = sensql.GetTable(columnas,"FROM `ingresotonner`,`proveedor`,`tonner`", "WHERE id_proveedor=cod_proveedor and cod_tonner=id_tonner;");
+            Object [][] datos = sensql.GetTable(columnas,"FROM `ingresotonner`,`proveedor`,`tonner`", "WHERE id_proveedor=cod_proveedor and cod_tonner=id_tonner ORDER BY `fecha` DESC;");
             switch(Arrays.toString(filter))
             {
                 case "[false, false, false]":
-                datos = sensql.GetTable(columnas, "FROM `ingresotonner`,`proveedor`,`tonner`" , "WHERE id_proveedor=cod_proveedor and cod_tonner=id_tonner;");
+                datos = sensql.GetTable(columnas, "FROM `ingresotonner`,`proveedor`,`tonner`" , "WHERE id_proveedor=cod_proveedor and cod_tonner=id_tonner ORDER BY `fecha` DESC;");
                 return datos;
                 case "[false, false, true]":
                 datos = sensql.GetTable(columnas, "FROM `ingresotonner`,`proveedor`,`tonner`", "WHERE id_proveedor=cod_proveedor and cod_tonner=id_tonner and YEAR(fecha) = '" +ano+ "';");
@@ -347,11 +374,11 @@ public class AuxiliaryFunctions
         else
         {
             String[] columnas= {"id_egresoTonner", "cod_tonner", "modelo", "detalle","fecha", "cantidad"};
-            Object [][] datos = sensql.GetTable(columnas, "from `egresotonner`,`tonner`", "where cod_tonner=id_tonner;");
+            Object [][] datos = sensql.GetTable(columnas, "from `egresotonner`,`tonner`", "where cod_tonner=id_tonner ORDER BY `fecha` DESC;");
             switch(Arrays.toString(filter))
             {
                 case "[false, false, false]":
-                datos = sensql.GetTable(columnas, "from `egresotonner`,`tonner`", "where cod_tonner=id_tonner;");
+                datos = sensql.GetTable(columnas, "from `egresotonner`,`tonner`", "where cod_tonner=id_tonner ORDER BY `fecha` DESC;");
                 return datos;
                 case "[false, false, true]":
                 datos = sensql.GetTable(columnas, "from `egresotonner`,`tonner`", "where cod_tonner=id_tonner and YEAR(fecha) = '" +ano+ "';");
@@ -382,9 +409,15 @@ public class AuxiliaryFunctions
     
     public boolean isIpAvailable(String id_ip)
     {
-        return sensql.existencias(id_ip, " from ip where id_ip='"+id_ip+"' and estado='LIBRE';");
+        return sensql.existencias(id_ip, " from ip where id_ip='"+id_ip+"' and estado='DISPONIBLE';");
     }
-        
+    
+    public boolean isIpReserve(String ip)
+    {
+        return sensql.existencias(ip, " from reservasip where cod_ip='"+ip+"';");
+    }
+    
+    
     public boolean existProvider( String id_prov)
     {
         return sensql.existencias(id_prov, " from proveedor where No_documento='"+id_prov+"';");
@@ -425,6 +458,15 @@ public class AuxiliaryFunctions
         return sensql.existencias(id, " from impresora where id_sn='"+id+"' and estado = '"+state+"';");
     }
          
+    public boolean existIpForRange(String ip)
+    {
+        if(sensql.existencias(ip, " from ip where ip='"+ip+"';"))
+        {
+        return true;
+        }
+        return false;
+    
+    }
     
     public boolean existIp(String ip)
     {
@@ -551,8 +593,8 @@ public class AuxiliaryFunctions
         {
             ipImage=parseIp(ipImage);
         }
-        updateStateIp("LIBRE", ipAdmin);
-        updateStateIp("LIBRE", ipImage);
+        updateStateIp("DISPONIBLE", ipAdmin);
+        updateStateIp("DISPONIBLE", ipImage);
         return sensql.deleteRow("pc", "id_pc = "+id_equipment +";");  
     }
     
@@ -562,8 +604,8 @@ public class AuxiliaryFunctions
         {
             if (sensql.insertRow(data, "insert into `pc`(`id_pc`, `nombrePc`, `usuario`, `contraseña`, `cod_ipAdm`, `cod_ipImag`, `descripcion`,`cod_area`, `cod_procesador`, `cod_motherboard`, `cod_ram`, `cod_disco`, `cod_so`) values(?,?,?,?,?,?,?,?,?,?,?,?,?)"))
             {
-                updateStateIp("USADA", data[4]);
-                updateStateIp("USADA", data[5]);
+                updateStateIp("EN USO", data[4]);
+                updateStateIp("EN USO", data[5]);
                 return true;
             }
             else
@@ -619,17 +661,7 @@ public class AuxiliaryFunctions
     {
         return sensql.modifiedRow("ip", "estado", state, "id_ip = '"+ id +"'");
     }
-    
-    public boolean updateStateIpAdmin(String state,String id_ipAdm)
-    {
-        return sensql.modifiedRow("ipadm", "estado", state, "id_ipAdm = '"+ id_ipAdm +"'");
-    }
-    
-    public boolean updateStateIpImage(String state,String id_ipImage)
-    {
-        return sensql.modifiedRow("ipimage", "estado", state, "id_ipImag = '"+ id_ipImage +"'");
-    }
-     
+         
     public boolean updateDateOfReturnPrinter(String date, String idRepair)
     {
         return sensql.modifiedRow("reparacion", "fechaRetorno", date, "id_reparacion = '"+idRepair+"'");
