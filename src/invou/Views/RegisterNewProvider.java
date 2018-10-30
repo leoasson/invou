@@ -17,7 +17,7 @@ AuxiliaryFunctions af = new AuxiliaryFunctions();
         limpiar();
         bloquear_cajas();
         
-        Object[] ciudad = af.combox("ciudad","id_ciudad");
+        Object[] ciudad = af.combox("ciudad","nombre_ciudad");
         ciudad_combo.removeAllItems();
         for(int i=0;i<ciudad.length;i++){
         ciudad_combo.addItem(ciudad[i]);
@@ -80,6 +80,7 @@ AuxiliaryFunctions af = new AuxiliaryFunctions();
         setMaximizable(true);
         setResizable(true);
         setTitle("Registrar proveedor");
+        setFrameIcon(new javax.swing.ImageIcon(getClass().getResource("/invou/imagenes/provider16.png"))); // NOI18N
 
         jInternalFrame1.setIconifiable(true);
         jInternalFrame1.setMaximizable(true);
@@ -382,6 +383,11 @@ AuxiliaryFunctions af = new AuxiliaryFunctions();
         jLabel20.setText("Telefono");
 
         ciudad_combo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        ciudad_combo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ciudad_comboActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -399,13 +405,13 @@ AuxiliaryFunctions af = new AuxiliaryFunctions();
                             .addComponent(label_id_prov))
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(42, 42, 42)
+                        .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(nuevoregjButton7, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(29, 29, 29)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(regproveedorjButton9)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(cancelprovjButton8)
-                        .addGap(27, 27, 27)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(salirprovjButton7)
                         .addContainerGap())
                     .addGroup(layout.createSequentialGroup()
@@ -538,7 +544,7 @@ public void limpiar()
         id = id_proveedor.getText();
         nombre = nomcomercialjTextField10.getText(); 
         dir = dirproveedorjTextField9.getText();
-        ciu = ciudad_combo.getSelectedItem().toString();
+        ciu = af.parseCity(ciudad_combo.getSelectedItem().toString());
         tel = telefonoprovjTextField9.getText();
         
         System.out.println(nombre);
@@ -585,6 +591,10 @@ public void limpiar()
     private void telefonoprovjTextField9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_telefonoprovjTextField9ActionPerformed
    telefonoprovjTextField9.transferFocus();
     }//GEN-LAST:event_telefonoprovjTextField9ActionPerformed
+
+    private void ciudad_comboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ciudad_comboActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_ciudad_comboActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cancelprovjButton8;

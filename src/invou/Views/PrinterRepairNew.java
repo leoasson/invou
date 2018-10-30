@@ -104,6 +104,7 @@ String serialNumber;
         fieldDate = new com.toedter.calendar.JDateChooser();
 
         setTitle("Enviar impresora a reparación");
+        setFrameIcon(new javax.swing.ImageIcon(getClass().getResource("/invou/imagenes/repairPrint16.png"))); // NOI18N
 
         labelCodigo.setText("Codigo");
 

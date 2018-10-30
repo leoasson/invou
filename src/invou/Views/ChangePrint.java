@@ -25,6 +25,12 @@ View view;
     
     public void setSerialNumber(String serialNumber)
     {
+        if(!af.existPrintCode(serialNumber,"DISPONIBLE"))
+        {
+            JOptionPane.showMessageDialog(null,"La impresora seleccionada esta en uso o se encuentra en reparación.");
+            fieldCode.requestFocus();
+            return;
+        }
         fieldCode.setText(serialNumber);
     }
     
@@ -47,13 +53,14 @@ View view;
         labelCantidad = new javax.swing.JLabel();
         searchButton = new javax.swing.JButton();
         searchButton3 = new javax.swing.JButton();
-        jLabel13 = new javax.swing.JLabel();
+        searchButton4 = new javax.swing.JButton();
 
         setClosable(true);
         setIconifiable(true);
         setMaximizable(true);
         setResizable(true);
         setTitle("Cambio de impresora");
+        setFrameIcon(new javax.swing.ImageIcon(getClass().getResource("/invou/imagenes/changePrint16.png"))); // NOI18N
 
         labelCodigo.setText("S/N Impresora disponible");
 
@@ -103,8 +110,8 @@ View view;
             }
         });
 
-        searchButton3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/invou/imagenes/searchPc-28.png"))); // NOI18N
-        searchButton3.setToolTipText("Buscar equipo");
+        searchButton3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/invou/imagenes/help16.png"))); // NOI18N
+        searchButton3.setToolTipText("Ayuda");
         searchButton3.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         searchButton3.setBorderPainted(false);
         searchButton3.setContentAreaFilled(false);
@@ -116,7 +123,18 @@ View view;
             }
         });
 
-        jLabel13.setText("* Seleccione el numero de serie de la impresora a intalar, junto con el id del equipo vinculado");
+        searchButton4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/invou/imagenes/searchPc-28.png"))); // NOI18N
+        searchButton4.setToolTipText("Buscar equipo");
+        searchButton4.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        searchButton4.setBorderPainted(false);
+        searchButton4.setContentAreaFilled(false);
+        searchButton4.setFocusable(false);
+        searchButton4.setRequestFocusEnabled(false);
+        searchButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                searchButton4ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -126,7 +144,8 @@ View view;
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(searchButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(buttonChange)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(ButtonLimpiar)
@@ -135,50 +154,47 @@ View view;
                         .addGap(31, 31, 31))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(labelCodigo)
+                            .addComponent(fieldCode, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(searchButton, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(48, 48, 48)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(labelCantidad)
                             .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(labelCodigo)
-                                    .addComponent(fieldCode, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(searchButton, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(48, 48, 48)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(labelCantidad)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(fieldIdEquipment, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(searchButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                            .addComponent(jLabel13))
-                        .addGap(0, 11, Short.MAX_VALUE))))
+                                .addComponent(fieldIdEquipment, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(searchButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addContainerGap(19, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(25, Short.MAX_VALUE)
+                .addContainerGap(29, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                            .addComponent(searchButton3)
-                            .addGap(41, 41, 41))
-                        .addGroup(layout.createSequentialGroup()
-                            .addComponent(labelCantidad)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                            .addComponent(fieldIdEquipment, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(41, 41, 41))
                         .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                             .addComponent(labelCodigo)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(fieldCode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(46, 46, 46)))
+                            .addGap(78, 78, 78))
+                        .addGroup(layout.createSequentialGroup()
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addComponent(searchButton4)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(labelCantidad)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(fieldIdEquipment, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGap(5, 5, 5)))
+                            .addGap(73, 73, 73)))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(searchButton, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(32, 32, 32)))
-                .addComponent(jLabel13)
-                .addGap(18, 18, 18)
+                        .addGap(64, 64, 64)))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(buttonChange)
                     .addComponent(ButtonLimpiar)
-                    .addComponent(ButtonSalir))
+                    .addComponent(ButtonSalir)
+                    .addComponent(searchButton3))
                 .addContainerGap())
         );
 
@@ -205,7 +221,7 @@ View view;
         }
         if(!af.existPrintCode(serialNumber,"DISPONIBLE"))
         {
-            JOptionPane.showMessageDialog(null,"La impresora seleccionada no se encuentra disponible.");
+            JOptionPane.showMessageDialog(null,"La impresora seleccionada esta en uso o se encuentra en reparación.");
             return;
         }
         
@@ -260,8 +276,24 @@ View view;
     }//GEN-LAST:event_searchButtonActionPerformed
 
     private void searchButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchButton3ActionPerformed
-        view.addSearchEquipment(this);
+      JOptionPane.showMessageDialog(null,""
+              + "Para realizar el cambio de una impresora se debera:\n"
+              + "Escanear el  s/n de la  impresora  disponible\n"
+              + "o bien buscarla a travez del buscador.\n"
+              + "Una vez indicada la impresora,  lo siguiente \n"
+              + "consiste en seleccionar el equipo de destino.\n"
+              + "Por ultimo se debe presionar el botón cambiar.\n\n"
+              + "En caso que el equipo seleccionado cuente con\n"
+              + "impresora, se mostrará la opción de enviarla \n"
+              + "a reparación si fuera necesario.\n"
+              + "Si se opta por no enviarla a reparación, dicha\n"
+              + "impresora  queda  en  estado  DISPONIBLE para \n"
+              + "volver a ser utilizada.");  
     }//GEN-LAST:event_searchButton3ActionPerformed
+
+    private void searchButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchButton4ActionPerformed
+        view.addSearchEquipment(this);
+    }//GEN-LAST:event_searchButton4ActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton ButtonLimpiar;
@@ -269,10 +301,10 @@ View view;
     private javax.swing.JButton buttonChange;
     private javax.swing.JTextField fieldCode;
     private javax.swing.JTextField fieldIdEquipment;
-    private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel labelCantidad;
     private javax.swing.JLabel labelCodigo;
     private javax.swing.JButton searchButton;
     private javax.swing.JButton searchButton3;
+    private javax.swing.JButton searchButton4;
     // End of variables declaration//GEN-END:variables
 }

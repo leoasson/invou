@@ -128,6 +128,7 @@ AuxiliaryFunctions af = new AuxiliaryFunctions();
         setMaximizable(true);
         setResizable(true);
         setTitle("Ingreso de impresora reparada");
+        setFrameIcon(new javax.swing.ImageIcon(getClass().getResource("/invou/imagenes/printerOk16.png"))); // NOI18N
 
         jInternalFrame1.setIconifiable(true);
         jInternalFrame1.setMaximizable(true);

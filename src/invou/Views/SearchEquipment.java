@@ -1,7 +1,9 @@
 package invou.Views;
 
 import invou.AuxiliaryFunctions;
+import invou.EquipmentReportXLS;
 import invou.PrintLabel;
+import invou.SaveExcelFile;
 import invou.SentencesSql;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
@@ -9,6 +11,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -20,292 +23,115 @@ import javax.swing.table.DefaultTableModel;
  * @author leoasson
  */
 public final class SearchEquipment extends javax.swing.JInternalFrame {
-    AuxiliaryFunctions af;
-    SentencesSql sensql;
+    AuxiliaryFunctions af = new AuxiliaryFunctions();
+    SentencesSql sensql = new SentencesSql();
     private Object[][] tableDate; 
     private View view;
     private ModifyEquipment modifyEquipment;
     RegisterEquipmentRepair registerEquipmentRepair;
     RegisterNewPrint registerNewPrint;
+    ChangeEquipment changeEquipment;
     ChangePrint changePrint;
     PrintReport printReport;
     Object[] channel;
     Object[] name;
-    int state = 0;
+    int state = 0, equipment;
     DefaultTableModel datos;
     ActionListener ActionBranch;
     ActionListener ActionFloor;
-    
-    public SearchEquipment()
-    {
-        this.af = new AuxiliaryFunctions();
-        this.sensql = new SentencesSql();
-        initComponents();
-        init();
-        labelInfo.setVisible(false);
-        buttonAcept.setEnabled(true);
-        state = 2;
-        this.ActionFloor = (ActionEvent ae) -> {
-            filterTable();
-        };
-        this.ActionBranch = (ActionEvent ae) -> {
-            if(comboBranch.getSelectedItem()!= null)
-            {
-                String idBranch = af.parseBranch(comboBranch.getSelectedItem().toString());
-                completeComboFloor("`cod_sucursal` = '"+idBranch+"'");
-                comboFloor.setEnabled(true);
-                filterTable();
-            }
-        };
-        comboBranch.addActionListener(ActionBranch);
-        comboFloor.addActionListener(ActionFloor);
-    }
-    
+       
     public SearchEquipment(View view)
     {
-        this.af = new AuxiliaryFunctions();
-        this.sensql = new SentencesSql();
+        state = 0;
         this.view = view;
         initComponents();
         init();
         buttonAcept.setVisible(false);
         labelInfo.setVisible(true);
-        this.ActionFloor = (ActionEvent ae) -> {
-            filterTable();
-        };
-        this.ActionBranch = (ActionEvent ae) -> {
-            if(comboBranch.getSelectedItem()!= null)
-            {
-                String idBranch = af.parseBranch(comboBranch.getSelectedItem().toString());
-                completeComboFloor("`cod_sucursal` = '"+idBranch+"'");
-                comboFloor.setEnabled(true);
-                filterTable();
-            }
-        };
-        comboBranch.addActionListener(ActionBranch);
-        comboFloor.addActionListener(ActionFloor);
-        tableData.addMouseListener(new MouseAdapter() {
-        @Override
-        public void mousePressed(MouseEvent mouseEvent) {
-        JTable table =(JTable) mouseEvent.getSource();
-        Point point = mouseEvent.getPoint();
-        int rowClicked = table.rowAtPoint(point);
-        if (mouseEvent.getClickCount() == 2 && table.getSelectedRow() != -1) 
-        {
-            modifyEquipmentInView((String) datos.getValueAt(rowClicked, 0));
-        }
-    }
-});
     }   
-    
-    public SearchEquipment(ModifyEquipment modifyEquipment)
-    {
-        this.af = new AuxiliaryFunctions();
-        this.sensql = new SentencesSql();
-        this.modifyEquipment = modifyEquipment;
-        initComponents();
-        state=3;
-        buttonAcept.setLabel("Seleccionar");
-        init();
-        labelInfo.setVisible(false);
-        buttonAcept.setEnabled(true);
-        this.ActionFloor = (ActionEvent ae) -> {
-            filterTable();
-        };
-        this.ActionBranch = (ActionEvent ae) -> {
-            if(comboBranch.getSelectedItem()!= null)
-            {
-                String idBranch = af.parseBranch(comboBranch.getSelectedItem().toString());
-                completeComboFloor("`cod_sucursal` = '"+idBranch+"'");
-                comboFloor.setEnabled(true);
-                filterTable();
-            }
-        };
-        comboBranch.addActionListener(ActionBranch);
-        comboFloor.addActionListener(ActionFloor);
-        tableData.addMouseListener(new MouseAdapter() {
-        @Override
-        public void mousePressed(MouseEvent mouseEvent) {
-        JTable table =(JTable) mouseEvent.getSource();
-        Point point = mouseEvent.getPoint();
-        int rowClicked = table.rowAtPoint(point);
-        if (mouseEvent.getClickCount() == 2 && table.getSelectedRow() != -1) 
-        {
-            modifyEquipment.setIdEquipment((String) datos.getValueAt(rowClicked, 0));
-            closeWindows();
-        }
-    }
-        });
-    }  
     
     public SearchEquipment(ChangePrint changePrint)
     {
-        this.af = new AuxiliaryFunctions();
-        this.sensql = new SentencesSql();
+        state=1;
         this.changePrint = changePrint;
         initComponents();
         init();
-        state=1;
-        labelInfo.setVisible(false);
-        buttonAcept.setEnabled(true);
-        buttonAcept.setLabel("Seleccionar");
-        this.ActionFloor = (ActionEvent ae) -> {
-            filterTable();
-        };
-        this.ActionBranch = (ActionEvent ae) -> {
-            if(comboBranch.getSelectedItem()!= null)
-            {
-                String idBranch = af.parseBranch(comboBranch.getSelectedItem().toString());
-                completeComboFloor("`cod_sucursal` = '"+idBranch+"'");
-                comboFloor.setEnabled(true);
-                filterTable();
-            }
-        };
-        comboBranch.addActionListener(ActionBranch);
-        comboFloor.addActionListener(ActionFloor);
-        tableData.addMouseListener(new MouseAdapter() {
-        @Override
-        public void mousePressed(MouseEvent mouseEvent) {
-        JTable table =(JTable) mouseEvent.getSource();
-        Point point = mouseEvent.getPoint();
-        int rowClicked = table.rowAtPoint(point);
-        if (mouseEvent.getClickCount() == 2 && table.getSelectedRow() != -1) 
-        {
-            changePrint.setIdEquipment((String) datos.getValueAt(rowClicked, 0));
-            closeWindows();
-        }
-    }
-        });
+        setSelecButton();
+        buttonGenerate.setVisible(false);
     } 
     
+    public SearchEquipment()
+    {
+        state = 2;
+        initComponents();
+        init();
+        labelInfo.setVisible(false);
+        buttonAcept.setEnabled(true);
+
+    }    
+    
+    public SearchEquipment(ModifyEquipment modifyEquipment)
+    {
+        state=3;        
+        this.modifyEquipment = modifyEquipment;
+        initComponents();
+        init();
+        setSelecButton();
+        buttonGenerate.setVisible(false);
+    }  
+        
     public SearchEquipment(PrintReport printReport)
     {
-        this.af = new AuxiliaryFunctions();
-        this.sensql = new SentencesSql();
+        state=4;
         this.printReport = printReport;
         initComponents();
         init();
-        state=4;
-        buttonAcept.setLabel("Seleccionar");
-        labelInfo.setVisible(false);
-        buttonAcept.setEnabled(true);
-        this.ActionFloor = (ActionEvent ae) -> {
-            filterTable();
-        };
-        this.ActionBranch = (ActionEvent ae) -> {
-            if(comboBranch.getSelectedItem()!= null)
-            {
-                String idBranch = af.parseBranch(comboBranch.getSelectedItem().toString());
-                completeComboFloor("`cod_sucursal` = '"+idBranch+"'");
-                comboFloor.setEnabled(true);
-                filterTable();
-            }
-        };
-        comboBranch.addActionListener(ActionBranch);
-        comboFloor.addActionListener(ActionFloor);
-        tableData.addMouseListener(new MouseAdapter() {
-        @Override
-        public void mousePressed(MouseEvent mouseEvent) {
-        JTable table =(JTable) mouseEvent.getSource();
-        Point point = mouseEvent.getPoint();
-        int rowClicked = table.rowAtPoint(point);
-        if (mouseEvent.getClickCount() == 2 && table.getSelectedRow() != -1) 
-        {
-            printReport.setIdEquipment((String) datos.getValueAt(rowClicked, 0));
-            closeWindows();
-        }
-    }
-        });
+        setSelecButton();
+        buttonGenerate.setVisible(false);        
     }  
-        
-    public SearchEquipment(RegisterNewPrint registerNewPrint)
-    {
-        this.af = new AuxiliaryFunctions();
-        this.sensql = new SentencesSql();
-        this.registerNewPrint = registerNewPrint;
-        initComponents();
-        init();
-        state=6;
-        buttonAcept.setLabel("Seleccionar");
-        labelInfo.setVisible(false);
-        buttonAcept.setEnabled(true);
-        this.ActionFloor = (ActionEvent ae) -> {
-            filterTable();
-        };
-        this.ActionBranch = (ActionEvent ae) -> {
-            if(comboBranch.getSelectedItem()!= null)
-            {
-                String idBranch = af.parseBranch(comboBranch.getSelectedItem().toString());
-                completeComboFloor("`cod_sucursal` = '"+idBranch+"'");
-                comboFloor.setEnabled(true);
-                filterTable();
-            }
-        };
-        comboBranch.addActionListener(ActionBranch);
-        comboFloor.addActionListener(ActionFloor);
-        tableData.addMouseListener(new MouseAdapter() {
-        @Override
-        public void mousePressed(MouseEvent mouseEvent) {
-        JTable table =(JTable) mouseEvent.getSource();
-        Point point = mouseEvent.getPoint();
-        int rowClicked = table.rowAtPoint(point);
-        if (mouseEvent.getClickCount() == 2 && table.getSelectedRow() != -1) 
-        {
-            registerNewPrint.setIdEquipment((String) datos.getValueAt(rowClicked, 0));
-            closeWindows();
-        }
-    }
-        });
-    }      
     
     public SearchEquipment(RegisterEquipmentRepair registerEquipmentRepair)
     {
-        this.af = new AuxiliaryFunctions();
-        this.sensql = new SentencesSql();
+        state=5;        
         this.registerEquipmentRepair = registerEquipmentRepair;
         initComponents();
         init();
-        state=5;
-        buttonAcept.setLabel("Seleccionar");
-        labelInfo.setVisible(false);
-        buttonAcept.setEnabled(true);
-        this.ActionFloor = (ActionEvent ae) -> {
-            filterTable();
-        };
-        this.ActionBranch = (ActionEvent ae) -> {
-            if(comboBranch.getSelectedItem()!= null)
-            {
-                String idBranch = af.parseBranch(comboBranch.getSelectedItem().toString());
-                completeComboFloor("`cod_sucursal` = '"+idBranch+"'");
-                comboFloor.setEnabled(true);
-                filterTable();
-            }
-        };
-        comboBranch.addActionListener(ActionBranch);
-        comboFloor.addActionListener(ActionFloor);
-        tableData.addMouseListener(new MouseAdapter() {
-        @Override
-        public void mousePressed(MouseEvent mouseEvent) {
-        JTable table =(JTable) mouseEvent.getSource();
-        Point point = mouseEvent.getPoint();
-        int rowClicked = table.rowAtPoint(point);
-        if (mouseEvent.getClickCount() == 2 && table.getSelectedRow() != -1) 
-        {
-            registerEquipmentRepair.setIdEquipment((String) datos.getValueAt(rowClicked, 0));
-            closeWindows();
-        }
-    }
-        });
+        setSelecButton();
+        buttonGenerate.setVisible(false);
+    }    
+    
+    public SearchEquipment(RegisterNewPrint registerNewPrint)
+    {
+        state=6;
+        this.registerNewPrint = registerNewPrint;
+        initComponents();
+        init();
+        setSelecButton();
+        buttonGenerate.setVisible(false);
+    }      
+    
+    public SearchEquipment(ChangeEquipment changeEquipment, int equipment)
+    {
+        state=7;
+        this.equipment=equipment;
+        this.changeEquipment = changeEquipment;
+        initComponents();
+        init();
+        setSelecButton();
+        buttonGenerate.setVisible(false);
     }  
+
     
     private void closeWindows()
     {
         this.dispose();
     }
+    
     private void modifyEquipmentInView(String Id_equipment)
     {
         view.addModifyEquipment(this, Id_equipment);
     }
+    
     private void init()
     {
         tableData.setDefaultEditor(Object.class, null);
@@ -316,8 +142,100 @@ public final class SearchEquipment extends javax.swing.JInternalFrame {
         fieldIp.setEnabled(false);
         completeComboBranch();
         showTable();
+        
+        this.ActionFloor = (ActionEvent ae) -> {
+            filterTable();
+        };
+        this.ActionBranch = (ActionEvent ae) -> {
+            if(comboBranch.getSelectedItem()!= null)
+            {
+                String idBranch = af.parseBranch(comboBranch.getSelectedItem().toString());
+                completeComboFloor("`cod_sucursal` = '"+idBranch+"'");
+                comboFloor.setEnabled(true);
+                filterTable();
+            }
+        };
+        comboBranch.addActionListener(ActionBranch);
+        comboFloor.addActionListener(ActionFloor);
+        
+        tableData.addMouseListener(new MouseAdapter() {
+        @Override
+        public void mousePressed(MouseEvent mouseEvent) {
+        JTable table =(JTable) mouseEvent.getSource();
+        Point point = mouseEvent.getPoint();
+        int rowClicked = table.rowAtPoint(point);
+        if (mouseEvent.getClickCount() == 2 && table.getSelectedRow() != -1) 
+        {
+            
+            switch(state)
+                {
+                case 0:
+                    modifyEquipmentInView((String) datos.getValueAt(rowClicked, 0));
+                break;
+                case 1:
+                changePrint.setIdEquipment((String) datos.getValueAt(rowClicked, 0));
+                closeWindows();
+                break;
+                
+                case 2:
+                String id_equipment = ((String) datos.getValueAt(rowClicked, 0));
+                String name_ = sensql.getData("nombrePc", "select nombrePc from pc where id_pc='"+id_equipment+"';"); 
+                String ipAdmin_ = sensql.getData("ip", "select ip from pc LEFT JOIN `ip` ON `id_ip` = `cod_ipAdm` where id_pc='"+id_equipment+"';");
+                String ipImage_ = sensql.getData("ip", "select ip from pc LEFT JOIN `ip` ON `id_ip` = `cod_ipImag` where id_pc='"+id_equipment+"';");
+                PrintLabel printLabel = new PrintLabel(name_, ipAdmin_, ipImage_, id_equipment);
+                
+                try
+                {
+                    printLabel.printLabel();
+                } 
+                catch (IOException ex) {Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);}
+                break;
+                                case 3:
+                modifyEquipment.setIdEquipment((String) datos.getValueAt(rowClicked, 0));
+                closeWindows();
+                break;
+                
+                case 4:
+                printReport.setIdEquipment((String) datos.getValueAt(rowClicked, 0));
+                closeWindows();
+                break;
+                
+                case 5:
+                registerEquipmentRepair.setIdEquipment((String) datos.getValueAt(rowClicked, 0));
+                closeWindows();
+                break;
+                
+                case 6:
+                registerNewPrint.setIdEquipment((String) datos.getValueAt(rowClicked, 0));
+                closeWindows();
+                break;
+                
+                case 7:
+                    if (equipment==1)
+                        changeEquipment.setIdEquipmentFree((String) datos.getValueAt(rowClicked, 0));
+                    else
+                        changeEquipment.setIdEquipmentBusy((String) datos.getValueAt(rowClicked, 0));
+                    closeWindows();
+                    break;
+                    
+                default:
+                    break;
+            }
+        }
+    }
+        });
+            
+        
+        
+        
     }
     
+    private void setSelecButton()
+    {
+        buttonAcept.setLabel("Seleccionar");
+        labelInfo.setVisible(false);
+        buttonAcept.setEnabled(true);
+    }
     private void clean()
     {
         fieldCode.setText("");
@@ -363,16 +281,16 @@ public final class SearchEquipment extends javax.swing.JInternalFrame {
         tableData.setModel(datos);
         tableData.getColumnModel().getColumn(0).setPreferredWidth(45);
         tableData.getColumnModel().getColumn(0).setMaxWidth(50);
-        tableData.getColumnModel().getColumn(1).setPreferredWidth(70);
-        tableData.getColumnModel().getColumn(1).setMaxWidth(80);
-        tableData.getColumnModel().getColumn(2).setPreferredWidth(70);
-        tableData.getColumnModel().getColumn(2).setMaxWidth(80);
-        tableData.getColumnModel().getColumn(3).setPreferredWidth(60);
+        tableData.getColumnModel().getColumn(1).setPreferredWidth(80);
+        tableData.getColumnModel().getColumn(1).setMaxWidth(90);
+        tableData.getColumnModel().getColumn(2).setPreferredWidth(40);
+        tableData.getColumnModel().getColumn(2).setMaxWidth(50);
+        tableData.getColumnModel().getColumn(3).setPreferredWidth(100);
         tableData.getColumnModel().getColumn(3).setMaxWidth(110);
         tableData.getColumnModel().getColumn(4).setPreferredWidth(90);
         tableData.getColumnModel().getColumn(4).setMaxWidth(150);
         tableData.getColumnModel().getColumn(5).setPreferredWidth(70);
-        tableData.getColumnModel().getColumn(5).setMaxWidth(80);
+        tableData.getColumnModel().getColumn(5).setMaxWidth(100);
         tableData.getColumnModel().getColumn(6).setPreferredWidth(70);
         tableData.getColumnModel().getColumn(6).setMaxWidth(80);
         tableData.getColumnModel().getColumn(7).setPreferredWidth(80);
@@ -421,9 +339,11 @@ public final class SearchEquipment extends javax.swing.JInternalFrame {
         fieldIp = new javax.swing.JTextField();
         boxIp = new javax.swing.JCheckBox();
         labelInfo = new javax.swing.JLabel();
+        buttonGenerate = new javax.swing.JButton();
 
         setClosable(true);
         setTitle("Equipamiento");
+        setFrameIcon(new javax.swing.ImageIcon(getClass().getResource("/invou/imagenes/searchPc-16.png"))); // NOI18N
 
         boxBranch.setText("Sucursal");
         boxBranch.addActionListener(new java.awt.event.ActionListener() {
@@ -507,6 +427,13 @@ public final class SearchEquipment extends javax.swing.JInternalFrame {
 
         labelInfo.setText("* Haciendo doble click sobre un elemento puede ampliar detalles del equipo.");
 
+        buttonGenerate.setText("Generar Excel");
+        buttonGenerate.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonGenerateActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -529,6 +456,8 @@ public final class SearchEquipment extends javax.swing.JInternalFrame {
                 .addGap(28, 28, 28)
                 .addComponent(labelInfo)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(buttonGenerate)
+                .addGap(18, 18, 18)
                 .addComponent(buttonAcept)
                 .addGap(18, 18, 18)
                 .addComponent(ButtonExit)
@@ -565,7 +494,8 @@ public final class SearchEquipment extends javax.swing.JInternalFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 366, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(buttonAcept)
-                            .addComponent(ButtonExit)))
+                            .addComponent(ButtonExit)
+                            .addComponent(buttonGenerate)))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(labelInfo)))
@@ -650,39 +580,47 @@ public final class SearchEquipment extends javax.swing.JInternalFrame {
             switch(state)
             {
                 case 1:
-                changePrint.setIdEquipment(tableDate[row][0].toString());
-                this.dispose();
-                break;
+                    changePrint.setIdEquipment(tableDate[row][0].toString());
+                    this.dispose();
+                    break;
                 
                 case 2:
-                String id_equipment = tableDate[row][0].toString();
-                String name_ = sensql.getData("nombrePc", "select nombrePc from pc where id_pc='"+id_equipment+"';"); 
-                String ipAdmin_ = sensql.getData("ip", "select ip from pc LEFT JOIN `ip` ON `id_ip` = `cod_ipAdm` where id_pc='"+id_equipment+"';");
-                String ipImage_ = sensql.getData("ip", "select ip from pc LEFT JOIN `ip` ON `id_ip` = `cod_ipImag` where id_pc='"+id_equipment+"';");
-                PrintLabel printLabel = new PrintLabel(name_, ipAdmin_, ipImage_, id_equipment);
-                
-                try
-                {
-                    printLabel.printLabel();
-                } 
-                catch (IOException ex) {Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);}
-                break;
-                                case 3:
-                modifyEquipment.setIdEquipment(tableDate[row][0].toString());
-                this.dispose();
-                break;
-                                case 4:
-                printReport.setIdEquipment(tableDate[row][0].toString());
-                this.dispose();
-                break;
-                                case 5:
-                registerEquipmentRepair.setIdEquipment(tableDate[row][0].toString());
-                this.dispose();
-                break;
-                                case 6:
-                registerNewPrint.setIdEquipment(tableDate[row][0].toString());
-                this.dispose();
-                break;
+                    String id_equipment = tableDate[row][0].toString();
+                    String name_ = sensql.getData("nombrePc", "select nombrePc from pc where id_pc='"+id_equipment+"';"); 
+                    String ipAdmin_ = sensql.getData("ip", "select ip from pc LEFT JOIN `ip` ON `id_ip` = `cod_ipAdm` where id_pc='"+id_equipment+"';");
+                    String ipImage_ = sensql.getData("ip", "select ip from pc LEFT JOIN `ip` ON `id_ip` = `cod_ipImag` where id_pc='"+id_equipment+"';");
+                    PrintLabel printLabel = new PrintLabel(name_, ipAdmin_, ipImage_, id_equipment);
+                    try
+                    {
+                        printLabel.printLabel();
+                    } 
+                    catch (IOException ex) {Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);}
+                    break;
+                case 3:
+                    modifyEquipment.setIdEquipment(tableDate[row][0].toString());
+                    this.dispose();
+                    break;
+                case 4:
+                    printReport.setIdEquipment(tableDate[row][0].toString());
+                    this.dispose();
+                    break;
+                case 5:
+                    registerEquipmentRepair.setIdEquipment(tableDate[row][0].toString());
+                    this.dispose();
+                    break;
+                case 6:
+                    registerNewPrint.setIdEquipment(tableDate[row][0].toString());
+                    this.dispose();
+                    break;
+                case 7:
+                    if (equipment==1)
+                        changeEquipment.setIdEquipmentFree(tableDate[row][0].toString());
+                    else
+                        changeEquipment.setIdEquipmentBusy(tableDate[row][0].toString());
+                    this.dispose();
+                    break;
+                default:
+                    break;
             }     
     }//GEN-LAST:event_buttonAceptActionPerformed
 
@@ -707,6 +645,8 @@ public final class SearchEquipment extends javax.swing.JInternalFrame {
         {
             boxFloor.setEnabled(false);
             boxFloor.setSelected(false);
+            comboBranch.setEnabled(false);
+            comboFloor.setEnabled(false);
             boxCode.setEnabled(true);
             boxIp.setEnabled(true);
             filterTable();
@@ -740,6 +680,33 @@ public final class SearchEquipment extends javax.swing.JInternalFrame {
         filterTable();
     }//GEN-LAST:event_fieldIpActionPerformed
 
+    private void buttonGenerateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonGenerateActionPerformed
+        SaveExcelFile file = new SaveExcelFile("Equipamiento al "+af.getActualDateString());
+        String[] column = {"Id del equipo", "Sucursal      ","Piso", "Sector       ", "Nombre del equipo", "Usuario    ", "Contraseña   ", "Descripcion                        ", "Ip administrativa", "Ip de imagen      ", "Procesador","Memoria RAM","Almacenamiento","Sistema Operativo", "Fabricante PM", "Modelo Motherboard"};
+        
+        ArrayList<Object[][]> list = new ArrayList<Object[][]>();
+
+        list.add(af.getEquipmentOfFloor("sucursal = 'central' and piso = '2° SS'"));
+        list.add(af.getEquipmentOfFloor("sucursal = 'central' and piso = '1° SS'"));
+        list.add(af.getEquipmentOfFloor("sucursal = 'central' and piso = 'PB'"));
+        list.add(af.getEquipmentOfFloor("sucursal = 'central' piso = '1° P'"));
+        list.add(af.getEquipmentOfFloor("sucursal = 'central' piso = '2° P'"));
+        list.add(af.getEquipmentOfFloor("sucursal = 'central' piso = '3° P'"));
+        list.add(af.getEquipmentOfFloor("sucursal = 'central' piso = '4° P'"));
+        list.add(af.getEquipmentOfFloor("sucursal = 'central' piso = '5° P'"));
+        list.add(af.getEquipmentOfFloor("sucursal = 'central' piso = '6° P'"));
+        list.add(af.getEquipmentOfFloor("sucursal != 'central'"));
+        
+        EquipmentReportXLS xls = new EquipmentReportXLS(list, column, "Inventario equipamiento al " + af.getActualDateString());
+        
+        
+        String route = file.getRoute();
+        if(route != null)
+        {
+                xls.generates(route);
+        }        // TODO add your handling code here:
+    }//GEN-LAST:event_buttonGenerateActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton ButtonExit;
     private javax.swing.JCheckBox boxBranch;
@@ -747,6 +714,7 @@ public final class SearchEquipment extends javax.swing.JInternalFrame {
     private javax.swing.JCheckBox boxFloor;
     private javax.swing.JCheckBox boxIp;
     private javax.swing.JButton buttonAcept;
+    private javax.swing.JButton buttonGenerate;
     private javax.swing.JComboBox<String> comboBranch;
     private javax.swing.JComboBox<String> comboFloor;
     private javax.swing.JTextField fieldCode;

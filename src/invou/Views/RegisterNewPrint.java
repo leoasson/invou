@@ -156,6 +156,7 @@ public class RegisterNewPrint extends javax.swing.JInternalFrame {
         );
 
         setTitle("Registrar nueva impresora");
+        setFrameIcon(new javax.swing.ImageIcon(getClass().getResource("/invou/imagenes/registryEditor16.png"))); // NOI18N
 
         fieldPart.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

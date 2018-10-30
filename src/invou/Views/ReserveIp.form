@@ -56,9 +56,9 @@
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
-              <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
+                      <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="labelCodigo" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="labelName" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -68,14 +68,13 @@
                           <Component id="fieldIp" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="fieldName" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace max="32767" attributes="0"/>
                   </Group>
-                  <Group type="102" alignment="1" attributes="0">
-                      <EmptySpace min="0" pref="12" max="32767" attributes="0"/>
+                  <Group type="102" alignment="0" attributes="0">
+                      <EmptySpace min="-2" pref="21" max="-2" attributes="0"/>
                       <Component id="searchButton" min="-2" pref="39" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
                   </Group>
               </Group>
+              <EmptySpace pref="36" max="32767" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="button" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="ButtonSalir" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -125,7 +124,7 @@
     <Component class="javax.swing.JButton" name="searchButton">
       <Properties>
         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-          <Image iconType="3" name="/invou/imagenes/printerRepair28.png"/>
+          <Image iconType="3" name="/invou/imagenes/listIp26.png"/>
         </Property>
         <Property name="toolTipText" type="java.lang.String" value="Buscar n&#xfa;mero de padr&#xf3;n"/>
         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">

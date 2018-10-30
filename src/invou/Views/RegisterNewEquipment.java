@@ -36,7 +36,7 @@ ActionListener actionFloor;
                 {
                     comboMotherboardModel.setEnabled(true);
                     String idMaker = af.parseMakerMotherboard(comboMotherboarMaker.getSelectedItem().toString());
-                    completeComboMotherboardModel("`cod_marca` = '"+idMaker+"';");
+                    completeComboMotherboardModel("`cod_marca` = '"+idMaker+"'");
                 }
             }
         };
@@ -118,7 +118,7 @@ ActionListener actionFloor;
     {
         Object[] model;
         //model = fileterComboxMotherboard("modelo", where);
-        model = sensql.setFilterCombox("modelo", "FROM `motherboard` LEFT JOIN `marcamotherboard` ON `cod_marca` = `id_marca` where " + where);
+        model = sensql.setFilterCombox("modelo", "FROM `motherboard` LEFT JOIN `marcamotherboard` ON `cod_marca` = `id_marca` where " + where +" ORDER BY modelo");
         comboMotherboardModel.removeAllItems();
         for (Object branchs : model) 
         {
@@ -248,20 +248,6 @@ ActionListener actionFloor;
         else return false;
         
         
-//        if(af.existIpAdmin(ipAdmin))
-//        {
-//             if(ipAdmin.equals("")){ipAdmin = "";}
-//            ipAdmin = af.parseIpAdmin(ipAdmin);  
-//        }
-//        else return false;
-//        
-//        if(af.existIpImage(ipImage))
-//        {
-//            if(ipImage.equals("")){ipImage = "";}
-//            ipImage = af.parseIpAdmin(ipImage);  
-//        }
-//        else return false;
-        
         if(comboBranch.getSelectedItem() == null)
         {
             JOptionPane.showMessageDialog(null, "Debe completar los campos correspondiente a la ubicación", "Mensaje", JOptionPane.WARNING_MESSAGE); 
@@ -297,10 +283,8 @@ ActionListener actionFloor;
             String data[] = {name, user, password, ipAdmin, ipImage, description, area, processor, motherboard, ram, disc, so};
             if(af.ingressNewEquipment(data))
             {
-                af.updateStateIp("USADA", ipAdmin);
-                af.updateStateIp("USADA", ipImage);
-//                af.updateStateIpAdmin("USADA", ipAdmin);
-//                af.updateStateIpImage("USADA", ipImage);
+                af.updateStateIp("EN USO", ipAdmin);
+                af.updateStateIp("EN USO", ipImage);
                 JOptionPane.showMessageDialog(null,"El equipo se registró correctamente.","Mensaje",JOptionPane.INFORMATION_MESSAGE);
                 clean();
             }
@@ -386,6 +370,7 @@ ActionListener actionFloor;
 
         setClosable(true);
         setTitle("Nuevo equipamiento");
+        setFrameIcon(new javax.swing.ImageIcon(getClass().getResource("/invou/imagenes/newPc-16.png"))); // NOI18N
 
         jInternalFrame1.setIconifiable(true);
         jInternalFrame1.setMaximizable(true);
@@ -934,13 +919,10 @@ ActionListener actionFloor;
 
     private void ButtonExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonExitActionPerformed
     this.dispose();
-    //view.addInPanel();
     }//GEN-LAST:event_ButtonExitActionPerformed
     
     private void buttonRegisterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonRegisterActionPerformed
         register();
-        
-        //Despues de esto tengo que cambiar el puesto de la impresora en "EN REPARACION"
     }//GEN-LAST:event_buttonRegisterActionPerformed
 
     private void ButtonCleanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonCleanActionPerformed

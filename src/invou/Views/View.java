@@ -12,6 +12,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.awt.Desktop;
 import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -28,8 +29,10 @@ public class View extends javax.swing.JFrame {
     public View() 
     {
         initComponents();
+        this.setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/invou/imagenes/logo-oulton32.png")));
         this.setLocationRelativeTo(null);
         jToolBar2.setFloatable(false);
+        
         
     }
 
@@ -48,6 +51,16 @@ public class View extends javax.swing.JFrame {
     public void addSearchEquipment(RegisterNewPrint rnp)
     {
         SearchEquipment equipment = new SearchEquipment(rnp);
+        Dimension desktopSize = jDesktopPane1.getSize();
+        Dimension jInternalFrameSize = equipment.getSize();
+        equipment.setLocation((desktopSize.width - jInternalFrameSize.width)/2,(desktopSize.height- jInternalFrameSize.height)/2);
+        jDesktopPane1.add(equipment);
+        equipment.show();
+    }
+    
+        public void addSearchEquipment(ChangeEquipment changeEquipment, int equip)
+    {
+        SearchEquipment equipment = new SearchEquipment(changeEquipment,equip);
         Dimension desktopSize = jDesktopPane1.getSize();
         Dimension jInternalFrameSize = equipment.getSize();
         equipment.setLocation((desktopSize.width - jInternalFrameSize.width)/2,(desktopSize.height- jInternalFrameSize.height)/2);
@@ -147,10 +160,12 @@ public class View extends javax.swing.JFrame {
         exitList = new javax.swing.JMenuItem();
         jSeparator2 = new javax.swing.JPopupMenu.Separator();
         StockList = new javax.swing.JMenuItem();
+        listTonerEmpty = new javax.swing.JMenuItem();
         jSeparator6 = new javax.swing.JPopupMenu.Separator();
         registryTonner = new javax.swing.JMenuItem();
         updateStock = new javax.swing.JMenuItem();
         updateStock1 = new javax.swing.JMenuItem();
+        updateStock2 = new javax.swing.JMenuItem();
         printerMenu = new javax.swing.JMenu();
         enviarImpresoraAReparacion1 = new javax.swing.JMenuItem();
         regresoDeReparacion = new javax.swing.JMenuItem();
@@ -159,11 +174,13 @@ public class View extends javax.swing.JFrame {
         listPrinter = new javax.swing.JMenu();
         listRepair = new javax.swing.JMenuItem();
         listPrint = new javax.swing.JMenuItem();
+        listRepair1 = new javax.swing.JMenuItem();
         jSeparator7 = new javax.swing.JPopupMenu.Separator();
         registrarImpresora = new javax.swing.JMenuItem();
         newPagesPrinted = new javax.swing.JMenuItem();
         generateReportMenu = new javax.swing.JMenu();
         RegisterNewMenu = new javax.swing.JMenuItem();
+        ListEquipmentMenu1 = new javax.swing.JMenuItem();
         modifyDeleteMenu = new javax.swing.JMenuItem();
         ListEquipmentMenu = new javax.swing.JMenuItem();
         jSeparator9 = new javax.swing.JPopupMenu.Separator();
@@ -185,6 +202,9 @@ public class View extends javax.swing.JFrame {
         menu_proveedores = new javax.swing.JMenu();
         listarProveedor = new javax.swing.JMenuItem();
         registrarProveedor = new javax.swing.JMenuItem();
+        menu_config = new javax.swing.JMenu();
+        addMotherboard = new javax.swing.JMenuItem();
+        addSector = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Invou");
@@ -303,7 +323,7 @@ public class View extends javax.swing.JFrame {
         jButton5.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         jToolBar2.add(jButton5);
 
-        jDesktopPane1.setBackground(new java.awt.Color(255, 255, 255));
+        jDesktopPane1.setBackground(new java.awt.Color(223, 230, 242));
         jDesktopPane1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         jDesktopPane1.setForeground(new java.awt.Color(255, 255, 255));
 
@@ -315,12 +335,12 @@ public class View extends javax.swing.JFrame {
         jDesktopPane1.setLayout(jDesktopPane1Layout);
         jDesktopPane1Layout.setHorizontalGroup(
             jDesktopPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 1048, Short.MAX_VALUE)
         );
         jDesktopPane1Layout.setVerticalGroup(
             jDesktopPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jDesktopPane1Layout.createSequentialGroup()
-                .addGap(0, 379, Short.MAX_VALUE)
+                .addGap(0, 343, Short.MAX_VALUE)
                 .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 229, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
@@ -383,6 +403,14 @@ public class View extends javax.swing.JFrame {
         });
         listTonner.add(StockList);
 
+        listTonerEmpty.setText("Retiro de toner vacios");
+        listTonerEmpty.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                listTonerEmptyActionPerformed(evt);
+            }
+        });
+        listTonner.add(listTonerEmpty);
+
         printLabeltonnerMenu.add(listTonner);
         printLabeltonnerMenu.add(jSeparator6);
 
@@ -412,6 +440,14 @@ public class View extends javax.swing.JFrame {
             }
         });
         printLabeltonnerMenu.add(updateStock1);
+
+        updateStock2.setText("Retiro de toner vacios");
+        updateStock2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                updateStock2ActionPerformed(evt);
+            }
+        });
+        printLabeltonnerMenu.add(updateStock2);
 
         jMenuBar1.add(printLabeltonnerMenu);
 
@@ -466,6 +502,15 @@ public class View extends javax.swing.JFrame {
         });
         listPrinter.add(listPrint);
 
+        listRepair1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/invou/imagenes/listRepair16.png"))); // NOI18N
+        listRepair1.setText("Impresiones");
+        listRepair1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                listRepair1ActionPerformed(evt);
+            }
+        });
+        listPrinter.add(listRepair1);
+
         printerMenu.add(listPrinter);
         printerMenu.add(jSeparator7);
 
@@ -499,6 +544,15 @@ public class View extends javax.swing.JFrame {
             }
         });
         generateReportMenu.add(RegisterNewMenu);
+
+        ListEquipmentMenu1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/invou/imagenes/changeEquipment16.png"))); // NOI18N
+        ListEquipmentMenu1.setText("Cambio de equipamineto");
+        ListEquipmentMenu1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ListEquipmentMenu1ActionPerformed(evt);
+            }
+        });
+        generateReportMenu.add(ListEquipmentMenu1);
 
         modifyDeleteMenu.setIcon(new javax.swing.ImageIcon(getClass().getResource("/invou/imagenes/editPc-16.png"))); // NOI18N
         modifyDeleteMenu.setText("Modificar/Borrar");
@@ -624,6 +678,7 @@ public class View extends javax.swing.JFrame {
 
         menu_proveedores.setText("Proveedores");
 
+        listarProveedor.setIcon(new javax.swing.ImageIcon(getClass().getResource("/invou/imagenes/listProvider16.png"))); // NOI18N
         listarProveedor.setText("Listar proveedores");
         listarProveedor.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -632,6 +687,7 @@ public class View extends javax.swing.JFrame {
         });
         menu_proveedores.add(listarProveedor);
 
+        registrarProveedor.setIcon(new javax.swing.ImageIcon(getClass().getResource("/invou/imagenes/provider16.png"))); // NOI18N
         registrarProveedor.setText("Registrar Proveedor");
         registrarProveedor.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -642,6 +698,26 @@ public class View extends javax.swing.JFrame {
 
         jMenuBar1.add(menu_proveedores);
 
+        menu_config.setText("Configuracion");
+
+        addMotherboard.setText("Registrar motherboard");
+        addMotherboard.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addMotherboardActionPerformed(evt);
+            }
+        });
+        menu_config.add(addMotherboard);
+
+        addSector.setText("Registrar nuevo sector");
+        addSector.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addSectorActionPerformed(evt);
+            }
+        });
+        menu_config.add(addSector);
+
+        jMenuBar1.add(menu_config);
+
         setJMenuBar(jMenuBar1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -650,10 +726,10 @@ public class View extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jDesktopPane1)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jToolBar2, javax.swing.GroupLayout.PREFERRED_SIZE, 756, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 125, Short.MAX_VALUE)
+                .addComponent(jToolBar2, javax.swing.GroupLayout.PREFERRED_SIZE, 603, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(fieldCode, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addGap(29, 29, 29))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -761,7 +837,7 @@ public class View extends javax.swing.JFrame {
     }//GEN-LAST:event_exitListActionPerformed
 
     private void listarProveedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_listarProveedorActionPerformed
-        InterfazListarProveedores listaProv = new InterfazListarProveedores();
+        SearchProvider listaProv = new SearchProvider();
         jDesktopPane1.add(listaProv);
         listaProv.show();
     }//GEN-LAST:event_listarProveedorActionPerformed
@@ -973,6 +1049,56 @@ public class View extends javax.swing.JFrame {
         printers.show();
     }//GEN-LAST:event_ButtonRegresoDeReparacion1ActionPerformed
 
+    private void ListEquipmentMenu1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ListEquipmentMenu1ActionPerformed
+        ChangeEquipment toner = new ChangeEquipment(this);
+        Dimension desktopSize = jDesktopPane1.getSize();
+        Dimension jInternalFrameSize = toner.getSize();
+        toner.setLocation((desktopSize.width - jInternalFrameSize.width)/2,(desktopSize.height- jInternalFrameSize.height)/2);
+        jDesktopPane1.add(toner);
+        toner.show(); 
+    }//GEN-LAST:event_ListEquipmentMenu1ActionPerformed
+
+    private void listRepair1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_listRepair1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_listRepair1ActionPerformed
+
+    private void addMotherboardActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addMotherboardActionPerformed
+        RegisterNewMotherboard motherboard = new RegisterNewMotherboard();
+        Dimension desktopSize = jDesktopPane1.getSize();
+        Dimension jInternalFrameSize = motherboard.getSize();
+        motherboard.setLocation((desktopSize.width - jInternalFrameSize.width)/2,(desktopSize.height- jInternalFrameSize.height)/2);
+        jDesktopPane1.add(motherboard);
+        motherboard.show(); 
+    }//GEN-LAST:event_addMotherboardActionPerformed
+
+    private void addSectorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addSectorActionPerformed
+       RegisterNewSector sector = new RegisterNewSector();
+        Dimension desktopSize = jDesktopPane1.getSize();
+        Dimension jInternalFrameSize = sector.getSize();
+        sector.setLocation((desktopSize.width - jInternalFrameSize.width)/2,(desktopSize.height- jInternalFrameSize.height)/2);
+        jDesktopPane1.add(sector);
+        sector.show(); 
+    }//GEN-LAST:event_addSectorActionPerformed
+
+    private void updateStock2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateStock2ActionPerformed
+     
+        EgressEmptyToner toner = new EgressEmptyToner();
+        Dimension desktopSize = jDesktopPane1.getSize();
+        Dimension jInternalFrameSize = toner.getSize();
+        toner.setLocation((desktopSize.width - jInternalFrameSize.width)/2,(desktopSize.height- jInternalFrameSize.height)/2);
+        jDesktopPane1.add(toner);
+        toner.show(); 
+    }//GEN-LAST:event_updateStock2ActionPerformed
+
+    private void listTonerEmptyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_listTonerEmptyActionPerformed
+        SearchExitEmptyToner listtoner = new SearchExitEmptyToner();
+        Dimension desktopSize = jDesktopPane1.getSize();
+        Dimension jInternalFrameSize = listtoner.getSize();
+        listtoner.setLocation((desktopSize.width - jInternalFrameSize.width)/2,(desktopSize.height- jInternalFrameSize.height)/2);
+        jDesktopPane1.add(listtoner);
+        listtoner.show(); 
+    }//GEN-LAST:event_listTonerEmptyActionPerformed
+
     
     
     
@@ -1018,9 +1144,12 @@ public class View extends javax.swing.JFrame {
     private javax.swing.JButton ButtonRegresoDeReparacion;
     private javax.swing.JButton ButtonRegresoDeReparacion1;
     private javax.swing.JMenuItem ListEquipmentMenu;
+    private javax.swing.JMenuItem ListEquipmentMenu1;
     private javax.swing.JMenuItem ListRepairEquipmentMenu;
     private javax.swing.JMenuItem RegisterNewMenu;
     private javax.swing.JMenuItem StockList;
+    private javax.swing.JMenuItem addMotherboard;
+    private javax.swing.JMenuItem addSector;
     private javax.swing.JMenuItem addTonner;
     private javax.swing.JMenuItem deleteTonner;
     private javax.swing.JMenuItem entryList;
@@ -1061,8 +1190,11 @@ public class View extends javax.swing.JFrame {
     private javax.swing.JMenuItem listPrint;
     private javax.swing.JMenu listPrinter;
     private javax.swing.JMenuItem listRepair;
+    private javax.swing.JMenuItem listRepair1;
+    private javax.swing.JMenuItem listTonerEmpty;
     private javax.swing.JMenu listTonner;
     private javax.swing.JMenuItem listarProveedor;
+    private javax.swing.JMenu menu_config;
     private javax.swing.JMenu menu_proveedores;
     private javax.swing.JMenuItem modifyDeleteMenu;
     private javax.swing.JMenu monitorMenu;
@@ -1078,6 +1210,7 @@ public class View extends javax.swing.JFrame {
     private javax.swing.JMenuItem regresoDeReparacion;
     private javax.swing.JMenuItem updateStock;
     private javax.swing.JMenuItem updateStock1;
+    private javax.swing.JMenuItem updateStock2;
     // End of variables declaration//GEN-END:variables
 
 }

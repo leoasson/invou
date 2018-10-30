@@ -1,6 +1,8 @@
 package invou.Views;
 
 import invou.AuxiliaryFunctions;
+import invou.PrinterReportXLS;
+import invou.SaveExcelFile;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Point;
@@ -9,6 +11,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
@@ -52,6 +55,7 @@ public final class SearchPrinter extends javax.swing.JFrame {
         initComponents();
         init();
         this.changePrint = changePrint;
+        buttonGenerate.setEnabled(false);
         state = 1;
         buttonAcept.setEnabled(true);
         this.ActListener = new ActionListener() {
@@ -85,7 +89,7 @@ public final class SearchPrinter extends javax.swing.JFrame {
     
     private void init()
     {
-        //this.setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/icon/searchCensus16.png")));
+        this.setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/invou/imagenes/searchPrint16.png")));
         this.setLocationRelativeTo(null);
         table.setDefaultEditor(Object.class, null);
         fieldModel.setEnabled(false);
@@ -204,6 +208,7 @@ public final class SearchPrinter extends javax.swing.JFrame {
         ButtonExit = new javax.swing.JButton();
         buttonAcept = new javax.swing.JButton();
         fieldCode = new javax.swing.JTextField();
+        buttonGenerate = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Buscar impresora");
@@ -282,6 +287,13 @@ public final class SearchPrinter extends javax.swing.JFrame {
             }
         });
 
+        buttonGenerate.setText("Generar Excel");
+        buttonGenerate.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonGenerateActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -292,6 +304,8 @@ public final class SearchPrinter extends javax.swing.JFrame {
                     .addComponent(jSeparator1)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(buttonGenerate)
+                        .addGap(18, 18, 18)
                         .addComponent(buttonAcept)
                         .addGap(18, 18, 18)
                         .addComponent(ButtonExit))
@@ -341,7 +355,8 @@ public final class SearchPrinter extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(ButtonExit)
-                    .addComponent(buttonAcept))
+                    .addComponent(buttonAcept)
+                    .addComponent(buttonGenerate))
                 .addContainerGap())
         );
 
@@ -426,6 +441,24 @@ public final class SearchPrinter extends javax.swing.JFrame {
         buttonFilter.requestFocus();
     }//GEN-LAST:event_fieldModelActionPerformed
 
+    private void buttonGenerateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonGenerateActionPerformed
+        SaveExcelFile file = new SaveExcelFile("Inventario de impresoras al "+af.getActualDateString());
+        String[] column = {"Número de Serie", "Número de parte","Modelo de la impresora", "Sucursal        ","Piso    ","Sector       ", "Nombre del equipo", "Impresiones    ", "Fecha de impresiones   ", "Estado     "};
+        
+        ArrayList<Object[][]> list = new ArrayList<Object[][]>();
+        filterTable();
+        list.add(tableDate);
+
+        PrinterReportXLS xls = new PrinterReportXLS(list, column, "Inventario de impresoras al " + af.getActualDateString());
+        
+        
+        String route = file.getRoute();
+        if(route != null)
+        {
+                xls.generates(route);
+        }
+    }//GEN-LAST:event_buttonGenerateActionPerformed
+
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -435,6 +468,7 @@ public final class SearchPrinter extends javax.swing.JFrame {
     private javax.swing.JCheckBox boxState;
     private javax.swing.JButton buttonAcept;
     private javax.swing.JButton buttonFilter;
+    private javax.swing.JButton buttonGenerate;
     private javax.swing.JTextField fieldCode;
     private javax.swing.JComboBox<String> fieldModel;
     private javax.swing.JComboBox<String> fieldState;

@@ -42,7 +42,7 @@ ActionListener actionFloor;
                 {
                     comboMotherboardModel.setEnabled(true);
                     String idMaker = af.parseMakerMotherboard(comboMotherboarMaker.getSelectedItem().toString());
-                    completeComboMotherboardModel("`cod_marca` = '"+idMaker+"';");
+                    completeComboMotherboardModel("`cod_marca` = '"+idMaker+"'");
                 }
             }
         };
@@ -104,7 +104,7 @@ ActionListener actionFloor;
                 {
                     comboMotherboardModel.setEnabled(true);
                     String idMaker = af.parseMakerMotherboard(comboMotherboarMaker.getSelectedItem().toString());
-                    completeComboMotherboardModel("`cod_marca` = '"+idMaker+"';");
+                    completeComboMotherboardModel("`cod_marca` = '"+idMaker+"'");
                 }
             }
         };
@@ -180,7 +180,7 @@ ActionListener actionFloor;
     private void completeComboMotherboardModel(String where)
     {
         Object[] model;
-        model = sensql.setFilterCombox("modelo", "FROM `motherboard` LEFT JOIN `marcamotherboard` ON `cod_marca` = `id_marca` where " + where);
+        model = sensql.setFilterCombox("modelo", "FROM `motherboard` LEFT JOIN `marcamotherboard` ON `cod_marca` = `id_marca` where " + where +" ORDER BY modelo");
         comboMotherboardModel.removeAllItems();
         for (Object branchs : model) 
         {
@@ -204,7 +204,7 @@ ActionListener actionFloor;
     private void completeComboMaker()
     {
         Object[] maker;
-        maker = af.combox("marcamotherboard", "fabricante");
+        maker = af.combox("marcamotherboard ORDER BY fabricante", "fabricante");
         comboMotherboarMaker.removeAllItems();
         for (Object branchs : maker) 
         {
@@ -519,7 +519,7 @@ ActionListener actionFloor;
 
         labelCodigo = new javax.swing.JLabel();
         fieldName = new javax.swing.JTextField();
-        exitButton = new javax.swing.JButton();
+        buttonExit = new javax.swing.JButton();
         saveButton = new javax.swing.JButton();
         fieldUser = new javax.swing.JTextField();
         labelCantidad = new javax.swing.JLabel();
@@ -571,10 +571,10 @@ ActionListener actionFloor;
             }
         });
 
-        exitButton.setText("Salir");
-        exitButton.addActionListener(new java.awt.event.ActionListener() {
+        buttonExit.setText("Salir");
+        buttonExit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                exitButtonActionPerformed(evt);
+                buttonExitActionPerformed(evt);
             }
         });
 
@@ -747,7 +747,7 @@ ActionListener actionFloor;
                                         .addGap(18, 18, 18)
                                         .addComponent(saveButton)
                                         .addGap(18, 18, 18)
-                                        .addComponent(exitButton)))
+                                        .addComponent(buttonExit)))
                                 .addComponent(jLabel27)))
                         .addContainerGap(20, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
@@ -841,7 +841,7 @@ ActionListener actionFloor;
                     .addComponent(comboSo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(28, 28, 28)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(exitButton)
+                    .addComponent(buttonExit)
                     .addComponent(saveButton)
                     .addComponent(deleteButton))
                 .addContainerGap())
@@ -854,13 +854,14 @@ ActionListener actionFloor;
         fieldUser.requestFocus();
     }//GEN-LAST:event_fieldNameActionPerformed
 
-    private void exitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitButtonActionPerformed
+    private void buttonExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonExitActionPerformed
         getValuesForCheckChanges();
         VerifyIfExistChanges();
-    }//GEN-LAST:event_exitButtonActionPerformed
+    }//GEN-LAST:event_buttonExitActionPerformed
     
     private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
         modifyEquipment();
+        buttonExit.requestFocus();
         if(searchEquipment != null)
         searchEquipment.filterTable();
     }//GEN-LAST:event_saveButtonActionPerformed
@@ -923,6 +924,7 @@ ActionListener actionFloor;
     }//GEN-LAST:event_buttonIdActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton buttonExit;
     private javax.swing.JButton buttonId;
     private javax.swing.JComboBox<String> comboBranch;
     private javax.swing.JComboBox<String> comboFloor;
@@ -934,7 +936,6 @@ ActionListener actionFloor;
     private javax.swing.JComboBox<String> comboSo;
     private javax.swing.JComboBox<String> comboStorage;
     private javax.swing.JButton deleteButton;
-    private javax.swing.JButton exitButton;
     private javax.swing.JTextField fieldAdminIP;
     private javax.swing.JTextField fieldDescription;
     private javax.swing.JTextField fieldId;
