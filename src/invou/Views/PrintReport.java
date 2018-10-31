@@ -4,16 +4,20 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import javax.swing.JOptionPane;
 import invou.AuxiliaryFunctions;
+import invou.SentencesSql;
 
 
 public class PrintReport extends javax.swing.JInternalFrame {
-AuxiliaryFunctions af = new AuxiliaryFunctions();
+AuxiliaryFunctions af;
+SentencesSql sensql;
 View view;
 String id_equipment;
 
-    public PrintReport(View view) 
+    public PrintReport(View view, SentencesSql sensql) 
     {
+        af = new AuxiliaryFunctions(sensql);
         this.view=view;
+        this.sensql=sensql;
         initComponents();
         clean();
     }
@@ -169,7 +173,7 @@ String id_equipment;
         
         else
         {
-           PrintReportView prv = new PrintReportView(codigo);
+           PrintReportView prv = new PrintReportView(codigo, sensql);
            prv.show();
            this.dispose();
         }

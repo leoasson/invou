@@ -16,6 +16,12 @@ public class AuxiliaryFunctions
         sensql = new SentencesSql();
     }
     
+    public AuxiliaryFunctions(SentencesSql sensql)
+    {
+        this.sensql = sensql;
+    }
+    
+    
     public boolean isValidNumber(String number)
     {
         if(number.equals("")){return false;}

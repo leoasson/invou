@@ -3,6 +3,7 @@ package invou.Views;
 import invou.AuxiliaryFunctions;
 import invou.PrinterReportXLS;
 import invou.SaveExcelFile;
+import invou.SentencesSql;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Point;
@@ -23,7 +24,7 @@ import javax.swing.table.DefaultTableModel;
  * @author leoasson
  */
 public final class SearchPrinter extends javax.swing.JFrame {
-    AuxiliaryFunctions af = new AuxiliaryFunctions();
+    AuxiliaryFunctions af; 
     private Object[][] tableDate; 
     DefaultTableModel datos;
     Object[] channel;
@@ -32,8 +33,9 @@ public final class SearchPrinter extends javax.swing.JFrame {
     ActionListener ActListener;
     ChangePrint changePrint;
  
-    public SearchPrinter()
+    public SearchPrinter(SentencesSql sensql)
     {
+        af = new AuxiliaryFunctions(sensql);
         initComponents();
         init();
         state = 0;
@@ -50,8 +52,9 @@ public final class SearchPrinter extends javax.swing.JFrame {
         table.setEnabled(false);
     }
     
-    public SearchPrinter(ChangePrint changePrint)
+    public SearchPrinter(ChangePrint changePrint, SentencesSql sensql)
     {
+        af = new AuxiliaryFunctions(sensql);
         initComponents();
         init();
         this.changePrint = changePrint;

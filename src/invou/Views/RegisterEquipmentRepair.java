@@ -4,15 +4,17 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import javax.swing.JOptionPane;
 import invou.AuxiliaryFunctions;
+import invou.SentencesSql;
 
 
 public class RegisterEquipmentRepair extends javax.swing.JInternalFrame {
-AuxiliaryFunctions af = new AuxiliaryFunctions();
+AuxiliaryFunctions af;
 View view;
 String id_equipment;
 
-    public RegisterEquipmentRepair(View view) 
+    public RegisterEquipmentRepair(View view, SentencesSql sensql) 
     {
+        af = new AuxiliaryFunctions(sensql);
         this.view=view;
         initComponents();
         clean();

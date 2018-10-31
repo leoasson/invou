@@ -2,17 +2,21 @@ package invou.Views;
 
 import javax.swing.JOptionPane;
 import invou.AuxiliaryFunctions;
+import invou.SentencesSql;
 import invou.control_proveedor;
 /**
  * @author ANDRES
  */
-public class RegisterNewProvider extends javax.swing.JInternalFrame {
-AuxiliaryFunctions af = new AuxiliaryFunctions();
+public final class RegisterNewProvider extends javax.swing.JInternalFrame {
+AuxiliaryFunctions af;
+SentencesSql sensql;
     /**
      * Creates new form Interfaz_Proveedor
      */
-    public RegisterNewProvider() 
+    public RegisterNewProvider(SentencesSql sensql) 
     {
+        this.sensql=sensql;
+        af = new AuxiliaryFunctions(sensql);
         initComponents();
         limpiar();
         bloquear_cajas();
@@ -548,7 +552,7 @@ public void limpiar()
         tel = telefonoprovjTextField9.getText();
         
         System.out.println(nombre);
-        control_proveedor prov = new control_proveedor(id, nombre, dir, ciu, tel);
+        control_proveedor prov = new control_proveedor(id, nombre, dir, ciu, tel,sensql);
         if (!id.equals("") && !nombre.equals("") && !dir.equals("") && !tel.equals("") )
         {
         if(prov.ingresar_proveedor())

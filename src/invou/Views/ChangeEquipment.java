@@ -8,14 +8,16 @@ import java.util.Date;
 
 
 public class ChangeEquipment extends javax.swing.JInternalFrame {
-AuxiliaryFunctions af = new AuxiliaryFunctions();
-SentencesSql sensql = new SentencesSql();
+AuxiliaryFunctions af;
+SentencesSql sensql;
 String id_equipment , serialNumber;
 View view;
         
-    public ChangeEquipment(View view) 
+    public ChangeEquipment(View view, SentencesSql sensql) 
     {
+        af = new AuxiliaryFunctions(sensql);
         this.view = view;
+        this.sensql = sensql;
         initComponents();
         searchButton.setFocusable(false);       
     }

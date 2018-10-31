@@ -2,6 +2,7 @@ package invou.Views;
 
 import javax.swing.table.DefaultTableModel;
 import invou.AuxiliaryFunctions;
+import invou.SentencesSql;
 import invou.ip;
 import java.awt.Color;
 import java.awt.Component;
@@ -10,7 +11,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
-import java.util.regex.Pattern;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
@@ -26,7 +26,7 @@ import javax.swing.table.TableRowSorter;
 public final class SearchIp extends javax.swing.JInternalFrame
 {
     
-    AuxiliaryFunctions af = new AuxiliaryFunctions();
+    AuxiliaryFunctions af;
     private Object[][] tableData;
     DefaultTableModel datos;
     ip ip = new ip(); 
@@ -36,8 +36,9 @@ public final class SearchIp extends javax.swing.JInternalFrame
     int tableLength;
     int state=0;
     
-    public SearchIp()
+    public SearchIp(SentencesSql sensql)
     {
+        af= new AuxiliaryFunctions(sensql);
         state=1;
         initComponents();
         tableData = af.getIp();
@@ -46,28 +47,27 @@ public final class SearchIp extends javax.swing.JInternalFrame
         buttonAcept.setEnabled(false);
     }
 
-    public SearchIp(ReserveIp reserveIp) 
+    public SearchIp(ReserveIp reserveIp, SentencesSql sensql)
     {
-        state=2;
+        af= new AuxiliaryFunctions(sensql);
         this.reserveIp=reserveIp;
+        state=2;
         initComponents();
         tableData = af.getIp();
         generateTableData(tableData);
         table.addMouseListener(new MouseAdapter() {
         @Override
-        public void mousePressed(MouseEvent mouseEvent) {
-        JTable table =(JTable) mouseEvent.getSource();
-        Point point = mouseEvent.getPoint();
-        int rowClicked = table.rowAtPoint(point);
-        if (mouseEvent.getClickCount() == 2 && table.getSelectedRow() != -1) 
+        public void mousePressed(MouseEvent mouseEvent)
         {
-            reserveIp.setIp((String) datos.getValueAt(rowClicked, 0));
-            closeWindows();
-        }
-    }
-        });
-        
-        
+            JTable table =(JTable) mouseEvent.getSource();
+            Point point = mouseEvent.getPoint();
+            int rowClicked = table.rowAtPoint(point);
+            if (mouseEvent.getClickCount() == 2 && table.getSelectedRow() != -1) 
+                {
+                    reserveIp.setIp((String) datos.getValueAt(rowClicked, 0));
+                    closeWindows();
+                }
+        }});    
     }
     
    private void closeWindows()

@@ -2,12 +2,14 @@ package invou.Views;
 
 import javax.swing.JOptionPane;
 import invou.AuxiliaryFunctions;
+import invou.SentencesSql;
 
 public class PrinterRepairReturn extends javax.swing.JInternalFrame {
-AuxiliaryFunctions af = new AuxiliaryFunctions();
+AuxiliaryFunctions af;
 
-    public PrinterRepairReturn() 
+    public PrinterRepairReturn(SentencesSql sensql) 
     {
+        af = new AuxiliaryFunctions(sensql);
         initComponents();
         clean();    
     }

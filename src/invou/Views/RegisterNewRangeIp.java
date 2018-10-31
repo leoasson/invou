@@ -2,20 +2,22 @@ package invou.Views;
 
 import javax.swing.JOptionPane;
 import invou.AuxiliaryFunctions;
+import invou.SentencesSql;
 import invou.ip;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 
 
 public class RegisterNewRangeIp extends javax.swing.JInternalFrame {
-AuxiliaryFunctions af = new AuxiliaryFunctions();
+AuxiliaryFunctions af;
 String id_equipment;
 ip ip = new ip();  
 String begin,end;
 ArrayList<String> array;
 
-    public RegisterNewRangeIp() 
+    public RegisterNewRangeIp(SentencesSql sensql) 
     {
+        af = new AuxiliaryFunctions(sensql);
         initComponents();
         clean();
     }

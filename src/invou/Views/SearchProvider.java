@@ -4,6 +4,7 @@
  */
 package invou.Views;
 
+import invou.SentencesSql;
 import javax.swing.table.DefaultTableModel;
 import invou.control_proveedor;
   
@@ -13,16 +14,19 @@ import invou.control_proveedor;
  */
 public class SearchProvider extends javax.swing.JInternalFrame {
 private Object[][] datostabla;
+SentencesSql sensql;
     /**
      * Creates new form Interfaz_buscarproveedor
      */
-    public SearchProvider() {
+    public SearchProvider(SentencesSql sensql) 
+    {
+        this.sensql=sensql;
         initComponents();
         mostrar_tabla();
     }
     
     public void mostrar_tabla(){
-        control_proveedor con = new control_proveedor("id_proveedor", "nombre_comercial","direccion","Cod_Ciudad","telefono");       
+        control_proveedor con = new control_proveedor("id_proveedor", "nombre_comercial","direccion","Cod_Ciudad","telefono",sensql);       
         String[] columnas = {"Identificacion","Nombre comercial","Direccion","Ciudad","Telefono"};
         datostabla = con.consulta_proveedor();
         DefaultTableModel datos = new DefaultTableModel(datostabla,columnas);

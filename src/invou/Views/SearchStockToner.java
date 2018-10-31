@@ -1,6 +1,7 @@
 package invou.Views;
 
 import invou.AuxiliaryFunctions;
+import invou.SentencesSql;
 import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -18,19 +19,21 @@ import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
  * @author leoasson
  */
 public final class SearchStockToner extends javax.swing.JFrame {
-    AuxiliaryFunctions af = new AuxiliaryFunctions();
+    //SentencesSql sensql;
+    AuxiliaryFunctions af;
     private Object[][] tableDate; 
     DefaultTableModel datos;
     Object[] model;
     int state=0;
-    EgressToner et = new EgressToner();
-    IngressToner it = new IngressToner();
-    PrintLabelToner plt = new PrintLabelToner();
-    UpdateStockToner ust = new UpdateStockToner();
+    EgressToner et; 
+    IngressToner it; 
+    PrintLabelToner plt; 
+    UpdateStockToner ust;
     ActionListener ActionModel;
             
-    public SearchStockToner()
+    public SearchStockToner(SentencesSql sensql)
     {
+        af =new AuxiliaryFunctions(sensql);
         initComponents();
         init();
         buttonAcept.setEnabled(false);
@@ -44,8 +47,9 @@ public final class SearchStockToner extends javax.swing.JFrame {
         comboModel.addActionListener(ActionModel);
     }
     
-    public SearchStockToner(EgressToner et)
+    public SearchStockToner(EgressToner et, SentencesSql sensql)
     {
+        af =new AuxiliaryFunctions(sensql);
         state = 1;
         initComponents();
         init();
@@ -54,30 +58,33 @@ public final class SearchStockToner extends javax.swing.JFrame {
     }
     
     
-    public SearchStockToner(IngressToner it)
+    public SearchStockToner(IngressToner it, SentencesSql sensql)
     {
+        af =new AuxiliaryFunctions(sensql);
         state = 2;
-        initComponents();
-        init();
         this.it = it;
+        initComponents();
+        init();
         setTitle("Seleccionar codigo de toner");
     }
     
-    public SearchStockToner(PrintLabelToner plt)
+    public SearchStockToner(PrintLabelToner plt, SentencesSql sensql)
     {
+        af = new AuxiliaryFunctions(sensql);
         state = 3;
+        this.plt = plt;
         initComponents();
         init();
-        this.plt = plt;
         setTitle("Seleccionar codigo de toner");
     }
     
-    public SearchStockToner(UpdateStockToner ust)
+    public SearchStockToner(UpdateStockToner ust, SentencesSql sensql)
     {
+        af =new AuxiliaryFunctions(sensql);
         state = 4;
+        this.ust = ust;
         initComponents();
         init();
-        this.ust = ust;
         setTitle("Seleccionar codigo de toner");
     }
     

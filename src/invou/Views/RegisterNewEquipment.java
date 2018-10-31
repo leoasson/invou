@@ -8,17 +8,19 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class RegisterNewEquipment extends javax.swing.JInternalFrame {
-AuxiliaryFunctions af = new AuxiliaryFunctions();
-SentencesSql sensql = new SentencesSql();
+AuxiliaryFunctions af;
+SentencesSql sensql;
 String name, user, password, ipAdmin, ipImage, description, area, processor, so, ram, disc, motherboard;
-View view = new View();
+View view;
 ActionListener actionMotherboard;
 ActionListener actionBranch;
 ActionListener actionFloor;
 
-    public RegisterNewEquipment(View view)
+    public RegisterNewEquipment(View view, SentencesSql sensql)
     {
+        af= new AuxiliaryFunctions(sensql);
         this.view = view;
+        this.sensql=sensql;
         initComponents();    
         completeComboBranch();
         completeComboProcessor();

@@ -2,17 +2,22 @@ package invou.Views;
 
 import javax.swing.JOptionPane;
 import invou.AuxiliaryFunctions;
+import invou.SentencesSql;
 
 /**
  *
  * @author Leandro Asson
  */
 public class UpdateStockToner extends javax.swing.JInternalFrame {
-     AuxiliaryFunctions ca = new AuxiliaryFunctions();
-     boolean esCodigoValidado = false;
 
-    public UpdateStockToner()
+    AuxiliaryFunctions af;
+    SentencesSql sensql;
+    boolean esCodigoValidado = false;
+
+    public UpdateStockToner(SentencesSql sensql)
     {
+        this.sensql=sensql;
+        af = new AuxiliaryFunctions(sensql);
         initComponents();
         stockActual.setEnabled(false);
         desc_articulo.setEnabled(false);
@@ -34,10 +39,10 @@ public class UpdateStockToner extends javax.swing.JInternalFrame {
         {
             JOptionPane.showMessageDialog(this, "Debe ingresar un codigo para validar");
         }
-        else if(ca.existTonerCode(fieldCode.getText()))
+        else if(af.existTonerCode(fieldCode.getText()))
         {
         esCodigoValidado = true;
-        Object[][] datos = ca.datos_tonner(fieldCode.getText());
+        Object[][] datos = af.datos_tonner(fieldCode.getText());
         desc_articulo.setText(datos[0][0].toString());
         stockActual.setText(datos[0][1].toString());
         stockActual.repaint();
@@ -226,16 +231,16 @@ public class UpdateStockToner extends javax.swing.JInternalFrame {
         }
         else
         {   
-            if(ca.isValidNumber(newStock.getText()))
+            if(af.isValidNumber(newStock.getText()))
             {
                 
                 if (JOptionPane.showConfirmDialog(null, "Está seguro que desea actualizar el stock de "+stockActual.getText()+" a "+newStock.getText()+" unidades?", "",JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) 
                 {
-                    if(ca.updateStockConBusqueda(fieldCode.getText()) && ca.updateIngressTableAndEgressTable(stockActual.getText(), newStock.getText(),fieldCode.getText()))
+                    if(af.updateStockConBusqueda(fieldCode.getText()) && af.updateIngressTableAndEgressTable(stockActual.getText(), newStock.getText(),fieldCode.getText()))
                     {
                         JOptionPane.showMessageDialog(this, "Se actualizo correctamente el stock");  
                         newStock.setText("");     
-                        Object[][] datos = ca.datos_tonner(fieldCode.getText());
+                        Object[][] datos = af.datos_tonner(fieldCode.getText());
                         stockActual.setText(datos[0][1].toString()); 
                     }
                     else
@@ -257,7 +262,7 @@ public class UpdateStockToner extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_fieldCodeActionPerformed
 
     private void searchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchButtonActionPerformed
-        SearchStockToner stock = new SearchStockToner(this);
+        SearchStockToner stock = new SearchStockToner(this, sensql);
         stock.show();
     }//GEN-LAST:event_searchButtonActionPerformed
 

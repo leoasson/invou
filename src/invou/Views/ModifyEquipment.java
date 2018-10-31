@@ -8,19 +8,21 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public final class ModifyEquipment extends javax.swing.JInternalFrame {
-AuxiliaryFunctions af = new AuxiliaryFunctions();
-SentencesSql sensql = new SentencesSql();
+AuxiliaryFunctions af;
+SentencesSql sensql;
 String id_equipment;
 String name, user, password, ipAdmin, ipImage, description, branch, floor, sector, processor, so, ram, disk, motherboard, modelMotherboard;
 String newName, newUser, newPassword, newIpImage, newDescription, newIpAdmin, newBranch, newFloor, newSector, newProcessor, newSo, newRam, newDisk, newMotherboard, newModelMotherboard;
-View view = new View();
+View view;
 SearchEquipment searchEquipment;
 ActionListener actionMotherboard;
 ActionListener actionBranch;
 ActionListener actionFloor;
 
-    public ModifyEquipment(View view)
+    public ModifyEquipment(View view, SentencesSql sensql)
     {
+        af= new AuxiliaryFunctions(sensql);
+        this.sensql =sensql;
         this.view = view;
         initComponents();  
         completeComboBranch();
@@ -80,8 +82,10 @@ ActionListener actionFloor;
         getValuesOfDatabase(id_equipment);
         setValuesInView();
     } 
-    public ModifyEquipment(View view, SearchEquipment searchEquipment, String id_equipment)
+    public ModifyEquipment(View view, SearchEquipment searchEquipment, String id_equipment, SentencesSql sensql)
     {
+        af = new AuxiliaryFunctions(sensql);
+        this.sensql=sensql;
         this.id_equipment = id_equipment;
         this.view = view;
         this.searchEquipment = searchEquipment;

@@ -4,24 +4,29 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import javax.swing.JOptionPane;
 import invou.AuxiliaryFunctions;
+import invou.SentencesSql;
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 
-
 public class IngressToner extends javax.swing.JInternalFrame {
-AuxiliaryFunctions af = new AuxiliaryFunctions();
+AuxiliaryFunctions af;
+SentencesSql sensql;
 Object[] proveedor;
+
     /**
      * Creates new form Interfaz_Proveedor
      */
-    public IngressToner() 
+    public IngressToner(SentencesSql sensql) 
     {
+        this.sensql = sensql;
+        af = new AuxiliaryFunctions(sensql);
         initComponents();
         clean();
         proveedor = af.combox("proveedor ORDER BY nombre_comercial ","nombre_comercial");
         comboProvider.removeAllItems();
-    for (Object proveedor1 : proveedor) {
-        comboProvider.addItem(proveedor1);
-    }
+        for (Object proveedor1 : proveedor)
+        {
+            comboProvider.addItem(proveedor1);
+        }
         comboProvider.setEditable(true);
         AutoCompleteDecorator.decorate(comboProvider);
         //comboProveedor.getEditor().getEditorComponent().addKeyListener(keyListener);
@@ -263,7 +268,7 @@ Object[] proveedor;
     }//GEN-LAST:event_comboProviderActionPerformed
 
     private void searchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchButtonActionPerformed
-        SearchStockToner stock = new SearchStockToner(this);
+        SearchStockToner stock = new SearchStockToner(this, sensql);
         stock.show();
         fieldQuantity.requestFocus();
     }//GEN-LAST:event_searchButtonActionPerformed

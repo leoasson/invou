@@ -23,8 +23,8 @@ import javax.swing.table.DefaultTableModel;
  * @author leoasson
  */
 public final class SearchEquipment extends javax.swing.JInternalFrame {
-    AuxiliaryFunctions af = new AuxiliaryFunctions();
-    SentencesSql sensql = new SentencesSql();
+    AuxiliaryFunctions af;
+    SentencesSql sensql;
     private Object[][] tableDate; 
     private View view;
     private ModifyEquipment modifyEquipment;
@@ -40,29 +40,35 @@ public final class SearchEquipment extends javax.swing.JInternalFrame {
     ActionListener ActionBranch;
     ActionListener ActionFloor;
        
-    public SearchEquipment(View view)
+    public SearchEquipment(View view, SentencesSql sensql)
     {
-        state = 0;
+        af = new AuxiliaryFunctions(sensql);
+        this.sensql = sensql;
         this.view = view;
+        state = 0;
         initComponents();
         init();
         buttonAcept.setVisible(false);
         labelInfo.setVisible(true);
     }   
     
-    public SearchEquipment(ChangePrint changePrint)
+    public SearchEquipment(ChangePrint changePrint, SentencesSql sensql)
     {
-        state=1;
+        af = new AuxiliaryFunctions(sensql);
+        this.sensql = sensql;
         this.changePrint = changePrint;
+        state=1;
         initComponents();
         init();
         setSelecButton();
         buttonGenerate.setVisible(false);
     } 
     
-    public SearchEquipment()
+    public SearchEquipment(SentencesSql sensql)
     {
+        af = new AuxiliaryFunctions(sensql);
         state = 2;
+        this.sensql = sensql;
         initComponents();
         init();
         labelInfo.setVisible(false);
@@ -70,50 +76,60 @@ public final class SearchEquipment extends javax.swing.JInternalFrame {
 
     }    
     
-    public SearchEquipment(ModifyEquipment modifyEquipment)
+    public SearchEquipment(ModifyEquipment modifyEquipment, SentencesSql sensql)
     {
-        state=3;        
+        af = new AuxiliaryFunctions(sensql);      
         this.modifyEquipment = modifyEquipment;
+        this.sensql = sensql;
+        state=3; 
         initComponents();
         init();
         setSelecButton();
         buttonGenerate.setVisible(false);
     }  
         
-    public SearchEquipment(PrintReport printReport)
+    public SearchEquipment(PrintReport printReport, SentencesSql sensql)
     {
-        state=4;
+        af = new AuxiliaryFunctions(sensql);
         this.printReport = printReport;
+        this.sensql = sensql;
+        state=4;
         initComponents();
         init();
         setSelecButton();
         buttonGenerate.setVisible(false);        
     }  
     
-    public SearchEquipment(RegisterEquipmentRepair registerEquipmentRepair)
+    public SearchEquipment(RegisterEquipmentRepair registerEquipmentRepair, SentencesSql sensql)
     {
-        state=5;        
+        af = new AuxiliaryFunctions(sensql);        
         this.registerEquipmentRepair = registerEquipmentRepair;
+        this.sensql = sensql;
+        state=5;        
         initComponents();
         init();
         setSelecButton();
         buttonGenerate.setVisible(false);
     }    
     
-    public SearchEquipment(RegisterNewPrint registerNewPrint)
+    public SearchEquipment(RegisterNewPrint registerNewPrint, SentencesSql sensql)
     {
-        state=6;
+        af = new AuxiliaryFunctions(sensql);
         this.registerNewPrint = registerNewPrint;
+        this.sensql = sensql;
+        state=6;
         initComponents();
         init();
         setSelecButton();
         buttonGenerate.setVisible(false);
     }      
     
-    public SearchEquipment(ChangeEquipment changeEquipment, int equipment)
+    public SearchEquipment(ChangeEquipment changeEquipment, int equipment, SentencesSql sensql)
     {
-        state=7;
+        af = new AuxiliaryFunctions(sensql);
+        this.sensql = sensql;
         this.equipment=equipment;
+        state=7;
         this.changeEquipment = changeEquipment;
         initComponents();
         init();

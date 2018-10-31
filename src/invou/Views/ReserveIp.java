@@ -6,24 +6,28 @@ import invou.SentencesSql;
 import invou.ip;
 
 public class ReserveIp extends javax.swing.JInternalFrame {
-AuxiliaryFunctions af = new AuxiliaryFunctions();
-SentencesSql sensql = new SentencesSql();
-View view = new View();
+AuxiliaryFunctions af;
+SentencesSql sensql;
+View view;
 boolean liberate=false;
 ip ip = new ip();
 
-    public ReserveIp(View view) 
+    public ReserveIp(View view, SentencesSql sensql) 
     {
-        initComponents();
-        clean();
+        this.sensql = sensql;
         this.view =view;
+        af = new AuxiliaryFunctions(sensql);
+        initComponents();
+        clean();  
     }
     
-    public ReserveIp(View view,int l) 
+    public ReserveIp(View view,int l, SentencesSql sensql) 
     {
+        this.sensql = sensql;
+        this.view =view;
+        af = new AuxiliaryFunctions(sensql);
         initComponents();
         clean();
-        this.view =view;
         button.setLabel("Liberar");
         liberate=true;
         this.setTitle("Liberar ip");

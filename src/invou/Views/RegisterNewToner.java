@@ -6,16 +6,18 @@ package invou.Views;
 
 import javax.swing.JOptionPane;
 import invou.AuxiliaryFunctions;
+import invou.SentencesSql;
 
 /**
  *
  * @author 
  */
 public class RegisterNewToner extends javax.swing.JInternalFrame {
-     AuxiliaryFunctions af = new AuxiliaryFunctions();
+     AuxiliaryFunctions af;
 
-    public RegisterNewToner()
+    public RegisterNewToner(SentencesSql sensql)
     {
+        af= new AuxiliaryFunctions(sensql);
         initComponents();
         clean();
     }

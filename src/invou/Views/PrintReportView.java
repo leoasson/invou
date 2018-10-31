@@ -26,13 +26,15 @@ String id_equipment;
 String name, user, password, ipAdmin, ipImage, description, branch, floor, sector, processor, so, ram, disk, motherboard,date_;
 public boolean top;
 PrinterJob gap = PrinterJob.getPrinterJob();
-AuxiliaryFunctions af = new AuxiliaryFunctions();
-SentencesSql sensql = new SentencesSql();
+AuxiliaryFunctions af; 
+SentencesSql sensql;
 
 
-public PrintReportView(String id_equipment)
+public PrintReportView(String id_equipment, SentencesSql sensql)
 {
+    af= new AuxiliaryFunctions(sensql);
     this.id_equipment =id_equipment;
+    this.sensql = sensql;
     initComponents();
     this.setLocationRelativeTo(null);
     this.setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/invou/imagenes/print-16.png")));

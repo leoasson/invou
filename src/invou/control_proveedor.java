@@ -11,10 +11,10 @@ public class control_proveedor extends Proveedor {
     
 SentencesSql sql;
 
-    public control_proveedor(String id_proveedor, String nombre_comercial, String direccion, String cod_ciudad,String telefono)
+    public control_proveedor(String id_proveedor, String nombre_comercial, String direccion, String cod_ciudad,String telefono, SentencesSql sensql)
     { 
         super(id_proveedor, nombre_comercial, direccion, cod_ciudad, telefono);
-        sql = new SentencesSql();
+        sql = sensql;
     }
        
     public boolean ingresar_proveedor()

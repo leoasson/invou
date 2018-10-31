@@ -2,15 +2,17 @@ package invou.Views;
 
 import javax.swing.JOptionPane;
 import invou.AuxiliaryFunctions;
+import invou.SentencesSql;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 
 public class EgressEmptyToner extends javax.swing.JInternalFrame {
-AuxiliaryFunctions ca = new AuxiliaryFunctions();;
+AuxiliaryFunctions af;
 
-    public EgressEmptyToner() 
+    public EgressEmptyToner(SentencesSql sensql) 
     {
+        af = new AuxiliaryFunctions(sensql);
         initComponents();
         clean();
         
@@ -25,7 +27,7 @@ AuxiliaryFunctions ca = new AuxiliaryFunctions();;
         
         cantidad = fieldQuantity.getText();
         
-        if(!ca.isValidNumber(cantidad))
+        if(!af.isValidNumber(cantidad))
         {
             JOptionPane.showMessageDialog(null,"Ingrese una cantidad valida");
             return;
@@ -34,7 +36,7 @@ AuxiliaryFunctions ca = new AuxiliaryFunctions();;
         
         if(!fecha.equals(""))
         {          
-            if(ca.ingressEmptyToner(fecha, cantidad))
+            if(af.ingressEmptyToner(fecha, cantidad))
             {   
                 clean();
                 JOptionPane.showMessageDialog(null,"El retiro de carcasas se registró correctamente");

@@ -2,15 +2,19 @@ package invou.Views;
 
 import javax.swing.JOptionPane;
 import invou.AuxiliaryFunctions;
+import invou.SentencesSql;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 
 public class EgressToner extends javax.swing.JInternalFrame {
-AuxiliaryFunctions ca = new AuxiliaryFunctions();;
+    AuxiliaryFunctions af;
+    SentencesSql sensql;
 
-    public EgressToner() 
+    public EgressToner(SentencesSql sensql) 
     {
+        this.sensql = sensql;
+        af = new AuxiliaryFunctions(sensql);
         initComponents();
         searchButton.setFocusable(false);
         clean();
@@ -33,27 +37,27 @@ AuxiliaryFunctions ca = new AuxiliaryFunctions();;
         cantidad = fieldQuantity.getText();
         codigo = fieldCode.getText();
         
-        if(!ca.existTonerCode(codigo))
+        if(!af.existTonerCode(codigo))
         {
             JOptionPane.showMessageDialog(null,"El codigo ingresado no esta registardo en la abase de datos");
             clean();
             return;
         }
-        if(!ca.isValidNumber(cantidad))
+        if(!af.isValidNumber(cantidad))
         {
             JOptionPane.showMessageDialog(null,"Ingrese una cantidad valida");
             return;
         }
-        if(!ca.esPosibleRetirar(codigo, cantidad))
+        if(!af.esPosibleRetirar(codigo, cantidad))
         {
-            Object[][] datos = ca.datos_tonner(codigo);
+            Object[][] datos = af.datos_tonner(codigo);
             fieldQuantity.setText("");
             JOptionPane.showMessageDialog(null,"Solo quedan "+datos[0][1].toString()+" unidades disponibles.");
             return;
         }
         if(!fecha.equals(""))
         {          
-            if(ca.egressToner(codigo, null, fecha, cantidad))
+            if(af.egressToner(codigo, null, fecha, cantidad))
             {   
                 //prueba m1=new prueba();  
                 //Thread t1 =new Thread(m1); 
@@ -541,7 +545,7 @@ AuxiliaryFunctions ca = new AuxiliaryFunctions();;
     }//GEN-LAST:event_fieldQuantityActionPerformed
 
     private void searchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchButtonActionPerformed
-        SearchStockToner stock = new SearchStockToner(this);
+        SearchStockToner stock = new SearchStockToner(this, sensql);
         stock.show();
         fieldQuantity.requestFocus();
     }//GEN-LAST:event_searchButtonActionPerformed

@@ -3,25 +3,22 @@ package invou.Views;
 import javax.swing.JOptionPane;
 import invou.AuxiliaryFunctions;
 import invou.SentencesSql;
-import java.io.IOException;
-
 /**
  *
- * @author ANDRES
+ * @author Leandro Asson
  */
 public class RegisterNewPrint extends javax.swing.JInternalFrame {
-     AuxiliaryFunctions af = new AuxiliaryFunctions();
-     View view = new View();
-     SentencesSql sen;
-     String code, model, count, date, cod_pc;
-     String state="DISPONIBLE";
+    AuxiliaryFunctions af;
+    SentencesSql sensql; 
+    View view;
+    String code, model, count, date, cod_pc;
+    String state="DISPONIBLE";
      
-     
-
-    public RegisterNewPrint(View view)
+    public RegisterNewPrint(View view, SentencesSql sensql)
     {
+        af = new AuxiliaryFunctions(sensql);
         this.view = view;
-        this.sen = new SentencesSql();
+        this.sensql = sensql;
         initComponents();
         fieldModel.setEnabled(false);
         fieldDate.setDate(af.getActualDate());
@@ -56,7 +53,7 @@ public class RegisterNewPrint extends javax.swing.JInternalFrame {
         }
         else
         {
-            fieldModel.setText(sen.getData("modelo", "select modelo from modeloImpresora where id_pn='"+fieldPart.getText()+"';"));
+            fieldModel.setText(sensql.getData("modelo", "select modelo from modeloImpresora where id_pn='"+fieldPart.getText()+"';"));
             fieldCount.requestFocus();
             return true;
         }

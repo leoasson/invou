@@ -2,6 +2,7 @@ package invou.Views;
 
 import javax.swing.table.DefaultTableModel;
 import invou.AuxiliaryFunctions;
+import invou.SentencesSql;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
@@ -13,13 +14,14 @@ import java.beans.PropertyChangeListener;
  */
 public final class SearchExitsToner extends javax.swing.JInternalFrame {
 
-    AuxiliaryFunctions af = new AuxiliaryFunctions();
+    AuxiliaryFunctions af;
     private Object[][] tableDate; 
     ActionListener ActionModel;
     PropertyChangeListener ActListener;
     
-    public SearchExitsToner()
+    public SearchExitsToner(SentencesSql sensql)
     {
+        af = new AuxiliaryFunctions(sensql);
         initComponents();
         comboMonth.setEnabled(false);
         comboModel.setEnabled(false);

@@ -2,19 +2,22 @@ package invou.Views;
 
 import javax.swing.JOptionPane;
 import invou.AuxiliaryFunctions;
+import invou.SentencesSql;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 
 public class PrintLabelToner extends javax.swing.JInternalFrame {
-AuxiliaryFunctions ca = new AuxiliaryFunctions();;
+AuxiliaryFunctions af;
+SentencesSql sensql;
 
-    public PrintLabelToner() 
+    public PrintLabelToner(SentencesSql sensql) 
     {
+        this.sensql = sensql;
+        af = new AuxiliaryFunctions(sensql);
         initComponents();
         searchButton.setFocusable(false);
-        clean();
-        
+        clean();   
     }
     
     public void setCode(String id_toner)
@@ -26,7 +29,7 @@ AuxiliaryFunctions ca = new AuxiliaryFunctions();;
     {
         String codigo = fieldCode.getText();
         
-        if(!ca.existTonerCode(codigo))
+        if(!af.existTonerCode(codigo))
         {
             JOptionPane.showMessageDialog(null,"El codigo ingresado no esta registardo en la abase de datos");
             clean();
@@ -34,7 +37,7 @@ AuxiliaryFunctions ca = new AuxiliaryFunctions();;
         }  
         else
         {
-            PrintLabelTonnerView view = new PrintLabelTonnerView(codigo);
+            PrintLabelTonnerView view = new PrintLabelTonnerView(codigo, sensql);
             view.print();
         }
     
@@ -457,7 +460,7 @@ AuxiliaryFunctions ca = new AuxiliaryFunctions();;
     }//GEN-LAST:event_buttonPrintActionPerformed
 
     private void searchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchButtonActionPerformed
-        SearchStockToner stock = new SearchStockToner(this);
+        SearchStockToner stock = new SearchStockToner(this, sensql);
         stock.show();
     }//GEN-LAST:event_searchButtonActionPerformed
 

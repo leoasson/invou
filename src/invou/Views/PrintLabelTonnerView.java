@@ -25,12 +25,13 @@ public class PrintLabelTonnerView extends javax.swing.JFrame implements Printabl
 String id_toner, name;
 public boolean top;
 PrinterJob gap = PrinterJob.getPrinterJob();
-AuxiliaryFunctions af = new AuxiliaryFunctions();
-SentencesSql sensql = new SentencesSql();
+AuxiliaryFunctions af;
+SentencesSql sensql;
 
-
-public PrintLabelTonnerView(String id_toner)
+public PrintLabelTonnerView(String id_toner, SentencesSql sensql)
 {
+    af = new AuxiliaryFunctions(sensql);
+    this.sensql=sensql;
     this.id_toner = id_toner;
     name = sensql.getData("modelo", "select modelo from tonner where id_tonner='"+id_toner+"';");
         initComponents();

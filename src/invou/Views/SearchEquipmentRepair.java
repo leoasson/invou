@@ -2,6 +2,7 @@ package invou.Views;
 
 import javax.swing.table.DefaultTableModel;
 import invou.AuxiliaryFunctions;
+import invou.SentencesSql;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
@@ -13,12 +14,13 @@ import java.beans.PropertyChangeListener;
  */
 public final class SearchEquipmentRepair extends javax.swing.JInternalFrame {
     
-    AuxiliaryFunctions af = new AuxiliaryFunctions();
+    AuxiliaryFunctions af;
     private Object[][] tableData;
     PropertyChangeListener ActListener;
     
-    public SearchEquipmentRepair()
+    public SearchEquipmentRepair(SentencesSql sensql)
     {
+        af= new AuxiliaryFunctions(sensql);
         initComponents();
         comboMonth.setEnabled(false);
         comboYear.setEnabled(false);

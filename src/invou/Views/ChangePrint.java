@@ -2,18 +2,22 @@ package invou.Views;
 
 import javax.swing.JOptionPane;
 import invou.AuxiliaryFunctions;
+import invou.SentencesSql;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 
 public class ChangePrint extends javax.swing.JInternalFrame {
-AuxiliaryFunctions af = new AuxiliaryFunctions();
+AuxiliaryFunctions af;
+SentencesSql sensql;
 String id_equipment , serialNumber;
 View view;
         
-    public ChangePrint(View view) 
+    public ChangePrint(View view, SentencesSql sensql) 
     {
+        af = new AuxiliaryFunctions(sensql);
         this.view = view;
+        this.sensql = sensql;
         initComponents();
         searchButton.setFocusable(false);       
     }
@@ -270,7 +274,7 @@ View view;
     }//GEN-LAST:event_fieldIdEquipmentActionPerformed
 
     private void searchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchButtonActionPerformed
-        SearchPrinter printer = new SearchPrinter(this);
+        SearchPrinter printer = new SearchPrinter(this, sensql);
         printer.show();
         fieldIdEquipment.requestFocus();
     }//GEN-LAST:event_searchButtonActionPerformed

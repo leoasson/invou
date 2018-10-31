@@ -15,13 +15,15 @@ import java.awt.event.ActionListener;
  * @author 
  */
 public class RegisterNewSector extends javax.swing.JInternalFrame {
-    AuxiliaryFunctions af = new AuxiliaryFunctions();
-    SentencesSql sensql = new SentencesSql();
+    AuxiliaryFunctions af;
+    SentencesSql sensql;
     ActionListener actionBranch;
     ActionListener actionFloor;
 
-    public RegisterNewSector()
+    public RegisterNewSector(SentencesSql sensql)
     {
+        af = new AuxiliaryFunctions(sensql);
+        this.sensql=sensql;
         initComponents();
         completeComboBranch();
         clean();

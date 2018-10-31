@@ -6,16 +6,18 @@ package invou.Views;
 
 import javax.swing.JOptionPane;
 import invou.AuxiliaryFunctions;
+import invou.SentencesSql;
 
 /**
  *
  * @author 
  */
 public class RegisterNewMotherboard extends javax.swing.JInternalFrame {
-     AuxiliaryFunctions af = new AuxiliaryFunctions();
+     AuxiliaryFunctions af; 
 
-    public RegisterNewMotherboard()
+    public RegisterNewMotherboard(SentencesSql sensql)
     {
+        af = new AuxiliaryFunctions(sensql);
         initComponents();
         completeComboMaker();
         clean();

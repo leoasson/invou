@@ -6,41 +6,31 @@
 package invou.Views;
 
 import invou.AuxiliaryFunctions;
-import invou.PrintLabel;
-import invou.ip;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.awt.Desktop;
+import invou.SentencesSql;
 import java.awt.Dimension;
 import java.awt.Toolkit;
-import java.io.File;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.util.ArrayList;
 import javax.swing.JOptionPane;
 /**
  *
  * @author leoas
  */
 public class View extends javax.swing.JFrame {
-
-    AuxiliaryFunctions af = new AuxiliaryFunctions();
+    
+    SentencesSql sensql = new SentencesSql();
+    AuxiliaryFunctions af = new AuxiliaryFunctions(sensql);
+    
     public View() 
     {
         initComponents();
         this.setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/invou/imagenes/logo-oulton32.png")));
         this.setLocationRelativeTo(null);
-        jToolBar2.setFloatable(false);
-        
-        
-    }
-
-    
+        jToolBar2.setFloatable(false);       
+    }  
     
     public void addModifyEquipment(SearchEquipment se, String Id_equipment)
     {
-        ModifyEquipment equipment = new ModifyEquipment(this, se, Id_equipment);
+        ModifyEquipment equipment = new ModifyEquipment(this, se, Id_equipment, sensql);
         Dimension desktopSize = jDesktopPane1.getSize();
         Dimension jInternalFrameSize = equipment.getSize();
         equipment.setLocation((desktopSize.width - jInternalFrameSize.width)/2,(desktopSize.height- jInternalFrameSize.height)/2);
@@ -50,7 +40,7 @@ public class View extends javax.swing.JFrame {
     
     public void addSearchEquipment(RegisterNewPrint rnp)
     {
-        SearchEquipment equipment = new SearchEquipment(rnp);
+        SearchEquipment equipment = new SearchEquipment(rnp, sensql);
         Dimension desktopSize = jDesktopPane1.getSize();
         Dimension jInternalFrameSize = equipment.getSize();
         equipment.setLocation((desktopSize.width - jInternalFrameSize.width)/2,(desktopSize.height- jInternalFrameSize.height)/2);
@@ -60,7 +50,7 @@ public class View extends javax.swing.JFrame {
     
         public void addSearchEquipment(ChangeEquipment changeEquipment, int equip)
     {
-        SearchEquipment equipment = new SearchEquipment(changeEquipment,equip);
+        SearchEquipment equipment = new SearchEquipment(changeEquipment,equip, sensql);
         Dimension desktopSize = jDesktopPane1.getSize();
         Dimension jInternalFrameSize = equipment.getSize();
         equipment.setLocation((desktopSize.width - jInternalFrameSize.width)/2,(desktopSize.height- jInternalFrameSize.height)/2);
@@ -71,7 +61,7 @@ public class View extends javax.swing.JFrame {
     
     public void addSearchEquipment(ModifyEquipment me)
     {
-        SearchEquipment equipment = new SearchEquipment(me);
+        SearchEquipment equipment = new SearchEquipment(me, sensql);
         Dimension desktopSize = jDesktopPane1.getSize();
         Dimension jInternalFrameSize = equipment.getSize();
         equipment.setLocation((desktopSize.width - jInternalFrameSize.width)/2,(desktopSize.height- jInternalFrameSize.height)/2);
@@ -81,7 +71,7 @@ public class View extends javax.swing.JFrame {
     
     public void addSearchEquipment(PrintReport pr)
     {
-        SearchEquipment equipment = new SearchEquipment(pr);
+        SearchEquipment equipment = new SearchEquipment(pr, sensql);
         Dimension desktopSize = jDesktopPane1.getSize();
         Dimension jInternalFrameSize = equipment.getSize();
         equipment.setLocation((desktopSize.width - jInternalFrameSize.width)/2,(desktopSize.height- jInternalFrameSize.height)/2);
@@ -91,7 +81,7 @@ public class View extends javax.swing.JFrame {
     
     public void addSearchEquipment(RegisterEquipmentRepair ier)
     {
-        SearchEquipment equipment = new SearchEquipment(ier);
+        SearchEquipment equipment = new SearchEquipment(ier, sensql);
         Dimension desktopSize = jDesktopPane1.getSize();
         Dimension jInternalFrameSize = equipment.getSize();
         equipment.setLocation((desktopSize.width - jInternalFrameSize.width)/2,(desktopSize.height- jInternalFrameSize.height)/2);
@@ -101,7 +91,7 @@ public class View extends javax.swing.JFrame {
     
     public void addSearchEquipment(ChangePrint changePrint)
     {
-        SearchEquipment equipment = new SearchEquipment(changePrint);
+        SearchEquipment equipment = new SearchEquipment(changePrint, sensql);
         Dimension desktopSize = jDesktopPane1.getSize();
         Dimension jInternalFrameSize = equipment.getSize();
         equipment.setLocation((desktopSize.width - jInternalFrameSize.width)/2,(desktopSize.height- jInternalFrameSize.height)/2);
@@ -121,7 +111,7 @@ public class View extends javax.swing.JFrame {
     
     public void addSearchIp(ReserveIp reserveip) 
     {
-        SearchIp searchIp = new SearchIp(reserveip);
+        SearchIp searchIp = new SearchIp(reserveip, sensql);
         Dimension desktopSize = jDesktopPane1.getSize();
         Dimension jInternalFrameSize = searchIp.getSize();
         searchIp.setLocation((desktopSize.width - jInternalFrameSize.width)/2,(desktopSize.height- jInternalFrameSize.height)/2);
@@ -146,7 +136,6 @@ public class View extends javax.swing.JFrame {
         jButton8 = new javax.swing.JButton();
         jSeparator5 = new javax.swing.JToolBar.Separator();
         jButton6 = new javax.swing.JButton();
-        jButton5 = new javax.swing.JButton();
         jDesktopPane1 = new javax.swing.JDesktopPane();
         jLabel2 = new javax.swing.JLabel();
         fieldCode = new javax.swing.JTextField();
@@ -316,12 +305,6 @@ public class View extends javax.swing.JFrame {
             }
         });
         jToolBar2.add(jButton6);
-
-        jButton5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/invou/imagenes/monitorAdd.png"))); // NOI18N
-        jButton5.setFocusable(false);
-        jButton5.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jButton5.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jToolBar2.add(jButton5);
 
         jDesktopPane1.setBackground(new java.awt.Color(223, 230, 242));
         jDesktopPane1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -746,19 +729,19 @@ public class View extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void ButtonEnviarAReparacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonEnviarAReparacionActionPerformed
-        PrinterRepairNew repair = new PrinterRepairNew();
+        PrinterRepairNew repair = new PrinterRepairNew(sensql);
         jDesktopPane1.add(repair);
         repair.show();
     }//GEN-LAST:event_ButtonEnviarAReparacionActionPerformed
 
     private void ButtonRegresoDeReparacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonRegresoDeReparacionActionPerformed
-        PrinterRepairReturn repair = new PrinterRepairReturn();
+        PrinterRepairReturn repair = new PrinterRepairReturn(sensql);
         jDesktopPane1.add(repair);
         repair.show();
     }//GEN-LAST:event_ButtonRegresoDeReparacionActionPerformed
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
-        SearchIp searchIp = new SearchIp();
+        SearchIp searchIp = new SearchIp(sensql);
         Dimension desktopSize = jDesktopPane1.getSize();
         Dimension jInternalFrameSize = searchIp.getSize();
         searchIp.setLocation((desktopSize.width - jInternalFrameSize.width)/2,(desktopSize.height- jInternalFrameSize.height)/2);
@@ -771,55 +754,55 @@ public class View extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem3ActionPerformed
 
     private void addTonnerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addTonnerActionPerformed
-    IngressToner ing = new IngressToner();
+    IngressToner ing = new IngressToner(sensql);
     jDesktopPane1.add(ing);
     ing.show();
     }//GEN-LAST:event_addTonnerActionPerformed
 
     private void deleteTonnerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteTonnerActionPerformed
-    EgressToner egr = new EgressToner();
+    EgressToner egr = new EgressToner(sensql);
     jDesktopPane1.add(egr);
     egr.show();
     }//GEN-LAST:event_deleteTonnerActionPerformed
 
     private void registryTonnerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registryTonnerActionPerformed
-        RegisterNewToner art = new RegisterNewToner();
+        RegisterNewToner art = new RegisterNewToner(sensql);
         jDesktopPane1.add(art);
         art.show(); 
     }//GEN-LAST:event_registryTonnerActionPerformed
 
     public void addInPanel()
     {
-        RegisterNewToner art = new RegisterNewToner();
+        RegisterNewToner art = new RegisterNewToner(sensql);
         jDesktopPane1.add(art);
         art.show(); 
     }
     
     private void StockListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_StockListActionPerformed
-        SearchStockToner bus = new SearchStockToner();
+        SearchStockToner bus = new SearchStockToner(sensql);
         bus.show();        
     }//GEN-LAST:event_StockListActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        EgressToner egr = new EgressToner();
+        EgressToner egr = new EgressToner(sensql);
         jDesktopPane1.add(egr);
         egr.show();        
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        IngressToner ing = new IngressToner();
+        IngressToner ing = new IngressToner(sensql);
         jDesktopPane1.add(ing);
         ing.show();
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void updateStockActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateStockActionPerformed
-        UpdateStockToner stock = new UpdateStockToner();
+        UpdateStockToner stock = new UpdateStockToner(sensql);
         jDesktopPane1.add(stock);
         stock.show(); 
     }//GEN-LAST:event_updateStockActionPerformed
 
     private void entryListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_entryListActionPerformed
-        SearchIncomeToner ingresos = new SearchIncomeToner();
+        SearchIncomeToner ingresos = new SearchIncomeToner(sensql);
         Dimension desktopSize = jDesktopPane1.getSize();
         Dimension jInternalFrameSize = ingresos.getSize();
         ingresos.setLocation((desktopSize.width - jInternalFrameSize.width)/2,(desktopSize.height- jInternalFrameSize.height)/2);
@@ -828,7 +811,7 @@ public class View extends javax.swing.JFrame {
     }//GEN-LAST:event_entryListActionPerformed
 
     private void exitListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitListActionPerformed
-        SearchExitsToner egresos = new SearchExitsToner();
+        SearchExitsToner egresos = new SearchExitsToner(sensql);
         Dimension desktopSize = jDesktopPane1.getSize();
         Dimension jInternalFrameSize = egresos.getSize();
         egresos.setLocation((desktopSize.width - jInternalFrameSize.width)/2,(desktopSize.height- jInternalFrameSize.height)/2);
@@ -837,25 +820,25 @@ public class View extends javax.swing.JFrame {
     }//GEN-LAST:event_exitListActionPerformed
 
     private void listarProveedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_listarProveedorActionPerformed
-        SearchProvider listaProv = new SearchProvider();
+        SearchProvider listaProv = new SearchProvider(sensql);
         jDesktopPane1.add(listaProv);
         listaProv.show();
     }//GEN-LAST:event_listarProveedorActionPerformed
 
     private void registrarProveedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registrarProveedorActionPerformed
-        RegisterNewProvider prov = new RegisterNewProvider();
+        RegisterNewProvider prov = new RegisterNewProvider(sensql);
         jDesktopPane1.add(prov);
         prov.show();
     }//GEN-LAST:event_registrarProveedorActionPerformed
 
     private void registrarImpresoraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registrarImpresoraActionPerformed
-        RegisterNewPrint impresora = new RegisterNewPrint(this);
+        RegisterNewPrint impresora = new RegisterNewPrint(this, sensql);
         jDesktopPane1.add(impresora);
         impresora.show();
     }//GEN-LAST:event_registrarImpresoraActionPerformed
 
     private void listRepairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_listRepairActionPerformed
-        SearchPrinterRepair repairs = new SearchPrinterRepair();
+        SearchPrinterRepair repairs = new SearchPrinterRepair(sensql);
         Dimension desktopSize = jDesktopPane1.getSize();
         Dimension jInternalFrameSize = repairs.getSize();
         repairs.setLocation((desktopSize.width - jInternalFrameSize.width)/2,(desktopSize.height- jInternalFrameSize.height)/2);
@@ -864,30 +847,30 @@ public class View extends javax.swing.JFrame {
     }//GEN-LAST:event_listRepairActionPerformed
 
     private void listPrintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_listPrintActionPerformed
-        SearchPrinter printers = new SearchPrinter();
+        SearchPrinter printers = new SearchPrinter(sensql);
         printers.show();
     }//GEN-LAST:event_listPrintActionPerformed
 
     private void enviarImpresoraAReparacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_enviarImpresoraAReparacionActionPerformed
-        PrinterRepairNew repair = new PrinterRepairNew();
+        PrinterRepairNew repair = new PrinterRepairNew(sensql);
         jDesktopPane1.add(repair);
         repair.show();
     }//GEN-LAST:event_enviarImpresoraAReparacionActionPerformed
 
     private void regresoDeReparacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_regresoDeReparacionActionPerformed
-        PrinterRepairReturn repair = new PrinterRepairReturn();
+        PrinterRepairReturn repair = new PrinterRepairReturn(sensql);
         jDesktopPane1.add(repair);
         repair.show();
     }//GEN-LAST:event_regresoDeReparacionActionPerformed
 
     private void newPagesPrintedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newPagesPrintedActionPerformed
-        UpdatePagesPrinted pages = new UpdatePagesPrinted();
+        UpdatePagesPrinted pages = new UpdatePagesPrinted(sensql);
         jDesktopPane1.add(pages);
         pages.show();        
     }//GEN-LAST:event_newPagesPrintedActionPerformed
 
     private void RegisterNewMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RegisterNewMenuActionPerformed
-        RegisterNewEquipment equipment = new RegisterNewEquipment(this);
+        RegisterNewEquipment equipment = new RegisterNewEquipment(this, sensql);
         Dimension desktopSize = jDesktopPane1.getSize();
         Dimension jInternalFrameSize = equipment.getSize();
         equipment.setLocation((desktopSize.width - jInternalFrameSize.width)/2,(desktopSize.height- jInternalFrameSize.height)/2);
@@ -896,7 +879,7 @@ public class View extends javax.swing.JFrame {
     }//GEN-LAST:event_RegisterNewMenuActionPerformed
 
     private void ListEquipmentMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ListEquipmentMenuActionPerformed
-        SearchEquipment equipment = new SearchEquipment(this);
+        SearchEquipment equipment = new SearchEquipment(this,sensql);
         Dimension desktopSize = jDesktopPane1.getSize();
         Dimension jInternalFrameSize = equipment.getSize();
         equipment.setLocation((desktopSize.width - jInternalFrameSize.width)/2,(desktopSize.height- jInternalFrameSize.height)/2);
@@ -905,7 +888,7 @@ public class View extends javax.swing.JFrame {
     }//GEN-LAST:event_ListEquipmentMenuActionPerformed
 
     private void registerRepairMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registerRepairMenuActionPerformed
-        RegisterEquipmentRepair equipment = new RegisterEquipmentRepair(this);
+        RegisterEquipmentRepair equipment = new RegisterEquipmentRepair(this, sensql);
         Dimension desktopSize = jDesktopPane1.getSize();
         Dimension jInternalFrameSize = equipment.getSize();
         equipment.setLocation((desktopSize.width - jInternalFrameSize.width)/2,(desktopSize.height- jInternalFrameSize.height)/2);
@@ -915,7 +898,7 @@ public class View extends javax.swing.JFrame {
 
     private void printLabelMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_printLabelMenuActionPerformed
         
-        SearchEquipment equipment = new SearchEquipment();
+        SearchEquipment equipment = new SearchEquipment(sensql);
         Dimension desktopSize = jDesktopPane1.getSize();
         Dimension jInternalFrameSize = equipment.getSize();
         equipment.setLocation((desktopSize.width - jInternalFrameSize.width)/2,(desktopSize.height- jInternalFrameSize.height)/2);
@@ -924,7 +907,7 @@ public class View extends javax.swing.JFrame {
     }//GEN-LAST:event_printLabelMenuActionPerformed
 
     private void modifyDeleteMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_modifyDeleteMenuActionPerformed
-        ModifyEquipment equipment = new ModifyEquipment(this);
+        ModifyEquipment equipment = new ModifyEquipment(this, sensql);
         Dimension desktopSize = jDesktopPane1.getSize();
         Dimension jInternalFrameSize = equipment.getSize();
         equipment.setLocation((desktopSize.width - jInternalFrameSize.width)/2,(desktopSize.height- jInternalFrameSize.height)/2);
@@ -933,7 +916,7 @@ public class View extends javax.swing.JFrame {
     }//GEN-LAST:event_modifyDeleteMenuActionPerformed
 
     private void ListRepairEquipmentMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ListRepairEquipmentMenuActionPerformed
-        SearchEquipmentRepair equipment = new SearchEquipmentRepair();
+        SearchEquipmentRepair equipment = new SearchEquipmentRepair(sensql);
         Dimension desktopSize = jDesktopPane1.getSize();
         Dimension jInternalFrameSize = equipment.getSize();
         equipment.setLocation((desktopSize.width - jInternalFrameSize.width)/2,(desktopSize.height- jInternalFrameSize.height)/2);
@@ -942,7 +925,7 @@ public class View extends javax.swing.JFrame {
     }//GEN-LAST:event_ListRepairEquipmentMenuActionPerformed
 
     private void print1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_print1ActionPerformed
-        PrintReport equipment = new PrintReport(this);
+        PrintReport equipment = new PrintReport(this, sensql);
         Dimension desktopSize = jDesktopPane1.getSize();
         Dimension jInternalFrameSize = equipment.getSize();
         equipment.setLocation((desktopSize.width - jInternalFrameSize.width)/2,(desktopSize.height- jInternalFrameSize.height)/2);
@@ -961,14 +944,14 @@ public class View extends javax.swing.JFrame {
         
         else
         {
-           PrintReportView prv = new PrintReportView(codigo);
+           PrintReportView prv = new PrintReportView(codigo,sensql);
            prv.show();
            fieldCode.setText("");
         }
     }//GEN-LAST:event_fieldCodeActionPerformed
 
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
-        RegisterNewEquipment equipment = new RegisterNewEquipment(this);
+        RegisterNewEquipment equipment = new RegisterNewEquipment(this,sensql);
         Dimension desktopSize = jDesktopPane1.getSize();
         Dimension jInternalFrameSize = equipment.getSize();
         equipment.setLocation((desktopSize.width - jInternalFrameSize.width)/2,(desktopSize.height- jInternalFrameSize.height)/2);
@@ -977,7 +960,7 @@ public class View extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton7ActionPerformed
 
     private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
-        SearchEquipment equipment = new SearchEquipment(this);
+        SearchEquipment equipment = new SearchEquipment(this, sensql);
         Dimension desktopSize = jDesktopPane1.getSize();
         Dimension jInternalFrameSize = equipment.getSize();
         equipment.setLocation((desktopSize.width - jInternalFrameSize.width)/2,(desktopSize.height- jInternalFrameSize.height)/2);
@@ -986,7 +969,7 @@ public class View extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton8ActionPerformed
 
     private void enviarImpresoraAReparacion1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_enviarImpresoraAReparacion1ActionPerformed
-        ChangePrint changePrint = new ChangePrint(this);
+        ChangePrint changePrint = new ChangePrint(this, sensql);
         Dimension desktopSize = jDesktopPane1.getSize();
         Dimension jInternalFrameSize = changePrint.getSize();
         changePrint.setLocation((desktopSize.width - jInternalFrameSize.width)/2,(desktopSize.height- jInternalFrameSize.height)/2);
@@ -995,7 +978,7 @@ public class View extends javax.swing.JFrame {
     }//GEN-LAST:event_enviarImpresoraAReparacion1ActionPerformed
 
     private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem5ActionPerformed
-        SearchIp searchIp = new SearchIp();
+        SearchIp searchIp = new SearchIp(sensql);
         Dimension desktopSize = jDesktopPane1.getSize();
         Dimension jInternalFrameSize = searchIp.getSize();
         searchIp.setLocation((desktopSize.width - jInternalFrameSize.width)/2,(desktopSize.height- jInternalFrameSize.height)/2);
@@ -1004,7 +987,7 @@ public class View extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem5ActionPerformed
 
     private void jMenuItem6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem6ActionPerformed
-        RegisterNewRangeIp range = new RegisterNewRangeIp();
+        RegisterNewRangeIp range = new RegisterNewRangeIp(sensql);
         Dimension desktopSize = jDesktopPane1.getSize();
         Dimension jInternalFrameSize = range.getSize();
         range.setLocation((desktopSize.width - jInternalFrameSize.width)/2,(desktopSize.height- jInternalFrameSize.height)/2);
@@ -1014,7 +997,7 @@ public class View extends javax.swing.JFrame {
 
     private void jMenuItem7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem7ActionPerformed
 
-        ReserveIp ip = new ReserveIp(this);
+        ReserveIp ip = new ReserveIp(this, sensql);
         Dimension desktopSize = jDesktopPane1.getSize();
         Dimension jInternalFrameSize = ip.getSize();
         ip.setLocation((desktopSize.width - jInternalFrameSize.width)/2,(desktopSize.height- jInternalFrameSize.height)/2);
@@ -1023,7 +1006,7 @@ public class View extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem7ActionPerformed
 
     private void jMenuItem8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem8ActionPerformed
-        ReserveIp ip = new ReserveIp(this,1);
+        ReserveIp ip = new ReserveIp(this,1, sensql);
         Dimension desktopSize = jDesktopPane1.getSize();
         Dimension jInternalFrameSize = ip.getSize();
         ip.setLocation((desktopSize.width - jInternalFrameSize.width)/2,(desktopSize.height- jInternalFrameSize.height)/2);
@@ -1036,7 +1019,7 @@ public class View extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem4ActionPerformed
 
     private void updateStock1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateStock1ActionPerformed
-        PrintLabelToner toner = new PrintLabelToner();
+        PrintLabelToner toner = new PrintLabelToner(sensql);
         Dimension desktopSize = jDesktopPane1.getSize();
         Dimension jInternalFrameSize = toner.getSize();
         toner.setLocation((desktopSize.width - jInternalFrameSize.width)/2,(desktopSize.height- jInternalFrameSize.height)/2);
@@ -1045,12 +1028,12 @@ public class View extends javax.swing.JFrame {
     }//GEN-LAST:event_updateStock1ActionPerformed
 
     private void ButtonRegresoDeReparacion1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonRegresoDeReparacion1ActionPerformed
-        SearchPrinter printers = new SearchPrinter();
+        SearchPrinter printers = new SearchPrinter(sensql);
         printers.show();
     }//GEN-LAST:event_ButtonRegresoDeReparacion1ActionPerformed
 
     private void ListEquipmentMenu1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ListEquipmentMenu1ActionPerformed
-        ChangeEquipment toner = new ChangeEquipment(this);
+        ChangeEquipment toner = new ChangeEquipment(this, sensql);
         Dimension desktopSize = jDesktopPane1.getSize();
         Dimension jInternalFrameSize = toner.getSize();
         toner.setLocation((desktopSize.width - jInternalFrameSize.width)/2,(desktopSize.height- jInternalFrameSize.height)/2);
@@ -1063,7 +1046,7 @@ public class View extends javax.swing.JFrame {
     }//GEN-LAST:event_listRepair1ActionPerformed
 
     private void addMotherboardActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addMotherboardActionPerformed
-        RegisterNewMotherboard motherboard = new RegisterNewMotherboard();
+        RegisterNewMotherboard motherboard = new RegisterNewMotherboard(sensql);
         Dimension desktopSize = jDesktopPane1.getSize();
         Dimension jInternalFrameSize = motherboard.getSize();
         motherboard.setLocation((desktopSize.width - jInternalFrameSize.width)/2,(desktopSize.height- jInternalFrameSize.height)/2);
@@ -1072,7 +1055,7 @@ public class View extends javax.swing.JFrame {
     }//GEN-LAST:event_addMotherboardActionPerformed
 
     private void addSectorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addSectorActionPerformed
-       RegisterNewSector sector = new RegisterNewSector();
+       RegisterNewSector sector = new RegisterNewSector(sensql);
         Dimension desktopSize = jDesktopPane1.getSize();
         Dimension jInternalFrameSize = sector.getSize();
         sector.setLocation((desktopSize.width - jInternalFrameSize.width)/2,(desktopSize.height- jInternalFrameSize.height)/2);
@@ -1082,7 +1065,7 @@ public class View extends javax.swing.JFrame {
 
     private void updateStock2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateStock2ActionPerformed
      
-        EgressEmptyToner toner = new EgressEmptyToner();
+        EgressEmptyToner toner = new EgressEmptyToner(sensql);
         Dimension desktopSize = jDesktopPane1.getSize();
         Dimension jInternalFrameSize = toner.getSize();
         toner.setLocation((desktopSize.width - jInternalFrameSize.width)/2,(desktopSize.height- jInternalFrameSize.height)/2);
@@ -1091,7 +1074,7 @@ public class View extends javax.swing.JFrame {
     }//GEN-LAST:event_updateStock2ActionPerformed
 
     private void listTonerEmptyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_listTonerEmptyActionPerformed
-        SearchExitEmptyToner listtoner = new SearchExitEmptyToner();
+        SearchExitEmptyToner listtoner = new SearchExitEmptyToner(sensql);
         Dimension desktopSize = jDesktopPane1.getSize();
         Dimension jInternalFrameSize = listtoner.getSize();
         listtoner.setLocation((desktopSize.width - jInternalFrameSize.width)/2,(desktopSize.height- jInternalFrameSize.height)/2);
@@ -1161,7 +1144,6 @@ public class View extends javax.swing.JFrame {
     private javax.swing.JMenu generateReportMenu;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
     private javax.swing.JButton jButton7;
     private javax.swing.JButton jButton8;
