@@ -75,6 +75,49 @@ public class SentencesSql {
         return data;
     }
     
+        public Object [][] GetTableForTonerReport(String colName[], String from, String where){
+        int register = 0;
+        String select = arrayStringToString(colName);
+        String consult = "SELECT " + select + from + " "+ where ; 
+        System.out.println(consult);
+        try
+        {
+           System.out.println("select count(*) as total FROM ("+consult+") as `tableOne`");
+           ps = con.connected().prepareStatement("select count(*) as total from ("+consult+") as `tableOne`");
+           
+           res = ps.executeQuery();
+           res.next();
+           register = res.getInt("total");
+           System.out.println(register);
+           res.close();
+        }
+        catch(SQLException e)
+        {
+           System.out.println(e);
+        }
+
+      Object[][] data = new String[register][colName.length];
+      String col[] = new String[colName.length];
+
+        try{
+           ps = con.connected().prepareStatement(consult);
+           res = ps.executeQuery();
+           int i = 0;
+           while(res.next()){
+              for(int j=0; j<=colName.length-1;j++){
+                  col[j] = res.getString(colName[j]);
+                  data[i][j] = col[j];
+              }
+              i++;
+           }
+           res.close();
+            }catch(SQLException e){
+           System.out.println(e);
+        }
+        return data;
+    }
+    
+    
     public Object [][] GetTabla(String colName[], String tabla, String sql){
       int registros = 0;
       

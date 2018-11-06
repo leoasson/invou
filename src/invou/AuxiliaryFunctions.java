@@ -174,21 +174,21 @@ public class AuxiliaryFunctions
     
     public Object[][] getStockToner()
     {
-        String[] columnas={"id_tonner", "modelo", "descripcion","stock"};
+        String[] columnas={"id_tonner", "modelo", "descripcion", "Impresoras","stock"};
         Object[][] datos = sensql.GetTable(columnas, "from tonner",";");
         return datos;
     }
 
     public Object [][] getIngressToner()
     {
-    String[] columnas= {"id_ingresoTonner", "cod_tonner","modelo", "detalle","nombre_comercial","fecha", "cantidad"};
+    String[] columnas= {"id_ingresoTonner", "cod_tonner","modelo", "descripcion","nombre_comercial","fecha", "cantidad"};
     Object [][] datos = sensql.GetTable(columnas, "FROM `ingresotonner`,`proveedor`,`tonner`", "WHERE id_proveedor=cod_proveedor and id_tonner=cod_tonner ORDER BY `fecha` DESC;");
     return datos;
     }
     
     public Object [][] getEgressToner()
     {
-    String[] columnas= {"id_egresoTonner","cod_tonner","modelo","detalle","fecha","cantidad"};
+    String[] columnas= {"id_egresoTonner","cod_tonner","modelo", "descripcion", "impresoras","fecha","cantidad"};
     Object [][] datos = sensql.GetTable(columnas, "FROM `egresotonner`,`tonner`", "WHERE cod_tonner=id_tonner ORDER BY `fecha` DESC;");
     return datos;
     }
@@ -198,6 +198,29 @@ public class AuxiliaryFunctions
         String[] columnas= {"id_sn", "cod_pn","modelo","sucursal", "piso", "area", "nombrePC","cantidad","fecha", "estado"};
         Object [][] datos = sensql.GetTable(columnas, "FROM `impresora` LEFT JOIN `modeloimpresora` ON `cod_pn` = `id_pn` LEFT JOIN `impresiones` ON `cod_impresion` = `id_impresion` LEFT JOIN `pc` on `cod_pc` = `id_pc` LEFT JOIN `area` ON `id_area` = `cod_area` LEFT JOIN `piso` ON `id_piso` = `cod_piso` LEFT JOIN `sucursal` ON `id_sucursal` = `cod_sucursal`", "ORDER BY `modelo`;");
         return datos;
+    }
+    
+    public Object [][] getReportToner(int ano, int mes, boolean[] filter)
+    {
+        String[] columnas= {"cod_tonner", "modelo", "descripcion", "impresoras", "SUM(`cantidad`)"};
+        Object [][] datos;
+        
+        switch(Arrays.toString(filter))
+        {
+            case "[false, true]":
+                datos = sensql.GetTableForTonerReport(columnas, "FROM `egresotonner` LEFT join `tonner` on `cod_tonner` = `id_tonner`"," where MONTH(fecha)='"+mes+"' GROUP BY `cod_tonner`");
+                return datos;
+            case "[true, true]":
+                datos = sensql.GetTableForTonerReport(columnas, "FROM `egresotonner` LEFT join `tonner` on `cod_tonner` = `id_tonner`"," where MONTH(fecha)='"+mes+"' and YEAR(fecha)='"+ano+"' GROUP BY `cod_tonner`");
+                return datos;   
+                
+            case "[true, false]":
+                datos = sensql.GetTableForTonerReport(columnas, "FROM `egresotonner` LEFT join `tonner` on `cod_tonner` = `id_tonner`"," where YEAR(fecha)='"+ano+"' GROUP BY `cod_tonner`");
+                return datos;
+            default:
+                datos= sensql.GetTableForTonerReport(columnas, "FROM `egresotonner` LEFT join `tonner` on `cod_tonner` = `id_tonner`"," where MONTH(fecha)='"+mes+"' and YEAR(fecha)='"+ano+"' GROUP BY `cod_tonner`");
+        }
+          return datos;  
     }
     
     public Object [][] getEquipment()
@@ -392,7 +415,7 @@ public class AuxiliaryFunctions
     
     public Object[][] filterStockToner(String model)
     {
-    String[] columnas={"id_tonner", "modelo", "descripcion","stock"};
+    String[] columnas={"id_tonner", "modelo", "descripcion", "impresoras","stock"};
     Object[][] datos = sensql.GetTable(columnas, "from `tonner`","WHERE modelo = '"+model+"';");
     return datos;
     }
@@ -435,7 +458,7 @@ public class AuxiliaryFunctions
         }
         else
         {
-            String[] columnas= {"id_egresoTonner", "cod_tonner", "modelo", "detalle","fecha", "cantidad"};
+            String[] columnas= {"id_egresoTonner", "cod_tonner", "modelo", "detalle", "impresoras","fecha", "cantidad"};
             Object [][] datos = sensql.GetTable(columnas, "from `egresotonner`,`tonner`", "where cod_tonner=id_tonner ORDER BY `fecha` DESC;");
             switch(Arrays.toString(filter))
             {

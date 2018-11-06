@@ -97,7 +97,7 @@ public class PrinterReportXLS
         style4.setAlignment(CellStyle.ALIGN_CENTER);
     }
         
-        private void setTotalStylus()
+    private void setTotalStylus()
     {
         style3.setFillForegroundColor(IndexedColors.LIGHT_ORANGE.getIndex());
         style3.setFillPattern(CellStyle.SOLID_FOREGROUND);
@@ -107,7 +107,6 @@ public class PrinterReportXLS
         style3.setBorderLeft(CellStyle.BORDER_THIN);
         style3.setAlignment(CellStyle.ALIGN_CENTER);
     }
-    
     
     private void generateHeader(Sheet sheet)
     {    

@@ -5,6 +5,7 @@
  */
 package invou.Views;
 
+import Invou.BackUpDataBase;
 import invou.AuxiliaryFunctions;
 import invou.SentencesSql;
 import java.awt.Dimension;
@@ -194,6 +195,7 @@ public class View extends javax.swing.JFrame {
         menu_config = new javax.swing.JMenu();
         addMotherboard = new javax.swing.JMenuItem();
         addSector = new javax.swing.JMenuItem();
+        backUpBD = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Invou");
@@ -699,6 +701,14 @@ public class View extends javax.swing.JFrame {
         });
         menu_config.add(addSector);
 
+        backUpBD.setText("Realizar BackUp BD");
+        backUpBD.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                backUpBDActionPerformed(evt);
+            }
+        });
+        menu_config.add(backUpBD);
+
         jMenuBar1.add(menu_config);
 
         setJMenuBar(jMenuBar1);
@@ -1082,6 +1092,12 @@ public class View extends javax.swing.JFrame {
         listtoner.show(); 
     }//GEN-LAST:event_listTonerEmptyActionPerformed
 
+    private void backUpBDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backUpBDActionPerformed
+        BackUpDataBase bkp;
+        bkp = new  BackUpDataBase(sensql);
+        bkp.GenerarBackupMySQL();
+    }//GEN-LAST:event_backUpBDActionPerformed
+
     
     
     
@@ -1134,6 +1150,7 @@ public class View extends javax.swing.JFrame {
     private javax.swing.JMenuItem addMotherboard;
     private javax.swing.JMenuItem addSector;
     private javax.swing.JMenuItem addTonner;
+    private javax.swing.JMenuItem backUpBD;
     private javax.swing.JMenuItem deleteTonner;
     private javax.swing.JMenuItem entryList;
     private javax.swing.JMenuItem enviarImpresoraAReparacion;

@@ -164,12 +164,19 @@ public final class SearchStockToner extends javax.swing.JFrame {
     
     public void generateTableData(Object [][] datostabla)
     {   
-        String[] columnas = {"Codigo_articulo","modelo", "Descripcion", "Stock"};
+        String[] columnas = {"Codigo_articulo","modelo", "Descripcion", "Impresoras", "Stock"};
         datos = new DefaultTableModel(tableDate,columnas);
         jTable1.setModel(datos);
-        //jTable1.getColumnModel().getColumn(0).setMaxWidth(80);
-        //jTable1.getColumnModel().getColumn(4).setMaxWidth(80);
-        //jTable1.getColumnModel().getColumn(3).setMaxWidth(80);
+        jTable1.getColumnModel().getColumn(0).setPreferredWidth(60);
+        jTable1.getColumnModel().getColumn(0).setMaxWidth(90);
+        jTable1.getColumnModel().getColumn(1).setPreferredWidth(150);
+        jTable1.getColumnModel().getColumn(1).setMaxWidth(160);
+        jTable1.getColumnModel().getColumn(3).setPreferredWidth(200);
+        //jTable1.getColumnModel().getColumn(3).setMaxWidth(250);
+        jTable1.getColumnModel().getColumn(2).setPreferredWidth(80);
+        jTable1.getColumnModel().getColumn(2).setMaxWidth(100);
+        jTable1.getColumnModel().getColumn(4).setPreferredWidth(60);
+        jTable1.getColumnModel().getColumn(4).setMaxWidth(90);
     }
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -240,7 +247,7 @@ public final class SearchStockToner extends javax.swing.JFrame {
                         .addComponent(buttonAcept)
                         .addGap(18, 18, 18)
                         .addComponent(ButtonExit))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 772, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 680, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)

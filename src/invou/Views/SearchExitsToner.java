@@ -2,11 +2,16 @@ package invou.Views;
 
 import javax.swing.table.DefaultTableModel;
 import invou.AuxiliaryFunctions;
+import invou.EquipmentReportXLS;
+import invou.SaveExcelFile;
 import invou.SentencesSql;
+import invou.TonerReportXLS;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -74,12 +79,24 @@ public final class SearchExitsToner extends javax.swing.JInternalFrame {
     public void generateTableData(Object [][] datostabla)
     {    
        System.out.println(datostabla.length);
-        String[] columnas = {"N° egreso","Codigo", "Modelo", "Detalle", "fecha", "cantidad"};
+        String[] columnas = {"N° egreso","Codigo", "Modelo", "Detalle","Impresoras compatibles", "fecha", "cantidad"};
         DefaultTableModel datos = new DefaultTableModel(datostabla,columnas);
         jTable2.setModel(datos);
+        jTable2.getColumnModel().getColumn(0).setPreferredWidth(70);
         jTable2.getColumnModel().getColumn(0).setMaxWidth(60);
-        jTable2.getColumnModel().getColumn(4).setMaxWidth(70);
-        jTable2.getColumnModel().getColumn(5).setMaxWidth(60);
+        jTable2.getColumnModel().getColumn(1).setPreferredWidth(50);
+        jTable2.getColumnModel().getColumn(1).setMaxWidth(60);
+        jTable2.getColumnModel().getColumn(2).setPreferredWidth(130);
+        jTable2.getColumnModel().getColumn(2).setMaxWidth(150);
+        jTable2.getColumnModel().getColumn(4).setPreferredWidth(200);
+        //jTable2.getColumnModel().getColumn(4).setMaxWidth(210);
+        jTable2.getColumnModel().getColumn(3).setPreferredWidth(120);
+        jTable2.getColumnModel().getColumn(3).setMaxWidth(130);
+        jTable2.getColumnModel().getColumn(5).setPreferredWidth(80);
+        jTable2.getColumnModel().getColumn(5).setMaxWidth(90);
+        jTable2.getColumnModel().getColumn(6).setPreferredWidth(60);
+        jTable2.getColumnModel().getColumn(6).setMaxWidth(60);
+        
     }
 
     @SuppressWarnings("unchecked")
@@ -97,6 +114,7 @@ public final class SearchExitsToner extends javax.swing.JInternalFrame {
         boxModel = new javax.swing.JCheckBox();
         boxYear = new javax.swing.JCheckBox();
         comboYear = new com.toedter.calendar.JYearChooser();
+        jButton1 = new javax.swing.JButton();
 
         setClosable(true);
         setIconifiable(true);
@@ -147,6 +165,13 @@ public final class SearchExitsToner extends javax.swing.JInternalFrame {
             }
         });
 
+        jButton1.setText("Generar reporte ");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -154,29 +179,31 @@ public final class SearchExitsToner extends javax.swing.JInternalFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(ButtonExit)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(comboModel, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(boxModel))
-                                .addGap(55, 55, 55)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(boxMonth)
-                                    .addComponent(comboMonth, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(55, 55, 55)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(boxYear)
-                                    .addComponent(comboYear, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(0, 305, Short.MAX_VALUE)))
-                        .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.LEADING)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jButton1)
+                        .addGap(18, 18, 18)
+                        .addComponent(ButtonExit))
+                    .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(comboModel, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(boxModel))
+                        .addGap(55, 55, 55)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(boxMonth)
+                            .addComponent(comboMonth, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(55, 55, 55)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(boxYear)
+                            .addComponent(comboYear, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 359, Short.MAX_VALUE))
+                    .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.LEADING))
                 .addGap(25, 25, 25))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
                     .addGap(31, 31, 31)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 670, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 724, Short.MAX_VALUE)
                     .addGap(29, 29, 29)))
         );
         layout.setVerticalGroup(
@@ -198,7 +225,9 @@ public final class SearchExitsToner extends javax.swing.JInternalFrame {
                         .addComponent(comboYear, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(comboMonth, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 314, Short.MAX_VALUE)
-                .addComponent(ButtonExit)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(ButtonExit)
+                    .addComponent(jButton1))
                 .addContainerGap())
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
@@ -231,10 +260,14 @@ public final class SearchExitsToner extends javax.swing.JInternalFrame {
         if(boxMonth.isSelected())
         { 
             comboMonth.setEnabled(true);
+            boxYear.setSelected(true);
+            comboYear.setEnabled(true);
             filterTable();
         }
         else
         {
+            boxYear.setSelected(false);
+            comboYear.setEnabled(false);
             comboMonth.setEnabled(false);
             filterTable();
         }    
@@ -248,10 +281,49 @@ public final class SearchExitsToner extends javax.swing.JInternalFrame {
       }
       else
       {
+          boxMonth.setSelected(false);
+          comboMonth.setEnabled(false);
           comboYear.setEnabled(false);
           filterTable();
       }    
     }//GEN-LAST:event_boxYearActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        boolean[] filter = {boxYear.isSelected(), boxMonth.isSelected()};
+        int month = comboMonth.getMonth()+1;
+        int year = comboYear.getYear();  
+        if(!boxYear.isSelected() && !boxMonth.isSelected())
+        {
+            JOptionPane.showMessageDialog(null, "Seleccione el mes y año para generar el reporte.", "Atención", JOptionPane.WARNING_MESSAGE); 
+        }
+        else if(boxMonth.isSelected() && !boxYear.isSelected())
+        {
+            JOptionPane.showMessageDialog(null, "indique el año del mes seleccionado.", "Atención", JOptionPane.WARNING_MESSAGE); 
+        }
+        else
+        { 
+            SaveExcelFile file;
+            if(!boxMonth.isSelected())
+            {
+            file = new SaveExcelFile("Consumo toner "+year);
+            }
+            else
+            {
+            file = new SaveExcelFile("Consumo toner "+month+"-"+year);
+            }
+            
+            String[] column = {"Codigo  ", "Modelo          ", "Detalle", "Impresoras compatibles                   ", "cantidad"};
+            Object[][] report = af.getReportToner(year, month, filter);
+
+            TonerReportXLS xls = new TonerReportXLS(report, column, "Consumo toner "+month+"/"+year);
+
+            String route = file.getRoute();
+            if(route != null)
+            {
+                    xls.generates(route);
+            }   
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton ButtonExit;
@@ -261,6 +333,7 @@ public final class SearchExitsToner extends javax.swing.JInternalFrame {
     private javax.swing.JComboBox<String> comboModel;
     private com.toedter.calendar.JMonthChooser comboMonth;
     private com.toedter.calendar.JYearChooser comboYear;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;

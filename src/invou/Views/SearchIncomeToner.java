@@ -236,10 +236,14 @@ public final class SearchIncomeToner extends javax.swing.JInternalFrame {
         if(boxMonth.isSelected())
         { 
             comboMonth.setEnabled(true);
+            boxYear.setSelected(true);
+            comboYear.setEnabled(true);
             filterTable();
         }
         else
         {
+            boxYear.setSelected(false);
+            comboYear.setEnabled(false);
             comboMonth.setEnabled(false);
             filterTable();
         }    
@@ -253,6 +257,8 @@ public final class SearchIncomeToner extends javax.swing.JInternalFrame {
       }
         else
       {
+          boxMonth.setSelected(false);
+          comboMonth.setEnabled(false);
           comboYear.setEnabled(false);
           filterTable();
       }    
