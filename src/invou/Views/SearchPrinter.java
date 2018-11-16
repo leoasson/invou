@@ -32,6 +32,7 @@ public final class SearchPrinter extends javax.swing.JFrame {
     int state = 0;
     ActionListener ActListener;
     ChangePrint changePrint;
+    UplinkPrint uplinkPrint;
  
     public SearchPrinter(SentencesSql sensql)
     {
@@ -49,7 +50,7 @@ public final class SearchPrinter extends javax.swing.JFrame {
         };
         fieldState.addActionListener(ActListener);
         fieldModel.addActionListener(ActListener);
-        table.setEnabled(false);
+        //table.setEnabled(false);
     }
     
     public SearchPrinter(ChangePrint changePrint, SentencesSql sensql)
@@ -60,6 +61,39 @@ public final class SearchPrinter extends javax.swing.JFrame {
         this.changePrint = changePrint;
         buttonGenerate.setEnabled(false);
         state = 1;
+        buttonAcept.setEnabled(true);
+        this.ActListener = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae)
+            {
+                filterTable();
+            }
+        };
+        fieldState.addActionListener(ActListener);
+        fieldModel.addActionListener(ActListener);
+        table.addMouseListener(new MouseAdapter() {
+        @Override
+        public void mousePressed(MouseEvent mouseEvent) {
+        JTable table =(JTable) mouseEvent.getSource();
+        Point point = mouseEvent.getPoint();
+        int rowClicked = table.rowAtPoint(point);
+        if (mouseEvent.getClickCount() == 2 && table.getSelectedRow() != -1) 
+        {
+            changePrint.setSerialNumber((String) datos.getValueAt(rowClicked, 0));
+            closeWindows();
+        }
+    }
+        });
+    }
+    
+    public SearchPrinter(UplinkPrint uplinkPrint, SentencesSql sensql)
+    {
+        af = new AuxiliaryFunctions(sensql);
+        initComponents();
+        init();
+        this.uplinkPrint = uplinkPrint;
+        buttonGenerate.setEnabled(false);
+        state = 2;
         buttonAcept.setEnabled(true);
         this.ActListener = new ActionListener() {
             @Override
@@ -430,7 +464,11 @@ public final class SearchPrinter extends javax.swing.JFrame {
                 case 1:
                         changePrint.setSerialNumber(tableDate[row][0].toString());
                         this.dispose();
-                        break;       
+                        break;  
+                case 2:
+                        uplinkPrint.setSerialNumber(tableDate[row][0].toString());
+                        this.dispose();
+                        break;                           
             }
         }
     }//GEN-LAST:event_buttonAceptActionPerformed

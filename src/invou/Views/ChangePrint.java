@@ -88,7 +88,7 @@ View view;
             }
         });
 
-        buttonChange.setText("Cambiar");
+        buttonChange.setText("Vincular/Cambiar");
         buttonChange.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buttonChangeActionPerformed(evt);
@@ -257,7 +257,7 @@ View view;
             //asocio la impresora al equipo.
             af.updatePrint(serialNumber, id_equipment);
             af.updateStatePrinter("EN USO", serialNumber);
-            JOptionPane.showMessageDialog(null,"La impresora con S/N: "+serialNumber+" se asocio correctamente con el equipo.");
+            JOptionPane.showMessageDialog(null,"La impresora con S/N: "+serialNumber+" se asocio correctamente con el equipo: "+id_equipment);
             this.dispose();
         }
         

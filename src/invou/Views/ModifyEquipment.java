@@ -892,7 +892,7 @@ ActionListener actionFloor;
         {
             if(af.deleteEquipment(id_equipment))
             {
-                JOptionPane.showMessageDialog(null, "El equipo fue borrado de la base de datos.\nLas ip asociadas fueron liberadas.", "Mensaje", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(null, "El equipo fue borrado de la base de datos.\nLas ip asociadas fueron liberadas. \n y la impresora vinculada pasó a estado diponible. ", "Mensaje", JOptionPane.INFORMATION_MESSAGE);
                 searchEquipment.filterTable();
                 this.dispose();
             }

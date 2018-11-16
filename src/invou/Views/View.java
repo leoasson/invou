@@ -7,10 +7,13 @@ package invou.Views;
 
 import Invou.BackUpDataBase;
 import invou.AuxiliaryFunctions;
+import invou.Config;
 import invou.SentencesSql;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 /**
  *
@@ -20,10 +23,20 @@ public class View extends javax.swing.JFrame {
     
     SentencesSql sensql = new SentencesSql();
     AuxiliaryFunctions af = new AuxiliaryFunctions(sensql);
+    Config conf = new Config();
     
-    public View() 
+    public View() throws IOException 
     {
         initComponents();
+        
+        listPagesPrinted.setEnabled(false);
+        
+        if(!conf.getUser().equals("admin"))
+        {
+            backUpBD.setEnabled(false);
+        }
+        
+        
         this.setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/invou/imagenes/logo-oulton32.png")));
         this.setLocationRelativeTo(null);
         jToolBar2.setFloatable(false);       
@@ -47,7 +60,7 @@ public class View extends javax.swing.JFrame {
         equipment.setLocation((desktopSize.width - jInternalFrameSize.width)/2,(desktopSize.height- jInternalFrameSize.height)/2);
         jDesktopPane1.add(equipment);
         equipment.show();
-    }
+    }  
     
         public void addSearchEquipment(ChangeEquipment changeEquipment, int equip)
     {
@@ -102,7 +115,7 @@ public class View extends javax.swing.JFrame {
     
     public void addPrinterRepair(String serialNumber)
     {
-        PrinterRepairNew repair = new PrinterRepairNew(serialNumber);
+        PrinterRepairNew repair = new PrinterRepairNew(serialNumber, sensql);
         Dimension desktopSize = jDesktopPane1.getSize();
         Dimension jInternalFrameSize = repair.getSize();
         repair.setLocation((desktopSize.width - jInternalFrameSize.width)/2,(desktopSize.height- jInternalFrameSize.height)/2);
@@ -157,17 +170,18 @@ public class View extends javax.swing.JFrame {
         updateStock1 = new javax.swing.JMenuItem();
         updateStock2 = new javax.swing.JMenuItem();
         printerMenu = new javax.swing.JMenu();
-        enviarImpresoraAReparacion1 = new javax.swing.JMenuItem();
-        regresoDeReparacion = new javax.swing.JMenuItem();
-        enviarImpresoraAReparacion = new javax.swing.JMenuItem();
+        linkPrint = new javax.swing.JMenuItem();
+        unlinkPrint = new javax.swing.JMenuItem();
+        repairReturn = new javax.swing.JMenuItem();
+        sendPrintToRepair = new javax.swing.JMenuItem();
         jSeparator8 = new javax.swing.JPopupMenu.Separator();
         listPrinter = new javax.swing.JMenu();
-        listRepair = new javax.swing.JMenuItem();
+        listPrinterRepair = new javax.swing.JMenuItem();
         listPrint = new javax.swing.JMenuItem();
-        listRepair1 = new javax.swing.JMenuItem();
+        listPagesPrinted = new javax.swing.JMenuItem();
         jSeparator7 = new javax.swing.JPopupMenu.Separator();
-        registrarImpresora = new javax.swing.JMenuItem();
-        newPagesPrinted = new javax.swing.JMenuItem();
+        registerNewPrint = new javax.swing.JMenuItem();
+        updatePagesPrinted = new javax.swing.JMenuItem();
         generateReportMenu = new javax.swing.JMenu();
         RegisterNewMenu = new javax.swing.JMenuItem();
         ListEquipmentMenu1 = new javax.swing.JMenuItem();
@@ -438,45 +452,54 @@ public class View extends javax.swing.JFrame {
 
         printerMenu.setText("Impresoras");
 
-        enviarImpresoraAReparacion1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/invou/imagenes/changePrint16.png"))); // NOI18N
-        enviarImpresoraAReparacion1.setText("Cambio de impresora");
-        enviarImpresoraAReparacion1.addActionListener(new java.awt.event.ActionListener() {
+        linkPrint.setIcon(new javax.swing.ImageIcon(getClass().getResource("/invou/imagenes/changePrint16.png"))); // NOI18N
+        linkPrint.setText("Vincular/cambiar impresora");
+        linkPrint.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                enviarImpresoraAReparacion1ActionPerformed(evt);
+                linkPrintActionPerformed(evt);
             }
         });
-        printerMenu.add(enviarImpresoraAReparacion1);
+        printerMenu.add(linkPrint);
 
-        regresoDeReparacion.setIcon(new javax.swing.ImageIcon(getClass().getResource("/invou/imagenes/printerOk16.png"))); // NOI18N
-        regresoDeReparacion.setText("Regreso de reparacion");
-        regresoDeReparacion.addActionListener(new java.awt.event.ActionListener() {
+        unlinkPrint.setIcon(new javax.swing.ImageIcon(getClass().getResource("/invou/imagenes/changePrint16.png"))); // NOI18N
+        unlinkPrint.setText("Desvincular impresora");
+        unlinkPrint.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                regresoDeReparacionActionPerformed(evt);
+                unlinkPrintActionPerformed(evt);
             }
         });
-        printerMenu.add(regresoDeReparacion);
+        printerMenu.add(unlinkPrint);
 
-        enviarImpresoraAReparacion.setIcon(new javax.swing.ImageIcon(getClass().getResource("/invou/imagenes/repairPrint16.png"))); // NOI18N
-        enviarImpresoraAReparacion.setText("Enviar a reparacion");
-        enviarImpresoraAReparacion.addActionListener(new java.awt.event.ActionListener() {
+        repairReturn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/invou/imagenes/printerOk16.png"))); // NOI18N
+        repairReturn.setText("Regreso de reparación");
+        repairReturn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                enviarImpresoraAReparacionActionPerformed(evt);
+                repairReturnActionPerformed(evt);
             }
         });
-        printerMenu.add(enviarImpresoraAReparacion);
+        printerMenu.add(repairReturn);
+
+        sendPrintToRepair.setIcon(new javax.swing.ImageIcon(getClass().getResource("/invou/imagenes/repairPrint16.png"))); // NOI18N
+        sendPrintToRepair.setText("Enviar a reparación");
+        sendPrintToRepair.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                sendPrintToRepairActionPerformed(evt);
+            }
+        });
+        printerMenu.add(sendPrintToRepair);
         printerMenu.add(jSeparator8);
 
         listPrinter.setIcon(new javax.swing.ImageIcon(getClass().getResource("/invou/imagenes/list16.png"))); // NOI18N
         listPrinter.setText("Listar");
 
-        listRepair.setIcon(new javax.swing.ImageIcon(getClass().getResource("/invou/imagenes/mantenimiento-16.png"))); // NOI18N
-        listRepair.setText("Reparaciones");
-        listRepair.addActionListener(new java.awt.event.ActionListener() {
+        listPrinterRepair.setIcon(new javax.swing.ImageIcon(getClass().getResource("/invou/imagenes/mantenimiento-16.png"))); // NOI18N
+        listPrinterRepair.setText("Reparaciones");
+        listPrinterRepair.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                listRepairActionPerformed(evt);
+                listPrinterRepairActionPerformed(evt);
             }
         });
-        listPrinter.add(listRepair);
+        listPrinter.add(listPrinterRepair);
 
         listPrint.setIcon(new javax.swing.ImageIcon(getClass().getResource("/invou/imagenes/print-16.png"))); // NOI18N
         listPrint.setText("Impresoras");
@@ -487,35 +510,35 @@ public class View extends javax.swing.JFrame {
         });
         listPrinter.add(listPrint);
 
-        listRepair1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/invou/imagenes/listRepair16.png"))); // NOI18N
-        listRepair1.setText("Impresiones");
-        listRepair1.addActionListener(new java.awt.event.ActionListener() {
+        listPagesPrinted.setIcon(new javax.swing.ImageIcon(getClass().getResource("/invou/imagenes/listRepair16.png"))); // NOI18N
+        listPagesPrinted.setText("Impresiones");
+        listPagesPrinted.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                listRepair1ActionPerformed(evt);
+                listPagesPrintedActionPerformed(evt);
             }
         });
-        listPrinter.add(listRepair1);
+        listPrinter.add(listPagesPrinted);
 
         printerMenu.add(listPrinter);
         printerMenu.add(jSeparator7);
 
-        registrarImpresora.setIcon(new javax.swing.ImageIcon(getClass().getResource("/invou/imagenes/registryEditor16.png"))); // NOI18N
-        registrarImpresora.setText("Registrar nueva impresora");
-        registrarImpresora.addActionListener(new java.awt.event.ActionListener() {
+        registerNewPrint.setIcon(new javax.swing.ImageIcon(getClass().getResource("/invou/imagenes/registryEditor16.png"))); // NOI18N
+        registerNewPrint.setText("Registrar nueva impresora");
+        registerNewPrint.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                registrarImpresoraActionPerformed(evt);
+                registerNewPrintActionPerformed(evt);
             }
         });
-        printerMenu.add(registrarImpresora);
+        printerMenu.add(registerNewPrint);
 
-        newPagesPrinted.setIcon(new javax.swing.ImageIcon(getClass().getResource("/invou/imagenes/update16.png"))); // NOI18N
-        newPagesPrinted.setText("Actualizar paginas impresas");
-        newPagesPrinted.addActionListener(new java.awt.event.ActionListener() {
+        updatePagesPrinted.setIcon(new javax.swing.ImageIcon(getClass().getResource("/invou/imagenes/update16.png"))); // NOI18N
+        updatePagesPrinted.setText("Actualizar paginas impresas");
+        updatePagesPrinted.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                newPagesPrintedActionPerformed(evt);
+                updatePagesPrintedActionPerformed(evt);
             }
         });
-        printerMenu.add(newPagesPrinted);
+        printerMenu.add(updatePagesPrinted);
 
         jMenuBar1.add(printerMenu);
 
@@ -702,6 +725,7 @@ public class View extends javax.swing.JFrame {
         menu_config.add(addSector);
 
         backUpBD.setText("Realizar BackUp BD");
+        backUpBD.setToolTipText("Solo es posible realizar backup desde el servidor");
         backUpBD.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 backUpBDActionPerformed(evt);
@@ -841,43 +865,43 @@ public class View extends javax.swing.JFrame {
         prov.show();
     }//GEN-LAST:event_registrarProveedorActionPerformed
 
-    private void registrarImpresoraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registrarImpresoraActionPerformed
+    private void registerNewPrintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registerNewPrintActionPerformed
         RegisterNewPrint impresora = new RegisterNewPrint(this, sensql);
         jDesktopPane1.add(impresora);
         impresora.show();
-    }//GEN-LAST:event_registrarImpresoraActionPerformed
+    }//GEN-LAST:event_registerNewPrintActionPerformed
 
-    private void listRepairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_listRepairActionPerformed
+    private void listPrinterRepairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_listPrinterRepairActionPerformed
         SearchPrinterRepair repairs = new SearchPrinterRepair(sensql);
         Dimension desktopSize = jDesktopPane1.getSize();
         Dimension jInternalFrameSize = repairs.getSize();
         repairs.setLocation((desktopSize.width - jInternalFrameSize.width)/2,(desktopSize.height- jInternalFrameSize.height)/2);
         jDesktopPane1.add(repairs);
         repairs.show();
-    }//GEN-LAST:event_listRepairActionPerformed
+    }//GEN-LAST:event_listPrinterRepairActionPerformed
 
     private void listPrintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_listPrintActionPerformed
         SearchPrinter printers = new SearchPrinter(sensql);
         printers.show();
     }//GEN-LAST:event_listPrintActionPerformed
 
-    private void enviarImpresoraAReparacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_enviarImpresoraAReparacionActionPerformed
+    private void sendPrintToRepairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendPrintToRepairActionPerformed
         PrinterRepairNew repair = new PrinterRepairNew(sensql);
         jDesktopPane1.add(repair);
         repair.show();
-    }//GEN-LAST:event_enviarImpresoraAReparacionActionPerformed
+    }//GEN-LAST:event_sendPrintToRepairActionPerformed
 
-    private void regresoDeReparacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_regresoDeReparacionActionPerformed
+    private void repairReturnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_repairReturnActionPerformed
         PrinterRepairReturn repair = new PrinterRepairReturn(sensql);
         jDesktopPane1.add(repair);
         repair.show();
-    }//GEN-LAST:event_regresoDeReparacionActionPerformed
+    }//GEN-LAST:event_repairReturnActionPerformed
 
-    private void newPagesPrintedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newPagesPrintedActionPerformed
+    private void updatePagesPrintedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updatePagesPrintedActionPerformed
         UpdatePagesPrinted pages = new UpdatePagesPrinted(sensql);
         jDesktopPane1.add(pages);
         pages.show();        
-    }//GEN-LAST:event_newPagesPrintedActionPerformed
+    }//GEN-LAST:event_updatePagesPrintedActionPerformed
 
     private void RegisterNewMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RegisterNewMenuActionPerformed
         RegisterNewEquipment equipment = new RegisterNewEquipment(this, sensql);
@@ -978,14 +1002,14 @@ public class View extends javax.swing.JFrame {
         equipment.show();
     }//GEN-LAST:event_jButton8ActionPerformed
 
-    private void enviarImpresoraAReparacion1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_enviarImpresoraAReparacion1ActionPerformed
+    private void linkPrintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_linkPrintActionPerformed
         ChangePrint changePrint = new ChangePrint(this, sensql);
         Dimension desktopSize = jDesktopPane1.getSize();
         Dimension jInternalFrameSize = changePrint.getSize();
         changePrint.setLocation((desktopSize.width - jInternalFrameSize.width)/2,(desktopSize.height- jInternalFrameSize.height)/2);
         jDesktopPane1.add(changePrint);
         changePrint.show();
-    }//GEN-LAST:event_enviarImpresoraAReparacion1ActionPerformed
+    }//GEN-LAST:event_linkPrintActionPerformed
 
     private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem5ActionPerformed
         SearchIp searchIp = new SearchIp(sensql);
@@ -1051,9 +1075,9 @@ public class View extends javax.swing.JFrame {
         toner.show(); 
     }//GEN-LAST:event_ListEquipmentMenu1ActionPerformed
 
-    private void listRepair1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_listRepair1ActionPerformed
+    private void listPagesPrintedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_listPagesPrintedActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_listRepair1ActionPerformed
+    }//GEN-LAST:event_listPagesPrintedActionPerformed
 
     private void addMotherboardActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addMotherboardActionPerformed
         RegisterNewMotherboard motherboard = new RegisterNewMotherboard(sensql);
@@ -1098,6 +1122,15 @@ public class View extends javax.swing.JFrame {
         bkp.GenerarBackupMySQL();
     }//GEN-LAST:event_backUpBDActionPerformed
 
+    private void unlinkPrintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_unlinkPrintActionPerformed
+        UplinkPrint uplinkPrint = new UplinkPrint(this, sensql);
+        Dimension desktopSize = jDesktopPane1.getSize();
+        Dimension jInternalFrameSize = uplinkPrint.getSize();
+        uplinkPrint.setLocation((desktopSize.width - jInternalFrameSize.width)/2,(desktopSize.height- jInternalFrameSize.height)/2);
+        jDesktopPane1.add(uplinkPrint);
+        uplinkPrint.show();
+    }//GEN-LAST:event_unlinkPrintActionPerformed
+
     
     
     
@@ -1133,8 +1166,15 @@ public class View extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> {
-            new View().setVisible(true);
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    new View().setVisible(true);
+                } catch (IOException ex) {
+                    Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
         });
     }
 
@@ -1153,8 +1193,6 @@ public class View extends javax.swing.JFrame {
     private javax.swing.JMenuItem backUpBD;
     private javax.swing.JMenuItem deleteTonner;
     private javax.swing.JMenuItem entryList;
-    private javax.swing.JMenuItem enviarImpresoraAReparacion;
-    private javax.swing.JMenuItem enviarImpresoraAReparacion1;
     private javax.swing.JMenu equiposMenu;
     private javax.swing.JMenuItem exitList;
     private javax.swing.JTextField fieldCode;
@@ -1186,10 +1224,11 @@ public class View extends javax.swing.JFrame {
     private javax.swing.JPopupMenu.Separator jSeparator8;
     private javax.swing.JPopupMenu.Separator jSeparator9;
     private javax.swing.JToolBar jToolBar2;
+    private javax.swing.JMenuItem linkPrint;
+    private javax.swing.JMenuItem listPagesPrinted;
     private javax.swing.JMenuItem listPrint;
     private javax.swing.JMenu listPrinter;
-    private javax.swing.JMenuItem listRepair;
-    private javax.swing.JMenuItem listRepair1;
+    private javax.swing.JMenuItem listPrinterRepair;
     private javax.swing.JMenuItem listTonerEmpty;
     private javax.swing.JMenu listTonner;
     private javax.swing.JMenuItem listarProveedor;
@@ -1197,16 +1236,18 @@ public class View extends javax.swing.JFrame {
     private javax.swing.JMenu menu_proveedores;
     private javax.swing.JMenuItem modifyDeleteMenu;
     private javax.swing.JMenu monitorMenu;
-    private javax.swing.JMenuItem newPagesPrinted;
     private javax.swing.JMenuItem print1;
     private javax.swing.JMenuItem printLabelMenu;
     private javax.swing.JMenu printLabeltonnerMenu;
     private javax.swing.JMenu printerMenu;
+    private javax.swing.JMenuItem registerNewPrint;
     private javax.swing.JMenuItem registerRepairMenu;
-    private javax.swing.JMenuItem registrarImpresora;
     private javax.swing.JMenuItem registrarProveedor;
     private javax.swing.JMenuItem registryTonner;
-    private javax.swing.JMenuItem regresoDeReparacion;
+    private javax.swing.JMenuItem repairReturn;
+    private javax.swing.JMenuItem sendPrintToRepair;
+    private javax.swing.JMenuItem unlinkPrint;
+    private javax.swing.JMenuItem updatePagesPrinted;
     private javax.swing.JMenuItem updateStock;
     private javax.swing.JMenuItem updateStock1;
     private javax.swing.JMenuItem updateStock2;

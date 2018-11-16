@@ -3,6 +3,7 @@ package invou.Views;
 import javax.swing.JOptionPane;
 import invou.AuxiliaryFunctions;
 import invou.SentencesSql;
+import java.util.Date;
 
 public class PrinterRepairNew extends javax.swing.JInternalFrame {
 AuxiliaryFunctions af;
@@ -14,8 +15,9 @@ String serialNumber;
         clean();    
     }
     
-    public PrinterRepairNew(String serialNumber) 
+    public PrinterRepairNew(String serialNumber, SentencesSql sensql) 
     {
+        af= new AuxiliaryFunctions(sensql);
         this.serialNumber = serialNumber;
         initComponents();
         clean();    
@@ -57,8 +59,8 @@ String serialNumber;
     private void register()
     {
         String date, code, failure;       
-        
-        date = af.getDateToString(fieldDate.getDate());
+        Date date_ = fieldDate.getDate();
+        date = af.getDateToString(date_);
         failure = fieldFailure.getText();
         code = fieldCode.getText();
         

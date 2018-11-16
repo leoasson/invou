@@ -678,6 +678,7 @@ public class AuxiliaryFunctions
      
     public boolean deleteEquipment(String id_equipment)
     {
+        String idPrint = sensql.getData("id_sn", "Select id_sn from impresora where cod_pc = '"+id_equipment+"';");
         String ipAdmin = sensql.getData("ip", "select ip from pc LEFT JOIN `ip` ON `id_ip` = `cod_ipAdm` where id_pc='"+id_equipment+"';");
         String ipImage = sensql.getData("ip", "select ip from pc LEFT JOIN `ip` ON `id_ip` = `cod_ipImag` where id_pc='"+id_equipment+"';");
         if(ipAdmin != null && !ipAdmin.equals(""))
@@ -688,6 +689,13 @@ public class AuxiliaryFunctions
         {
             ipImage=parseIp(ipImage);
         }
+        
+        if(idPrint != null && !idPrint.equals(""))
+        {
+            updateStatePrint("DISPONIBLE", idPrint );
+            cleanPcLinkedToThePrinter(idPrint);
+        }
+        
         updateStateIp("DISPONIBLE", ipAdmin);
         updateStateIp("DISPONIBLE", ipImage);
         return sensql.deleteRow("pc", "id_pc = "+id_equipment +";");  
@@ -756,6 +764,17 @@ public class AuxiliaryFunctions
     {
         return sensql.modifiedRow("ip", "estado", state, "id_ip = '"+ id +"'");
     }
+    
+    public boolean updateStatePrint(String state,String id_sn)
+    {
+        return sensql.modifiedRow("impresora", "estado", state, "id_sn = '"+ id_sn +"'");  
+    }
+    
+    public boolean cleanPcLinkedToThePrinter(String id_sn)
+    {
+        return sensql.modifiedRow("impresora", "cod_pc", "", "id_sn = '"+ id_sn +"'");  
+    }
+    
          
     public boolean updateDateOfReturnPrinter(String date, String idRepair)
     {

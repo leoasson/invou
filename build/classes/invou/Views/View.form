@@ -136,37 +136,48 @@
             <Property name="text" type="java.lang.String" value="Impresoras"/>
           </Properties>
           <SubComponents>
-            <MenuItem class="javax.swing.JMenuItem" name="enviarImpresoraAReparacion1">
+            <MenuItem class="javax.swing.JMenuItem" name="linkPrint">
               <Properties>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
                   <Image iconType="3" name="/invou/imagenes/changePrint16.png"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Cambio de impresora"/>
+                <Property name="text" type="java.lang.String" value="Vincular/cambiar impresora"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="enviarImpresoraAReparacion1ActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="linkPrintActionPerformed"/>
               </Events>
             </MenuItem>
-            <MenuItem class="javax.swing.JMenuItem" name="regresoDeReparacion">
+            <MenuItem class="javax.swing.JMenuItem" name="unlinkPrint">
+              <Properties>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                  <Image iconType="3" name="/invou/imagenes/changePrint16.png"/>
+                </Property>
+                <Property name="text" type="java.lang.String" value="Desvincular impresora"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="unlinkPrintActionPerformed"/>
+              </Events>
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="repairReturn">
               <Properties>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
                   <Image iconType="3" name="/invou/imagenes/printerOk16.png"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Regreso de reparacion"/>
+                <Property name="text" type="java.lang.String" value="Regreso de reparaci&#xf3;n"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="regresoDeReparacionActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="repairReturnActionPerformed"/>
               </Events>
             </MenuItem>
-            <MenuItem class="javax.swing.JMenuItem" name="enviarImpresoraAReparacion">
+            <MenuItem class="javax.swing.JMenuItem" name="sendPrintToRepair">
               <Properties>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
                   <Image iconType="3" name="/invou/imagenes/repairPrint16.png"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Enviar a reparacion"/>
+                <Property name="text" type="java.lang.String" value="Enviar a reparaci&#xf3;n"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="enviarImpresoraAReparacionActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="sendPrintToRepairActionPerformed"/>
               </Events>
             </MenuItem>
             <MenuItem class="javax.swing.JPopupMenu$Separator" name="jSeparator8">
@@ -179,7 +190,7 @@
                 <Property name="text" type="java.lang.String" value="Listar"/>
               </Properties>
               <SubComponents>
-                <MenuItem class="javax.swing.JMenuItem" name="listRepair">
+                <MenuItem class="javax.swing.JMenuItem" name="listPrinterRepair">
                   <Properties>
                     <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
                       <Image iconType="3" name="/invou/imagenes/mantenimiento-16.png"/>
@@ -187,7 +198,7 @@
                     <Property name="text" type="java.lang.String" value="Reparaciones"/>
                   </Properties>
                   <Events>
-                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="listRepairActionPerformed"/>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="listPrinterRepairActionPerformed"/>
                   </Events>
                 </MenuItem>
                 <MenuItem class="javax.swing.JMenuItem" name="listPrint">
@@ -201,7 +212,7 @@
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="listPrintActionPerformed"/>
                   </Events>
                 </MenuItem>
-                <MenuItem class="javax.swing.JMenuItem" name="listRepair1">
+                <MenuItem class="javax.swing.JMenuItem" name="listPagesPrinted">
                   <Properties>
                     <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
                       <Image iconType="3" name="/invou/imagenes/listRepair16.png"/>
@@ -209,14 +220,14 @@
                     <Property name="text" type="java.lang.String" value="Impresiones"/>
                   </Properties>
                   <Events>
-                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="listRepair1ActionPerformed"/>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="listPagesPrintedActionPerformed"/>
                   </Events>
                 </MenuItem>
               </SubComponents>
             </Menu>
             <MenuItem class="javax.swing.JPopupMenu$Separator" name="jSeparator7">
             </MenuItem>
-            <MenuItem class="javax.swing.JMenuItem" name="registrarImpresora">
+            <MenuItem class="javax.swing.JMenuItem" name="registerNewPrint">
               <Properties>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
                   <Image iconType="3" name="/invou/imagenes/registryEditor16.png"/>
@@ -224,10 +235,10 @@
                 <Property name="text" type="java.lang.String" value="Registrar nueva impresora"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="registrarImpresoraActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="registerNewPrintActionPerformed"/>
               </Events>
             </MenuItem>
-            <MenuItem class="javax.swing.JMenuItem" name="newPagesPrinted">
+            <MenuItem class="javax.swing.JMenuItem" name="updatePagesPrinted">
               <Properties>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
                   <Image iconType="3" name="/invou/imagenes/update16.png"/>
@@ -235,7 +246,7 @@
                 <Property name="text" type="java.lang.String" value="Actualizar paginas impresas"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="newPagesPrintedActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="updatePagesPrintedActionPerformed"/>
               </Events>
             </MenuItem>
           </SubComponents>
@@ -476,6 +487,7 @@
             <MenuItem class="javax.swing.JMenuItem" name="backUpBD">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Realizar BackUp BD"/>
+                <Property name="toolTipText" type="java.lang.String" value="Solo es posible realizar backup desde el servidor"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="backUpBDActionPerformed"/>

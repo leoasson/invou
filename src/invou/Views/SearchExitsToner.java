@@ -305,11 +305,13 @@ public final class SearchExitsToner extends javax.swing.JInternalFrame {
             SaveExcelFile file;
             if(!boxMonth.isSelected())
             {
-            file = new SaveExcelFile("Consumo toner "+year);
+                String str="Consumo toner "+year;
+                file = new SaveExcelFile(str);
             }
             else
             {
-            file = new SaveExcelFile("Consumo toner "+month+"-"+year);
+                String str="Consumo toner "+month+"-"+year;
+                file = new SaveExcelFile(str);
             }
             
             String[] column = {"Codigo  ", "Modelo          ", "Detalle", "Impresoras compatibles                   ", "cantidad"};
