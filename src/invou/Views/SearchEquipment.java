@@ -296,25 +296,25 @@ public final class SearchEquipment extends javax.swing.JInternalFrame {
         datos = new DefaultTableModel(datostabla,columnas);
         tableData.setModel(datos);
         tableData.getColumnModel().getColumn(0).setPreferredWidth(45);
-        tableData.getColumnModel().getColumn(0).setMaxWidth(50);
-        tableData.getColumnModel().getColumn(1).setPreferredWidth(80);
-        tableData.getColumnModel().getColumn(1).setMaxWidth(90);
+        tableData.getColumnModel().getColumn(0).setMaxWidth(60);
+        tableData.getColumnModel().getColumn(1).setPreferredWidth(90);
+        tableData.getColumnModel().getColumn(1).setMaxWidth(150);
         tableData.getColumnModel().getColumn(2).setPreferredWidth(40);
-        tableData.getColumnModel().getColumn(2).setMaxWidth(50);
-        tableData.getColumnModel().getColumn(3).setPreferredWidth(100);
-        tableData.getColumnModel().getColumn(3).setMaxWidth(110);
+        tableData.getColumnModel().getColumn(2).setMaxWidth(60);
+        tableData.getColumnModel().getColumn(3).setPreferredWidth(130);
+        tableData.getColumnModel().getColumn(3).setMaxWidth(170);
         tableData.getColumnModel().getColumn(4).setPreferredWidth(90);
-        tableData.getColumnModel().getColumn(4).setMaxWidth(150);
-        tableData.getColumnModel().getColumn(5).setPreferredWidth(70);
-        tableData.getColumnModel().getColumn(5).setMaxWidth(100);
+        tableData.getColumnModel().getColumn(4).setMaxWidth(130);
+        tableData.getColumnModel().getColumn(5).setPreferredWidth(60);
+        tableData.getColumnModel().getColumn(5).setMaxWidth(120);
         tableData.getColumnModel().getColumn(6).setPreferredWidth(70);
-        tableData.getColumnModel().getColumn(6).setMaxWidth(80);
+        tableData.getColumnModel().getColumn(6).setMaxWidth(130);
         tableData.getColumnModel().getColumn(7).setPreferredWidth(80);
-        tableData.getColumnModel().getColumn(7).setMaxWidth(90);
-        tableData.getColumnModel().getColumn(8).setPreferredWidth(80);
-        tableData.getColumnModel().getColumn(8).setMaxWidth(90);
-        tableData.getColumnModel().getColumn(9).setPreferredWidth(80);
-        tableData.getColumnModel().getColumn(9).setMaxWidth(90);
+        tableData.getColumnModel().getColumn(7).setMaxWidth(300);
+        tableData.getColumnModel().getColumn(8).setPreferredWidth(85);
+        tableData.getColumnModel().getColumn(8).setMaxWidth(110);
+        tableData.getColumnModel().getColumn(9).setPreferredWidth(85);
+        tableData.getColumnModel().getColumn(9).setMaxWidth(110);
     }
     
     public void filterTable()
@@ -358,6 +358,8 @@ public final class SearchEquipment extends javax.swing.JInternalFrame {
         buttonGenerate = new javax.swing.JButton();
 
         setClosable(true);
+        setMaximizable(true);
+        setResizable(true);
         setTitle("Equipamiento");
         setFrameIcon(new javax.swing.ImageIcon(getClass().getResource("/invou/imagenes/searchPc-16.png"))); // NOI18N
 
@@ -467,7 +469,7 @@ public final class SearchEquipment extends javax.swing.JInternalFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(fieldIp, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(boxIp))
-                .addContainerGap(258, Short.MAX_VALUE))
+                .addContainerGap(394, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(28, 28, 28)
                 .addComponent(labelInfo)
@@ -483,7 +485,7 @@ public final class SearchEquipment extends javax.swing.JInternalFrame {
                     .addGap(28, 28, 28)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                         .addComponent(jSeparator1)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 772, Short.MAX_VALUE)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 908, Short.MAX_VALUE)
                         .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                 .addComponent(jLabel13, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)

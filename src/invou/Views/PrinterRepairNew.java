@@ -61,8 +61,8 @@ String serialNumber;
         String date, code, failure;       
         Date date_ = fieldDate.getDate();
         date = af.getDateToString(date_);
-        failure = fieldFailure.getText();
-        code = fieldCode.getText();
+        failure = fieldFailure.getText().toUpperCase();
+        code = fieldCode.getText().toUpperCase();
         
         if(!isValidPrinterCode(code))
         {

@@ -70,8 +70,8 @@ private void getValues()
         name = sensql.getData("nombrePc", "select nombrePc from pc where id_pc='"+id_equipment+"';");
         user =  sensql.getData("usuario", "select usuario from pc where id_pc='"+id_equipment+"';");
         password = sensql.getData("contraseña", "select contraseña from pc where id_pc='"+id_equipment+"';"); 
-        ipAdmin = sensql.getData("ipAdm", "select ipAdm from pc LEFT JOIN `ipAdm` ON `id_ipAdm` = `cod_ipAdm` where id_pc='"+id_equipment+"';");
-        ipImage = sensql.getData("ipImag", "select ipImag from pc LEFT JOIN `ipImage` ON `id_ipImag` = `cod_ipImag` where id_pc='"+id_equipment+"';");
+        ipAdmin = sensql.getData("ip", "select ip from pc LEFT JOIN `ip` ON `id_ip` = `cod_ipAdm` where id_pc='"+id_equipment+"';");
+        ipImage = sensql.getData("ip", "select ip from pc LEFT JOIN `ip` ON `id_ip` = `cod_ipImag` where id_pc='"+id_equipment+"';");
         description = sensql.getData("descripcion", "select descripcion from pc where id_pc='"+id_equipment+"';");
         String from = "FROM `pc` LEFT JOIN `area` ON `id_area` = `cod_area` LEFT JOIN `piso` ON `cod_piso` = `id_piso` LEFT JOIN `sucursal` ON `id_sucursal` = `cod_sucursal` where ";
         branch = sensql.getData("sucursal", "select `sucursal`" + from + "id_pc='"+id_equipment+"';");

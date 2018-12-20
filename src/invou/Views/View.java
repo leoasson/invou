@@ -150,6 +150,8 @@ public class View extends javax.swing.JFrame {
         jButton8 = new javax.swing.JButton();
         jSeparator5 = new javax.swing.JToolBar.Separator();
         jButton6 = new javax.swing.JButton();
+        jSeparator13 = new javax.swing.JToolBar.Separator();
+        jButton9 = new javax.swing.JButton();
         jDesktopPane1 = new javax.swing.JDesktopPane();
         jLabel2 = new javax.swing.JLabel();
         fieldCode = new javax.swing.JTextField();
@@ -321,6 +323,19 @@ public class View extends javax.swing.JFrame {
             }
         });
         jToolBar2.add(jButton6);
+        jToolBar2.add(jSeparator13);
+
+        jButton9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/invou/imagenes/update24.png"))); // NOI18N
+        jButton9.setToolTipText("Actualizar base de datos");
+        jButton9.setFocusable(false);
+        jButton9.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jButton9.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jButton9.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton9ActionPerformed(evt);
+            }
+        });
+        jToolBar2.add(jButton9);
 
         jDesktopPane1.setBackground(new java.awt.Color(223, 230, 242));
         jDesktopPane1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -1131,6 +1146,11 @@ public class View extends javax.swing.JFrame {
         uplinkPrint.show();
     }//GEN-LAST:event_unlinkPrintActionPerformed
 
+    private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
+        SentencesSql sensql_ = new SentencesSql();
+        sensql = sensql_;
+    }//GEN-LAST:event_jButton9ActionPerformed
+
     
     
     
@@ -1202,6 +1222,7 @@ public class View extends javax.swing.JFrame {
     private javax.swing.JButton jButton6;
     private javax.swing.JButton jButton7;
     private javax.swing.JButton jButton8;
+    private javax.swing.JButton jButton9;
     private javax.swing.JDesktopPane jDesktopPane1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JMenuBar jMenuBar1;
@@ -1215,6 +1236,7 @@ public class View extends javax.swing.JFrame {
     private javax.swing.JPopupMenu.Separator jSeparator10;
     private javax.swing.JPopupMenu.Separator jSeparator11;
     private javax.swing.JPopupMenu.Separator jSeparator12;
+    private javax.swing.JToolBar.Separator jSeparator13;
     private javax.swing.JPopupMenu.Separator jSeparator2;
     private javax.swing.JToolBar.Separator jSeparator3;
     private javax.swing.JToolBar.Separator jSeparator4;

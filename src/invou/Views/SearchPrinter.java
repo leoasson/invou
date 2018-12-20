@@ -171,22 +171,25 @@ public final class SearchPrinter extends javax.swing.JFrame {
         datos = new DefaultTableModel(datostabla,columnas);
         table.setModel(datos);
         table.getColumnModel().getColumn(0).setPreferredWidth(80);
-        table.getColumnModel().getColumn(0).setMaxWidth(90);
+        table.getColumnModel().getColumn(0).setMaxWidth(100);
         table.getColumnModel().getColumn(1).setPreferredWidth(70);
-        table.getColumnModel().getColumn(1).setMaxWidth(80);
+        table.getColumnModel().getColumn(1).setMaxWidth(90);
         table.getColumnModel().getColumn(2).setPreferredWidth(120);
+        table.getColumnModel().getColumn(2).setMaxWidth(300);
         table.getColumnModel().getColumn(3).setPreferredWidth(70);
-        table.getColumnModel().getColumn(3).setMaxWidth(80);
+        table.getColumnModel().getColumn(3).setMaxWidth(300);
         table.getColumnModel().getColumn(4).setPreferredWidth(50);
-        table.getColumnModel().getColumn(4).setMaxWidth(60);
+        table.getColumnModel().getColumn(4).setMaxWidth(70);
         table.getColumnModel().getColumn(5).setPreferredWidth(70);
-        table.getColumnModel().getColumn(5).setMaxWidth(80);
+        table.getColumnModel().getColumn(5).setMaxWidth(300);
         table.getColumnModel().getColumn(6).setPreferredWidth(80);
-        table.getColumnModel().getColumn(6).setMaxWidth(90);
+        table.getColumnModel().getColumn(6).setMaxWidth(110);
         table.getColumnModel().getColumn(7).setPreferredWidth(80);
-        table.getColumnModel().getColumn(7).setMaxWidth(90);
+        table.getColumnModel().getColumn(7).setMaxWidth(100);
+        table.getColumnModel().getColumn(8).setPreferredWidth(80);
+        table.getColumnModel().getColumn(8).setMaxWidth(100);
         table.getColumnModel().getColumn(9).setPreferredWidth(100);
-        table.getColumnModel().getColumn(9).setMaxWidth(110);
+        table.getColumnModel().getColumn(9).setMaxWidth(130);
         table.getColumnModel().getColumn(9).setCellRenderer(new StatusColumnCellRenderer());
     }
     

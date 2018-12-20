@@ -63,12 +63,13 @@ public final class SearchEquipmentRepair extends javax.swing.JInternalFrame {
         jTable1.getColumnModel().getColumn(1).setPreferredWidth(60);
         jTable1.getColumnModel().getColumn(1).setMaxWidth(70);
         jTable1.getColumnModel().getColumn(2).setPreferredWidth(100);
-        jTable1.getColumnModel().getColumn(2).setMaxWidth(120);
+        jTable1.getColumnModel().getColumn(2).setMaxWidth(150);
         jTable1.getColumnModel().getColumn(3).setPreferredWidth(80);
-        jTable1.getColumnModel().getColumn(3).setMaxWidth(90);
+        jTable1.getColumnModel().getColumn(3).setMaxWidth(300);
         jTable1.getColumnModel().getColumn(4).setPreferredWidth(70);
         jTable1.getColumnModel().getColumn(4).setMaxWidth(80);
         jTable1.getColumnModel().getColumn(5).setPreferredWidth(200);
+        jTable1.getColumnModel().getColumn(4).setMaxWidth(400);
    }
 
     @SuppressWarnings("unchecked")

@@ -28,7 +28,7 @@ public class EgressToner extends javax.swing.JInternalFrame {
 
     private void register()
     {
-            String fecha, codigo, cantidad;       
+        String fecha, codigo, cantidad;       
         
         Date date = dateFecha.getDate();  
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -62,7 +62,7 @@ public class EgressToner extends javax.swing.JInternalFrame {
                 //prueba m1=new prueba();  
                 //Thread t1 =new Thread(m1); 
                 //t1.start();
-                //JOptionPane.showMessageDialog(null,"El articulo se retiro con exito");
+                JOptionPane.showMessageDialog(null,"El articulo se retiro con exito");
                 clean();
                 fieldCode.requestFocus();
             }
