@@ -529,8 +529,8 @@ public final class SearchEquipment extends javax.swing.JInternalFrame {
                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                     .addComponent(fieldCode, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGap(18, 18, 18)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 320, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(61, Short.MAX_VALUE)))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 320, Short.MAX_VALUE)
+                    .addGap(65, 65, 65)))
         );
 
         pack();
@@ -707,12 +707,12 @@ public final class SearchEquipment extends javax.swing.JInternalFrame {
         list.add(af.getEquipmentOfFloor("sucursal = 'central' and piso = '2° SS'"));
         list.add(af.getEquipmentOfFloor("sucursal = 'central' and piso = '1° SS'"));
         list.add(af.getEquipmentOfFloor("sucursal = 'central' and piso = 'PB'"));
-        list.add(af.getEquipmentOfFloor("sucursal = 'central' piso = '1° P'"));
-        list.add(af.getEquipmentOfFloor("sucursal = 'central' piso = '2° P'"));
-        list.add(af.getEquipmentOfFloor("sucursal = 'central' piso = '3° P'"));
-        list.add(af.getEquipmentOfFloor("sucursal = 'central' piso = '4° P'"));
-        list.add(af.getEquipmentOfFloor("sucursal = 'central' piso = '5° P'"));
-        list.add(af.getEquipmentOfFloor("sucursal = 'central' piso = '6° P'"));
+        list.add(af.getEquipmentOfFloor("sucursal = 'central' and piso = '1° P'"));
+        list.add(af.getEquipmentOfFloor("sucursal = 'central' and piso = '2° P'"));
+        list.add(af.getEquipmentOfFloor("sucursal = 'central' and piso = '3° P'"));
+        list.add(af.getEquipmentOfFloor("sucursal = 'central' and piso = '4° P'"));
+        list.add(af.getEquipmentOfFloor("sucursal = 'central' and piso = '5° P'"));
+        list.add(af.getEquipmentOfFloor("sucursal = 'central' and piso = '6° P'"));
         list.add(af.getEquipmentOfFloor("sucursal != 'central'"));
         
         EquipmentReportXLS xls = new EquipmentReportXLS(list, column, "Inventario equipamiento al " + af.getActualDateString());

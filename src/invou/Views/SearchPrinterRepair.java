@@ -69,9 +69,9 @@ public final class SearchPrinterRepair extends javax.swing.JInternalFrame {
         jTable1.getColumnModel().getColumn(4).setPreferredWidth(70);
         jTable1.getColumnModel().getColumn(4).setMaxWidth(80);
         jTable1.getColumnModel().getColumn(5).setPreferredWidth(120);
-        jTable1.getColumnModel().getColumn(5).setMaxWidth(300);
+        jTable1.getColumnModel().getColumn(5).setMaxWidth(500);
         jTable1.getColumnModel().getColumn(6).setPreferredWidth(120);
-        jTable1.getColumnModel().getColumn(6).setMaxWidth(300);
+        jTable1.getColumnModel().getColumn(6).setMaxWidth(500);
    }
 
     @SuppressWarnings("unchecked")

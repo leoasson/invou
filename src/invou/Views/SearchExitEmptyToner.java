@@ -65,9 +65,12 @@ public final class SearchExitEmptyToner extends javax.swing.JInternalFrame {
         String[] columnas = {"N° egreso","fecha", "cantidad"};
         DefaultTableModel datos = new DefaultTableModel(datostabla,columnas);
         jTable2.setModel(datos);
-        jTable2.getColumnModel().getColumn(0).setMaxWidth(60);
-        jTable2.getColumnModel().getColumn(1).setMaxWidth(200);
-        jTable2.getColumnModel().getColumn(1).setMaxWidth(100);
+        jTable2.getColumnModel().getColumn(1).setPreferredWidth(60);
+        jTable2.getColumnModel().getColumn(0).setMaxWidth(100);
+        jTable2.getColumnModel().getColumn(1).setPreferredWidth(100);
+        jTable2.getColumnModel().getColumn(1).setMaxWidth(500);
+        jTable2.getColumnModel().getColumn(2).setPreferredWidth(100);
+
     }
 
     @SuppressWarnings("unchecked")
@@ -154,8 +157,8 @@ public final class SearchExitEmptyToner extends javax.swing.JInternalFrame {
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
                     .addGap(28, 28, 28)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 672, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(30, Short.MAX_VALUE)))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 672, Short.MAX_VALUE)
+                    .addGap(30, 30, 30)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
