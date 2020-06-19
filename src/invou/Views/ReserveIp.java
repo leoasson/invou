@@ -202,7 +202,7 @@ ip ip = new ip();
         if(af.existIp(fieldIp.getText()))
             {
                 String ip = af.parseIp(fieldIp.getText());
-                af.ingressReserveIp(fieldName.getText().toUpperCase(), ip);
+                af.ingressReserveIp(fieldName.getText(), ip);
                 JOptionPane.showMessageDialog(null, "La ip se reservó correctamente", "Mensaje", JOptionPane.INFORMATION_MESSAGE);
                 clean();
             }

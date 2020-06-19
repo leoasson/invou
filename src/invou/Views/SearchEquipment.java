@@ -292,7 +292,7 @@ public final class SearchEquipment extends javax.swing.JInternalFrame {
     
     public void generateTableData(Object [][] datostabla)
     {    
-        String[] columnas = {"Id Pc", "Sucursal", "Piso", "Sector" ,"Nombre", "Usuario", "Contraseña", "Descripción", "IP Admin","IP Imagen"};
+        String[] columnas = {"Id Pc", "Sucursal", "Piso", "Sector" ,"Nombre", "Usuario", "Contraseña", "Descripción", "IP Admin","IP Imagen","MAC adress"};
         datos = new DefaultTableModel(datostabla,columnas);
         table.setModel(datos);
         table.getColumnModel().getColumn(0).setPreferredWidth(45);
@@ -309,11 +309,13 @@ public final class SearchEquipment extends javax.swing.JInternalFrame {
         table.getColumnModel().getColumn(5).setMaxWidth(120);
         table.getColumnModel().getColumn(6).setPreferredWidth(70);
         table.getColumnModel().getColumn(6).setMaxWidth(130);
-        table.getColumnModel().getColumn(7).setPreferredWidth(80);
+        table.getColumnModel().getColumn(7).setPreferredWidth(140);
         table.getColumnModel().getColumn(7).setMaxWidth(300);
-        table.getColumnModel().getColumn(8).setPreferredWidth(85);
+        table.getColumnModel().getColumn(8).setPreferredWidth(95);
         table.getColumnModel().getColumn(8).setMaxWidth(110);
-        table.getColumnModel().getColumn(9).setPreferredWidth(85);
+        table.getColumnModel().getColumn(9).setPreferredWidth(95);
+        table.getColumnModel().getColumn(9).setMaxWidth(110);
+        table.getColumnModel().getColumn(9).setPreferredWidth(130);
         table.getColumnModel().getColumn(9).setMaxWidth(110);
     }
     
@@ -469,7 +471,7 @@ public final class SearchEquipment extends javax.swing.JInternalFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(fieldIp, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(boxIp))
-                .addContainerGap(394, Short.MAX_VALUE))
+                .addContainerGap(507, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(28, 28, 28)
                 .addComponent(labelInfo)
@@ -485,7 +487,7 @@ public final class SearchEquipment extends javax.swing.JInternalFrame {
                     .addGap(28, 28, 28)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                         .addComponent(jSeparator1)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 908, Short.MAX_VALUE)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 1021, Short.MAX_VALUE)
                         .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                 .addComponent(jLabel13, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -700,7 +702,7 @@ public final class SearchEquipment extends javax.swing.JInternalFrame {
 
     private void buttonGenerateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonGenerateActionPerformed
         SaveExcelFile file = new SaveExcelFile("Equipamiento al "+af.getActualDateString());
-        String[] column = {"Id del equipo", "Sucursal      ","Piso", "Sector       ", "Nombre del equipo", "Usuario    ", "Contraseña   ", "Descripcion                        ", "Ip administrativa", "Ip de imagen      ", "Procesador","Memoria RAM","Almacenamiento","Sistema Operativo", "Fabricante PM", "Modelo Motherboard"};
+        String[] column = {"Id del equipo", "Sucursal      ","Piso", "Sector       ", "Nombre del equipo", "Usuario    ", "Contraseña   ", "Descripcion                        ", "Ip administrativa", "Ip de imagen      ","MAC adress      ", "Procesador","Memoria RAM","Almacenamiento","Sistema Operativo", "Fabricante PM", "Modelo Motherboard"};
         
         ArrayList<Object[][]> list = new ArrayList<Object[][]>();
 

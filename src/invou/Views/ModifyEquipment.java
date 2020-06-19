@@ -11,8 +11,8 @@ public final class ModifyEquipment extends javax.swing.JInternalFrame {
 AuxiliaryFunctions af;
 SentencesSql sensql;
 String id_equipment;
-String name, user, password, ipAdmin, ipImage, description, branch, floor, sector, processor, so, ram, disk, motherboard, modelMotherboard;
-String newName, newUser, newPassword, newIpImage, newDescription, newIpAdmin, newBranch, newFloor, newSector, newProcessor, newSo, newRam, newDisk, newMotherboard, newModelMotherboard;
+String name, user, password, ipAdmin, ipImage, description, branch, floor, area, processor, so, ram, disk, motherboard, modelMotherboard, mac;
+String newName, newUser, newPassword, newIpImage, newDescription, newIpAdmin, newBranch, newFloor, newArea, newProcessor, newSo, newRam, newDisk, newMotherboard, newModelMotherboard, newMac;
 View view;
 SearchEquipment searchEquipment;
 ActionListener actionMotherboard;
@@ -308,6 +308,7 @@ ActionListener actionFloor;
     
     public void getValuesForCheckChanges()
     {
+        newMac = fieldMAC.getText().toUpperCase();
         newName = fieldName.getText().toUpperCase();
         newUser = fieldUser.getText();
         newPassword = fieldPassword.getText();
@@ -325,7 +326,7 @@ ActionListener actionFloor;
         }
         if(comboSector.getSelectedItem() != null)
         {
-            newSector = comboSector.getSelectedItem().toString();
+            newArea = comboSector.getSelectedItem().toString();
         }
         newProcessor = comboProcessor.getSelectedItem().toString();
         newSo = comboSo.getSelectedItem().toString();
@@ -351,10 +352,11 @@ ActionListener actionFloor;
         ipAdmin = sensql.getData("ip", "select ip from pc LEFT JOIN `ip` ON `id_ip` = `cod_ipAdm` where id_pc='"+Id_equipment+"';");
         ipImage = sensql.getData("ip", "select ip from pc LEFT JOIN `ip` ON `id_ip` = `cod_ipImag` where id_pc='"+Id_equipment+"';");
         description = sensql.getData("descripcion", "select descripcion from pc where id_pc='"+Id_equipment+"';");
+        mac = sensql.getData("mac", "select mac from pc where id_pc='"+Id_equipment+"';");
         String from = "FROM `pc` LEFT JOIN `area` ON `id_area` = `cod_area` LEFT JOIN `piso` ON `cod_piso` = `id_piso` LEFT JOIN `sucursal` ON `id_sucursal` = `cod_sucursal` where ";
         branch = sensql.getData("sucursal", "select `sucursal`" + from + "id_pc='"+Id_equipment+"';");
         floor = sensql.getData("piso", "select `piso`" + from + "id_pc='"+Id_equipment+"';");
-        sector = sensql.getData("area", "select `area`" + from + "id_pc='"+Id_equipment+"';");
+        area = sensql.getData("area", "select `area`" + from + "id_pc='"+Id_equipment+"';");
         processor = sensql.getData("procesador", "select `procesador` from pc LEFT JOIN `procesador` ON `id_procesador` = `cod_procesador` where id_pc='"+Id_equipment+"';");
         motherboard = sensql.getData("fabricante", "select `fabricante` from pc LEFT JOIN `motherboard` ON `id_motherboard` = `cod_motherboard` LEFT JOIN `marcamotherboard` ON `id_marca`=`cod_marca` where id_pc='"+Id_equipment+"';");
         modelMotherboard = sensql.getData("modelo", "select `modelo` from pc LEFT JOIN `motherboard` ON `id_motherboard` = `cod_motherboard` LEFT JOIN `marcamotherboard` ON `id_marca`=`cod_marca` where id_pc='"+Id_equipment+"';");
@@ -367,6 +369,7 @@ ActionListener actionFloor;
     
     public boolean getValuesOfView()
     {
+        newMac = fieldMAC.getText().toUpperCase();
         newName = fieldName.getText().toUpperCase();
         newUser = fieldUser.getText();
         newPassword = fieldPassword.getText();
@@ -419,13 +422,13 @@ ActionListener actionFloor;
         }
         
         
-        if(comboBranch.getSelectedItem() == null)
+        if(comboBranch.getSelectedItem() == null || comboFloor.getSelectedItem() == null || comboSector.getSelectedItem()== null)
         {
             JOptionPane.showMessageDialog(null, "Debe completar los campos correspondiente a la ubicación", "Mensaje", JOptionPane.WARNING_MESSAGE); 
             return false;
         }
-        newSector = af.parseSector(comboSector.getSelectedItem().toString());
-
+        newArea = af.getIdArea(comboBranch.getSelectedItem().toString(),comboFloor.getSelectedItem().toString(),comboSector.getSelectedItem().toString());
+        
         if(comboProcessor.getSelectedItem() == null || comboSo.getSelectedItem() == null || comboRam.getSelectedItem() == null || comboStorage.getSelectedItem() == null)
         {
             JOptionPane.showMessageDialog(null, "Debe completar los campos correspondiente a las caracteristicas del equipo", "Mensaje", JOptionPane.WARNING_MESSAGE); 
@@ -449,6 +452,7 @@ ActionListener actionFloor;
     
         public void setValuesInView()
     {
+        fieldMAC.setText(mac);
         fieldName.setText(name);
         fieldUser.setText(user);
         fieldPassword.setText(password);
@@ -457,7 +461,7 @@ ActionListener actionFloor;
         fieldDescription.setText(description);
         comboBranch.setSelectedItem(branch);
         comboFloor.setSelectedItem(floor);
-        comboSector.setSelectedItem(sector);
+        comboSector.setSelectedItem(area);
         comboProcessor.setSelectedItem(processor);
 
         if(modelMotherboard == null){comboMotherboarMaker.setSelectedItem(null);}
@@ -474,8 +478,8 @@ ActionListener actionFloor;
     public void VerifyIfExistChanges()
     {
         if(!name.equals(newName) || !user.equals(newUser) || !password.equals(newPassword) || !ipAdmin.equals(newIpAdmin) || !ipImage.equals(newIpImage) || !description.equals(newDescription)
-        || !branch.equals(newBranch) || !floor.equals(newFloor) || !sector.equals(newSector)
-        || !processor.equals(newProcessor) || !motherboard.equals(newMotherboard) || !modelMotherboard.equals(newModelMotherboard) || !so.equals(newSo) || !ram.equals(newRam) || !disk.equals(newDisk))
+        || !branch.equals(newBranch) || !floor.equals(newFloor) || !area.equals(newArea) || !processor.equals(newProcessor) || !motherboard.equals(newMotherboard) 
+        || !modelMotherboard.equals(newModelMotherboard) || !so.equals(newSo) || !ram.equals(newRam) || !disk.equals(newDisk)|| !mac.equals(newMac))
         {
             int jo = JOptionPane.showConfirmDialog(null, "Se registaron modificaciones. \n¿Desea guardar los cambios efectudos?", "Advertencia",JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
             if(jo == 0) 
@@ -497,11 +501,12 @@ ActionListener actionFloor;
         if(getValuesOfView())
         {
             
-            String data[] = {id_equipment, newName, newUser, newPassword, newIpAdmin, newIpImage, newDescription, newSector, newProcessor, newMotherboard, newRam, newDisk, newSo};
+            String data[] = {id_equipment, newName, newUser, newPassword, newIpAdmin, newIpImage, newDescription, newArea, newProcessor, newMotherboard, newRam, newDisk, newSo, newMac};
             if(af.modifyEquipment(data))
             { 
                 JOptionPane.showMessageDialog(null,"El equipo se modifico correctamente.","Mensaje",JOptionPane.INFORMATION_MESSAGE);
                 getValuesOfDatabase(id_equipment);
+                this.dispose();
             }
         }
     }
@@ -563,6 +568,8 @@ ActionListener actionFloor;
         jLabel1 = new javax.swing.JLabel();
         fieldId = new javax.swing.JTextField();
         buttonId = new javax.swing.JButton();
+        fieldMAC = new javax.swing.JTextField();
+        labelMAC = new javax.swing.JLabel();
 
         setClosable(true);
         setTitle("Detalles equipamiento");
@@ -623,6 +630,11 @@ ActionListener actionFloor;
         jLabel19.setText("Sucursal*");
 
         comboBranch.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        comboBranch.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                comboBranchActionPerformed(evt);
+            }
+        });
 
         comboFloor.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
@@ -687,6 +699,8 @@ ActionListener actionFloor;
             }
         });
 
+        labelMAC.setText("MAC principal");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -726,22 +740,6 @@ ActionListener actionFloor;
                                 .addComponent(deleteButton)
                                 .addGap(18, 18, 18)
                                 .addComponent(buttonExit))
-                            .addComponent(jLabel14)
-                            .addComponent(fieldAdminIP, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(labelCodigo)
-                                    .addComponent(fieldName, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(47, 47, 47)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(labelCantidad)
-                                    .addComponent(fieldUser, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(fieldImageIP, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel15))
-                                .addGap(47, 47, 47)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel13)
-                                    .addComponent(fieldPassword)))
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(layout.createSequentialGroup()
@@ -764,7 +762,30 @@ ActionListener actionFloor;
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(comboSector, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel20))))
+                                    .addComponent(jLabel20)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(labelCodigo)
+                                            .addComponent(fieldName, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addGap(47, 47, 47)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(labelCantidad)
+                                            .addComponent(fieldUser, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(fieldImageIP, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(jLabel15)))
+                                    .addComponent(fieldAdminIP, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel14))
+                                .addGap(47, 47, 47)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(fieldPassword)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jLabel13)
+                                            .addComponent(fieldMAC, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(labelMAC))
+                                        .addGap(0, 0, Short.MAX_VALUE)))))
                         .addComponent(jLabel27)))
                 .addContainerGap(20, Short.MAX_VALUE))
         );
@@ -773,7 +794,7 @@ ActionListener actionFloor;
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 10, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(fieldId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(buttonId))
@@ -794,11 +815,13 @@ ActionListener actionFloor;
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel14)
-                    .addComponent(jLabel15))
+                    .addComponent(jLabel15)
+                    .addComponent(labelMAC))
                 .addGap(8, 8, 8)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(fieldAdminIP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(fieldImageIP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(fieldImageIP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(fieldMAC, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel17)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -864,8 +887,8 @@ ActionListener actionFloor;
     private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
         modifyEquipment();
         if(searchEquipment != null)
-        searchEquipment.filterTable();
-        this.dispose();
+            searchEquipment.filterTable();
+        //this.dispose();
     }//GEN-LAST:event_saveButtonActionPerformed
 
     private void fieldUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fieldUserActionPerformed
@@ -925,6 +948,10 @@ ActionListener actionFloor;
         view.addSearchEquipment(this);
     }//GEN-LAST:event_buttonIdActionPerformed
 
+    private void comboBranchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboBranchActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_comboBranchActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonExit;
     private javax.swing.JButton buttonId;
@@ -942,6 +969,7 @@ ActionListener actionFloor;
     private javax.swing.JTextField fieldDescription;
     private javax.swing.JTextField fieldId;
     private javax.swing.JTextField fieldImageIP;
+    private javax.swing.JTextField fieldMAC;
     private javax.swing.JTextField fieldName;
     private javax.swing.JTextField fieldPassword;
     private javax.swing.JTextField fieldUser;
@@ -967,6 +995,7 @@ ActionListener actionFloor;
     private javax.swing.JSeparator jSeparator3;
     private javax.swing.JLabel labelCantidad;
     private javax.swing.JLabel labelCodigo;
+    private javax.swing.JLabel labelMAC;
     private javax.swing.JButton saveButton;
     // End of variables declaration//GEN-END:variables
 }

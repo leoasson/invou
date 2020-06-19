@@ -106,7 +106,7 @@ public class AuxiliaryFunctions
     
     public boolean ingressNewEquipment(String data[])
     {
-        return sensql.insertRow(data, "insert into `pc`(`nombrePc`, `usuario`, `contraseña`, `cod_ipAdm`, `cod_ipImag`, `descripcion`,`cod_area`, `cod_procesador`, `cod_motherboard`, `cod_ram`, `cod_disco`, `cod_so`) values(?,?,?,?,?,?,?,?,?,?,?,?)");
+        return sensql.insertRow(data, "insert into `pc`(`nombrePc`, `usuario`, `contraseña`, `cod_ipAdm`, `cod_ipImag`, `descripcion`, `mac`,`cod_area`, `cod_procesador`, `cod_motherboard`, `cod_ram`, `cod_disco`, `cod_so`) values(?,?,?,?,?,?,?,?,?,?,?,?,?)");
     }
         
     public boolean ingressPrintRepair (String dateOut,String code, String failure)
@@ -243,15 +243,15 @@ public class AuxiliaryFunctions
     
     public Object [][] getEquipment()
     {
-        String[] columnas= {"result.id_pc", "sucursal", "piso", "area" ,"nombrePc","usuario", "contraseña", "descripcion","ipadmin","ip"};
-        Object [][] datos = sensql.GetTable(columnas, "FROM (SELECT `id_pc`,`sucursal`,`piso`,`area`,`nombrePc`,`usuario`,`contraseña`,`descripcion`,`ip` as ipadmin,`cod_ipImag` FROM `pc` LEFT JOIN `area` ON `id_area`=`cod_area` LEFT JOIN `piso` ON `id_piso`=`cod_piso` LEFT JOIN `sucursal` ON `id_sucursal`=`cod_sucursal` LEFT JOIN `ip` ON `id_ip`=`cod_ipAdm`) as `result` LEFT JOIN ip ON `id_ip`=`cod_ipImag`", "ORDER BY piso, area, nombrePC;");
+        String[] columnas= {"result.id_pc", "sucursal", "piso", "area" ,"nombrePc","usuario", "contraseña", "descripcion","ipadmin","ip","mac"};
+        Object [][] datos = sensql.GetTable(columnas, "FROM (SELECT `id_pc`,`sucursal`,`piso`,`area`,`nombrePc`,`usuario`,`contraseña`,`descripcion`,`ip` as ipadmin,`cod_ipImag`,`mac` FROM `pc` LEFT JOIN `area` ON `id_area`=`cod_area` LEFT JOIN `piso` ON `id_piso`=`cod_piso` LEFT JOIN `sucursal` ON `id_sucursal`=`cod_sucursal` LEFT JOIN `ip` ON `id_ip`=`cod_ipAdm`) as `result` LEFT JOIN ip ON `id_ip`=`cod_ipImag`", "ORDER BY piso, area, nombrePC;");
         return datos;
     }
     
     public Object [][] getEquipmentOfFloor(String where)
     {
-        String[] columnas= {"result.id_pc", "sucursal", "piso", "area" ,"nombrePc","usuario", "contraseña", "descripcion","ipadmin","ip","procesador","memoriaRam","disco","so","fabricante","modelo"};
-        Object [][] datos = sensql.GetTable(columnas, "FROM (SELECT `id_pc`,`sucursal`,`piso`,`area`,`nombrePc`,`usuario`,`contraseña`,`descripcion`,`ip` as ipadmin,`cod_ipImag`,`cod_procesador`,`cod_motherboard`"
+        String[] columnas= {"result.id_pc", "sucursal", "piso", "area" ,"nombrePc","usuario", "contraseña", "descripcion","ipadmin","ip","mac","procesador","memoriaRam","disco","so","fabricante","modelo"};
+        Object [][] datos = sensql.GetTable(columnas, "FROM (SELECT `id_pc`,`sucursal`,`piso`,`area`,`nombrePc`,`usuario`,`contraseña`,`descripcion`,`ip` as ipadmin,`cod_ipImag`,`mac`,`cod_procesador`,`cod_motherboard`"
                 + ",`cod_ram`,`cod_disco`,`cod_so` FROM `pc` LEFT JOIN `area` ON `id_area`=`cod_area` LEFT JOIN `piso` ON `id_piso`=`cod_piso` LEFT JOIN `sucursal` ON `id_sucursal`=`cod_sucursal` LEFT JOIN `ip` ON `id_ip`=`cod_ipAdm`) as `result` "
                 + "LEFT JOIN ip ON `id_ip`=`cod_ipImag` LEFT JOIN `procesador` ON `id_procesador`=`cod_procesador` LEFT JOIN `ram` ON `id_ram`=`cod_ram` LEFT JOIN `disco` ON `id_disco`=`cod_disco` LEFT JOIN `so` ON `id_so`=`cod_so` "
                 + "LEFT JOIN `motherboard` on `cod_motherboard`=`id_motherboard` LEFT JOIN `marcamotherboard` on `id_marca`= `cod_marca` where " + where, "ORDER BY piso, area, nombrePC;");
@@ -371,9 +371,9 @@ public class AuxiliaryFunctions
     }
     public Object[][] filterEquipment(String code, String branch, String floor, String ip, boolean[] filter)
     {
-        String[] columnas= {"id_pc", "sucursal", "piso", "area" ,"nombrePc","usuario", "contraseña", "descripcion","ipadmin","ip"};
+        String[] columnas= {"id_pc", "sucursal", "piso", "area" ,"nombrePc","usuario", "contraseña", "descripcion","ipadmin","ip","mac"};
         Object[][] data = getEquipment();
-        String select = "FROM (SELECT `id_pc`,`sucursal`,`piso`,`area`,`nombrePc`,`usuario`,`contraseña`,`descripcion`,`ip` as ipadmin,`cod_ipImag` FROM `pc` LEFT JOIN `area` ON `id_area`=`cod_area` LEFT JOIN `piso` ON `id_piso`=`cod_piso` LEFT JOIN `sucursal` ON `id_sucursal`=`cod_sucursal` LEFT JOIN `ip` ON `id_ip`=`cod_ipAdm`) as `result` LEFT JOIN ip ON `id_ip`=`cod_ipImag`";
+        String select = "FROM (SELECT `id_pc`,`sucursal`,`piso`,`area`,`nombrePc`,`usuario`,`contraseña`,`descripcion`,`ip` as ipadmin,`cod_ipImag`,`mac` FROM `pc` LEFT JOIN `area` ON `id_area`=`cod_area` LEFT JOIN `piso` ON `id_piso`=`cod_piso` LEFT JOIN `sucursal` ON `id_sucursal`=`cod_sucursal` LEFT JOIN `ip` ON `id_ip`=`cod_ipAdm`) as `result` LEFT JOIN ip ON `id_ip`=`cod_ipImag`";
         switch(Arrays.toString(filter))
             {
                 case "[false, false, false, false]":
@@ -636,6 +636,14 @@ public class AuxiliaryFunctions
          return sensql.getData("id_proveedor", "select id_proveedor from proveedor where nombre_comercial='"+nombre_comercial+"';");
      }
      
+     public String getIdArea(String branch, String floor, String sector)
+     {
+         String branch_ = parseBranch(branch);
+         String floor_ = parseFloor(floor);
+         
+         return sensql.getData("id_area", "select id_area from area where cod_sucursal='"+branch_+"' and cod_piso='"+floor_+"' and area='"+sector+"';");
+     }
+     
      public String parseBranch(String branch)
      {
          if(branch == null)
@@ -660,10 +668,10 @@ public class AuxiliaryFunctions
          }
      }
      
-      public String parseSector(String sector)
-     {
-            return sensql.getData("id_area", "select id_area from area where area='"+sector+"';");
-     }
+//     public String parseSector(String sector)
+//     {
+//            return sensql.getData("id_area", "select id_area from area where area='"+sector+"';");
+//     }
       
      public String parseProcessor(String processor)
      {
@@ -742,7 +750,7 @@ public class AuxiliaryFunctions
     {
         if(deleteEquipment(data[0]))
         {
-            if (sensql.insertRow(data, "insert into `pc`(`id_pc`, `nombrePc`, `usuario`, `contraseña`, `cod_ipAdm`, `cod_ipImag`, `descripcion`,`cod_area`, `cod_procesador`, `cod_motherboard`, `cod_ram`, `cod_disco`, `cod_so`) values(?,?,?,?,?,?,?,?,?,?,?,?,?)"))
+            if (sensql.insertRow(data, "insert into `pc`(`id_pc`, `nombrePc`, `usuario`, `contraseña`, `cod_ipAdm`, `cod_ipImag`, `descripcion`,`cod_area`, `cod_procesador`, `cod_motherboard`, `cod_ram`, `cod_disco`, `cod_so`,`mac`) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?)"))
             {
                 updateStateIp("EN USO", data[4]);
                 updateStateIp("EN USO", data[5]);

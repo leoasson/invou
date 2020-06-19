@@ -10,7 +10,7 @@ import java.awt.event.ActionListener;
 public class RegisterNewEquipment extends javax.swing.JInternalFrame {
 AuxiliaryFunctions af;
 SentencesSql sensql;
-String name, user, password, ipAdmin, ipImage, description, area, processor, so, ram, disc, motherboard;
+String name, user, password, ipAdmin, ipImage, description, area, processor, so, ram, disc, motherboard, mac;
 View view;
 ActionListener actionMotherboard;
 ActionListener actionBranch;
@@ -220,6 +220,7 @@ ActionListener actionFloor;
         password = fieldPassword.getText();
         ipImage = fieldImageIP.getText();
         description = fieldDescription.getText();
+        mac = fieldMAC.getText();
         ipAdmin = fieldAdminIP.getText();
         
         if(name.equals("") || user.equals("") || password.equals(""))
@@ -250,12 +251,12 @@ ActionListener actionFloor;
         else return false;
         
         
-        if(comboBranch.getSelectedItem() == null)
+        if(comboBranch.getSelectedItem() == null || comboFloor.getSelectedItem() == null || comboSector.getSelectedItem()== null)
         {
             JOptionPane.showMessageDialog(null, "Debe completar los campos correspondiente a la ubicación", "Mensaje", JOptionPane.WARNING_MESSAGE); 
             return false;
         }
-        area = af.parseSector(comboSector.getSelectedItem().toString());
+        area = af.getIdArea(comboBranch.getSelectedItem().toString(),comboFloor.getSelectedItem().toString(),comboSector.getSelectedItem().toString());
 
         if(comboProcessor.getSelectedItem() == null || comboSo.getSelectedItem() == null || comboRam.getSelectedItem() == null || comboStorage.getSelectedItem() == null)
         {
@@ -282,7 +283,7 @@ ActionListener actionFloor;
     {
         if(getValuesOfView())
         {
-            String data[] = {name, user, password, ipAdmin, ipImage, description, area, processor, motherboard, ram, disc, so};
+            String data[] = {name, user, password, ipAdmin, ipImage, description, mac, area, processor, motherboard, ram, disc, so};
             if(af.ingressNewEquipment(data))
             {
                 af.updateStateIp("EN USO", ipAdmin);
@@ -369,6 +370,8 @@ ActionListener actionFloor;
         comboRam = new javax.swing.JComboBox<>();
         comboStorage = new javax.swing.JComboBox<>();
         comboSo = new javax.swing.JComboBox<>();
+        labelMAC = new javax.swing.JLabel();
+        fieldMAC = new javax.swing.JTextField();
 
         setClosable(true);
         setTitle("Nuevo equipamiento");
@@ -727,6 +730,8 @@ ActionListener actionFloor;
 
         comboSo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
+        labelMAC.setText("MAC adress");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -745,7 +750,7 @@ ActionListener actionFloor;
                             .addComponent(comboRam, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jSeparator3, javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jSeparator2, javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.LEADING)
@@ -769,29 +774,7 @@ ActionListener actionFloor;
                                             .addComponent(jLabel25)
                                             .addComponent(comboMotherboardModel, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE))
                                         .addGap(0, 0, Short.MAX_VALUE))))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(0, 0, Short.MAX_VALUE)
-                                .addComponent(buttonRegister)
-                                .addGap(18, 18, 18)
-                                .addComponent(ButtonClean)
-                                .addGap(18, 18, 18)
-                                .addComponent(ButtonExit))
-                            .addComponent(jLabel14, javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(fieldAdminIP, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(labelCodigo)
-                                    .addComponent(fieldName, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(47, 47, 47)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(labelCantidad)
-                                    .addComponent(fieldUser, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(fieldImageIP, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel15))
-                                .addGap(47, 47, 47)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel13)
-                                    .addComponent(fieldPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)))
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                                 .addComponent(comboBranch, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(47, 47, 47)
@@ -802,7 +785,35 @@ ActionListener actionFloor;
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel20)
                                     .addComponent(comboSector, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                            .addComponent(jLabel27, javax.swing.GroupLayout.Alignment.LEADING))
+                            .addComponent(jLabel27, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(buttonRegister)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(ButtonClean)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(ButtonExit))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                    .addComponent(labelCodigo)
+                                                    .addComponent(fieldName, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                .addGap(47, 47, 47)
+                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                    .addComponent(labelCantidad)
+                                                    .addComponent(fieldUser, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                    .addComponent(fieldImageIP, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                    .addComponent(jLabel15)))
+                                            .addComponent(jLabel14))
+                                        .addGap(47, 47, 47)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jLabel13)
+                                            .addComponent(fieldPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(labelMAC)
+                                            .addComponent(fieldMAC, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE))))))
                         .addContainerGap(20, Short.MAX_VALUE))))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
@@ -835,11 +846,13 @@ ActionListener actionFloor;
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel14)
-                    .addComponent(jLabel15))
+                    .addComponent(jLabel15)
+                    .addComponent(labelMAC))
                 .addGap(8, 8, 8)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(fieldAdminIP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(fieldImageIP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(fieldImageIP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(fieldMAC, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel17)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -882,7 +895,7 @@ ActionListener actionFloor;
                     .addComponent(comboRam, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(comboStorage, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(comboSo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 43, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 47, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(ButtonClean)
                     .addComponent(ButtonExit)
@@ -975,6 +988,7 @@ ActionListener actionFloor;
     private javax.swing.JTextField fieldAdminIP;
     private javax.swing.JTextField fieldDescription;
     private javax.swing.JTextField fieldImageIP;
+    private javax.swing.JTextField fieldMAC;
     private javax.swing.JTextField fieldName;
     private javax.swing.JTextField fieldPassword;
     private javax.swing.JTextField fieldUser;
@@ -1031,5 +1045,6 @@ ActionListener actionFloor;
     private javax.swing.JTextField jTextField8;
     private javax.swing.JLabel labelCantidad;
     private javax.swing.JLabel labelCodigo;
+    private javax.swing.JLabel labelMAC;
     // End of variables declaration//GEN-END:variables
 }
