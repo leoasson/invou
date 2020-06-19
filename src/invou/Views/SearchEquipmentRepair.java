@@ -26,6 +26,7 @@ public final class SearchEquipmentRepair extends javax.swing.JInternalFrame {
         comboYear.setEnabled(false);
         fieldCode.setEnabled(false);
         generateTableData();
+        table.setDefaultEditor(Object.class, null);
         this.ActListener = new PropertyChangeListener() {
             @Override
             public void propertyChange(PropertyChangeEvent pce) {
@@ -57,19 +58,19 @@ public final class SearchEquipmentRepair extends javax.swing.JInternalFrame {
    {          
         String[] columnas = {"N° rep.","Id de PC", "Nombre del equipo", "Area", "Fecha", "Detalle de reparación"};
         DefaultTableModel datos = new DefaultTableModel(datostabla,columnas);
-        jTable1.setModel(datos);
-        jTable1.getColumnModel().getColumn(0).setPreferredWidth(50);
-        jTable1.getColumnModel().getColumn(0).setMaxWidth(60);
-        jTable1.getColumnModel().getColumn(1).setPreferredWidth(60);
-        jTable1.getColumnModel().getColumn(1).setMaxWidth(70);
-        jTable1.getColumnModel().getColumn(2).setPreferredWidth(100);
-        jTable1.getColumnModel().getColumn(2).setMaxWidth(150);
-        jTable1.getColumnModel().getColumn(3).setPreferredWidth(80);
-        jTable1.getColumnModel().getColumn(3).setMaxWidth(300);
-        jTable1.getColumnModel().getColumn(4).setPreferredWidth(70);
-        jTable1.getColumnModel().getColumn(4).setMaxWidth(80);
-        jTable1.getColumnModel().getColumn(5).setPreferredWidth(200);
-        jTable1.getColumnModel().getColumn(4).setMaxWidth(400);
+        table.setModel(datos);
+        table.getColumnModel().getColumn(0).setPreferredWidth(50);
+        table.getColumnModel().getColumn(0).setMaxWidth(60);
+        table.getColumnModel().getColumn(1).setPreferredWidth(60);
+        table.getColumnModel().getColumn(1).setMaxWidth(70);
+        table.getColumnModel().getColumn(2).setPreferredWidth(100);
+        table.getColumnModel().getColumn(2).setMaxWidth(150);
+        table.getColumnModel().getColumn(3).setPreferredWidth(80);
+        table.getColumnModel().getColumn(3).setMaxWidth(300);
+        table.getColumnModel().getColumn(4).setPreferredWidth(70);
+        table.getColumnModel().getColumn(4).setMaxWidth(80);
+        table.getColumnModel().getColumn(5).setPreferredWidth(200);
+        table.getColumnModel().getColumn(4).setMaxWidth(400);
    }
 
     @SuppressWarnings("unchecked")
@@ -86,7 +87,7 @@ public final class SearchEquipmentRepair extends javax.swing.JInternalFrame {
         boxYear = new javax.swing.JCheckBox();
         comboYear = new com.toedter.calendar.JYearChooser();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        table = new javax.swing.JTable();
         fieldCode = new javax.swing.JTextField();
 
         setClosable(true);
@@ -133,7 +134,7 @@ public final class SearchEquipmentRepair extends javax.swing.JInternalFrame {
             }
         });
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        table.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {},
                 {},
@@ -144,7 +145,7 @@ public final class SearchEquipmentRepair extends javax.swing.JInternalFrame {
 
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(table);
 
         fieldCode.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -288,6 +289,6 @@ public final class SearchEquipmentRepair extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JTable table;
     // End of variables declaration//GEN-END:variables
 }

@@ -94,9 +94,10 @@ public final class SearchStockToner extends javax.swing.JFrame {
         this.setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/invou/imagenes/stock16.png")));
         this.setLocationRelativeTo(null);
         comboModel.setEnabled(false);
+        table.setDefaultEditor(Object.class, null);
         completeComboModel();
         showTable();
-        jTable1.addMouseListener(new MouseAdapter() {
+        table.addMouseListener(new MouseAdapter() {
         @Override
         public void mousePressed(MouseEvent mouseEvent) {
         JTable table =(JTable) mouseEvent.getSource();
@@ -109,7 +110,11 @@ public final class SearchStockToner extends javax.swing.JFrame {
                 case 1:
                         et.setCode((String) datos.getValueAt(rowClicked, 0));
                         closeWindows();
-                        break;       
+                        break;
+                case 2:
+                        it.setCode((String) datos.getValueAt(rowClicked, 0));
+                        closeWindows();
+                        break;
                 case 3:
                         plt.setCode((String) datos.getValueAt(rowClicked, 0));
                         closeWindows();
@@ -117,11 +122,8 @@ public final class SearchStockToner extends javax.swing.JFrame {
                 case 4:
                         ust.setCode((String) datos.getValueAt(rowClicked, 0));
                         closeWindows();
-                        break;                         
-                        
+                        break;                                             
                 default:
-                        it.setCode((String) datos.getValueAt(rowClicked, 0));
-                        closeWindows();
                         break;
             }
         }
@@ -166,17 +168,17 @@ public final class SearchStockToner extends javax.swing.JFrame {
     {   
         String[] columnas = {"Codigo_articulo","modelo", "Descripcion", "Impresoras", "Stock"};
         datos = new DefaultTableModel(tableDate,columnas);
-        jTable1.setModel(datos);
-        jTable1.getColumnModel().getColumn(0).setPreferredWidth(60);
-        jTable1.getColumnModel().getColumn(0).setMaxWidth(90);
-        jTable1.getColumnModel().getColumn(1).setPreferredWidth(150);
-        jTable1.getColumnModel().getColumn(1).setMaxWidth(160);
-        jTable1.getColumnModel().getColumn(3).setPreferredWidth(200);
+        table.setModel(datos);
+        table.getColumnModel().getColumn(0).setPreferredWidth(60);
+        table.getColumnModel().getColumn(0).setMaxWidth(90);
+        table.getColumnModel().getColumn(1).setPreferredWidth(150);
+        table.getColumnModel().getColumn(1).setMaxWidth(160);
+        table.getColumnModel().getColumn(3).setPreferredWidth(200);
         //jTable1.getColumnModel().getColumn(3).setMaxWidth(250);
-        jTable1.getColumnModel().getColumn(2).setPreferredWidth(80);
-        jTable1.getColumnModel().getColumn(2).setMaxWidth(100);
-        jTable1.getColumnModel().getColumn(4).setPreferredWidth(60);
-        jTable1.getColumnModel().getColumn(4).setMaxWidth(90);
+        table.getColumnModel().getColumn(2).setPreferredWidth(80);
+        table.getColumnModel().getColumn(2).setMaxWidth(100);
+        table.getColumnModel().getColumn(4).setPreferredWidth(60);
+        table.getColumnModel().getColumn(4).setMaxWidth(90);
     }
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -187,7 +189,7 @@ public final class SearchStockToner extends javax.swing.JFrame {
         boxModel = new javax.swing.JCheckBox();
         comboModel = new javax.swing.JComboBox<>();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        table = new javax.swing.JTable();
         ButtonExit = new javax.swing.JButton();
         buttonAcept = new javax.swing.JButton();
 
@@ -210,7 +212,7 @@ public final class SearchStockToner extends javax.swing.JFrame {
             }
         });
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        table.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -218,7 +220,7 @@ public final class SearchStockToner extends javax.swing.JFrame {
 
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(table);
 
         ButtonExit.setText("Salir");
         ButtonExit.addActionListener(new java.awt.event.ActionListener() {
@@ -299,7 +301,7 @@ public final class SearchStockToner extends javax.swing.JFrame {
     }//GEN-LAST:event_ButtonExitActionPerformed
 
     private void buttonAceptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonAceptActionPerformed
-        int row = jTable1.getSelectedRow();
+        int row = table.getSelectedRow();
         if(row < 0)
         {
             JOptionPane.showMessageDialog(null,"Seleccione la fila deseada."," ",JOptionPane.WARNING_MESSAGE);
@@ -311,7 +313,11 @@ public final class SearchStockToner extends javax.swing.JFrame {
                 case 1:
                         et.setCode(tableDate[row][0].toString());
                         this.dispose();
-                        break;       
+                        break;  
+                case 2:
+                        it.setCode(tableDate[row][0].toString());
+                        this.dispose();
+                        break;                        
                 case 3:
                         plt.setCode(tableDate[row][0].toString());
                         this.dispose();
@@ -321,8 +327,6 @@ public final class SearchStockToner extends javax.swing.JFrame {
                         this.dispose();
                         break; 
                 default:
-                        it.setCode(tableDate[row][0].toString());
-                        this.dispose();
                         break;
             }
 
@@ -341,6 +345,6 @@ public final class SearchStockToner extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JTable table;
     // End of variables declaration//GEN-END:variables
 }

@@ -48,7 +48,7 @@ AuxiliaryFunctions af;
     {
         String date, code, detail;       
         
-        date = af.getDateToString(fieldDate.getDate());
+        date = af.getStringToDate(fieldDate.getDate());
         detail = fieldDetail.getText();
         code = fieldCode.getText();
         

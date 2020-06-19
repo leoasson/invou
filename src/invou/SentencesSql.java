@@ -14,6 +14,7 @@ public class SentencesSql {
     connection con;
     PreparedStatement ps;
     ResultSet res;
+    String consult;
 
     public SentencesSql() 
     {
@@ -39,7 +40,7 @@ public class SentencesSql {
     public Object [][] GetTable(String colName[], String from, String where){
         int register = 0;
         String select = arrayStringToString(colName);
-        String consult = "SELECT " + select + from + " "+ where ; 
+        consult = "SELECT " + select + from + " "+ where ; 
         System.out.println(consult);
         try
         {
@@ -78,13 +79,11 @@ public class SentencesSql {
         public Object [][] GetTableForTonerReport(String colName[], String from, String where){
         int register = 0;
         String select = arrayStringToString(colName);
-        String consult = "SELECT " + select + from + " "+ where ; 
+        consult = "SELECT " + select + from + " "+ where ; 
         System.out.println(consult);
         try
         {
-           System.out.println("select count(*) as total FROM ("+consult+") as `tableOne`");
            ps = con.connected().prepareStatement("select count(*) as total from ("+consult+") as `tableOne`");
-           
            res = ps.executeQuery();
            res.next();
            register = res.getInt("total");
@@ -121,13 +120,17 @@ public class SentencesSql {
     public Object [][] GetTabla(String colName[], String tabla, String sql){
       int registros = 0;
       
-      try{
-         ps = con.connected().prepareStatement("select count(*) as total from " + tabla);
+      try
+      {
+         consult = "select count(*) as total from " + tabla;
+         ps = con.connected().prepareStatement(consult);
          res = ps.executeQuery();
          res.next();
          registros = res.getInt("total");
          res.close();
-      }catch(SQLException e){
+      }
+      catch(SQLException e)
+      {
          System.out.println(e);
       }
 
@@ -155,8 +158,9 @@ public class SentencesSql {
      public boolean existencias(String campo, String from_where){
         int registros = 0;
         try{
-            ps = con.connected().prepareStatement("SELECT count('"+campo+"') as total " + from_where);
-            System.out.println("SELECT count('"+campo+"') as total  " + from_where);
+            consult = "SELECT count('"+campo+"') as total  " + from_where;
+            System.out.println(consult);
+            ps = con.connected().prepareStatement(consult);
             res = ps.executeQuery();
             res.next();
             registros = res.getInt("total");
@@ -165,20 +169,15 @@ public class SentencesSql {
             System.out.println(e);
          }
 
-        if (registros >0){
-               return true;
-           }
-        else
-           {
-               return false;
-           }
+        return registros >0;
     }
     
     public String getUltimateID (String table, String column, String where){
         String id="";
         try{
-            System.out.println("SELECT max("+column+") as id from  " +table+ " where "+ where);
-            ps = con.connected().prepareStatement("SELECT max("+column+") as id from " +table+ " where "+ where);
+            consult = "SELECT max("+column+") as id from  " +table+ " where "+ where;
+            System.out.println(consult);
+            ps = con.connected().prepareStatement(consult);
             res = ps.executeQuery();
             res.next();
             id = res.getString("id");
@@ -195,21 +194,41 @@ public class SentencesSql {
      * Retorna la suma de las cantidades de una tabla dado un articulo en particular.
      */
     public int getQuantity (String from_where){
-        int registros = 0;
+        int record = 0;
         try{
-            ps = con.connected().prepareStatement("SELECT sum(cantidad) as total "  + from_where);
+            consult = "SELECT sum(cantidad) as total "  + from_where;
+            ps = con.connected().prepareStatement(consult);
             res = ps.executeQuery();
             res.next();
-            registros = res.getInt("total");
+            record = res.getInt("total");
             res.close();
          }
         catch(SQLException e)
          {
             System.out.println(e);
          }
-        return registros;
-        
+        return record;   
     }
+    
+    public int getQuantityOfRow (String from_where)
+    {
+        int record = 0;
+        try{
+            consult = "SELECT count(*) as total "  + from_where;
+            System.out.println(consult);
+            ps = con.connected().prepareStatement(consult);
+            res = ps.executeQuery();
+            res.next();
+            record = res.getInt("total");
+            res.close();
+         }
+        catch(SQLException e)
+         {
+            System.out.println(e);
+         }
+        return record;   
+    }
+    
      
     public String getData(String nombre_columna, String sentenciasql){
         
@@ -236,8 +255,9 @@ public class SentencesSql {
         int registros = 0;      
         try
         {
-            System.out.println("SELECT count(DISTINCT "+ nameColum +") as total " + fromWhere);
-            ps = con.connected().prepareStatement("SELECT count(DISTINCT `"+ nameColum +"`) as total " + fromWhere);
+            consult = "SELECT count(DISTINCT "+ nameColum +") as total " + fromWhere;
+            System.out.println(consult);
+            ps = con.connected().prepareStatement(consult);
             res = ps.executeQuery();
             res.next();
             registros = res.getInt("total");
@@ -247,8 +267,9 @@ public class SentencesSql {
 
         Object[] datos = new Object[registros];
         try{
-            System.out.println("SELECT DISTINCT "+ nameColum +" "+ fromWhere);
-            ps = con.connected().prepareStatement("SELECT DISTINCT "+ nameColum +" "+ fromWhere);
+            consult = "SELECT DISTINCT "+ nameColum +" "+ fromWhere;
+            System.out.println(consult);
+            ps = con.connected().prepareStatement(consult);
             res = ps.executeQuery();
             int i = 0;
             while(res.next()){
@@ -266,8 +287,9 @@ public class SentencesSql {
       int registros = 0;      
       try
       {
-         System.out.println("SELECT count(*) as total FROM " + tabla);
-         ps = con.connected().prepareStatement("SELECT count(*) as total FROM " + tabla);
+         consult = "SELECT count(*) as total FROM " + tabla;
+         System.out.println(consult);
+         ps = con.connected().prepareStatement(consult);
          res = ps.executeQuery();
          res.next();
          registros = res.getInt("total");
@@ -297,8 +319,9 @@ public class SentencesSql {
     public boolean modifiedRow(String table, String column ,String value, String where){
         try
         {
-            System.out.println("UPDATE `"+ table +"` SET `"+column+"` = '"+value+"' WHERE "+ where +";");
-            ps = con.connected().prepareStatement("UPDATE `"+ table +"` SET `"+column+"` = '"+value+"' WHERE "+ where +";");
+            consult = "UPDATE `"+ table +"` SET `"+column+"` = '"+value+"' WHERE "+ where +";";
+            System.out.println(consult);
+            ps = con.connected().prepareStatement(consult);
             ps.executeUpdate();
             return true;
         }
@@ -312,8 +335,9 @@ public class SentencesSql {
     public boolean deleteRow(String table, String where){
             try
             {
-              //System.out.println("DELETE FROM `"+ table +"` WHERE "+where+";");
-              ps = con.connected().prepareStatement("DELETE FROM `"+ table +"` WHERE "+where+";");
+              consult = "DELETE FROM `"+ table +"` WHERE "+where+";";
+              //System.out.println(consult);
+              ps = con.connected().prepareStatement(consult);
               ps.executeUpdate();
               return true;
             }
@@ -337,6 +361,11 @@ public class SentencesSql {
         }
               return select + " ";
      }
+    
+    public String getConsultSql()
+    {
+        return consult;
+    }
 }
     
 

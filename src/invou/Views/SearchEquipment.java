@@ -150,7 +150,7 @@ public final class SearchEquipment extends javax.swing.JInternalFrame {
     
     private void init()
     {
-        tableData.setDefaultEditor(Object.class, null);
+        table.setDefaultEditor(Object.class, null);
         boxFloor.setEnabled(false);
         comboBranch.setEnabled(false);
         comboFloor.setEnabled(false);
@@ -174,7 +174,7 @@ public final class SearchEquipment extends javax.swing.JInternalFrame {
         comboBranch.addActionListener(ActionBranch);
         comboFloor.addActionListener(ActionFloor);
         
-        tableData.addMouseListener(new MouseAdapter() {
+        table.addMouseListener(new MouseAdapter() {
         @Override
         public void mousePressed(MouseEvent mouseEvent) {
         JTable table =(JTable) mouseEvent.getSource();
@@ -294,27 +294,27 @@ public final class SearchEquipment extends javax.swing.JInternalFrame {
     {    
         String[] columnas = {"Id Pc", "Sucursal", "Piso", "Sector" ,"Nombre", "Usuario", "Contraseña", "Descripción", "IP Admin","IP Imagen"};
         datos = new DefaultTableModel(datostabla,columnas);
-        tableData.setModel(datos);
-        tableData.getColumnModel().getColumn(0).setPreferredWidth(45);
-        tableData.getColumnModel().getColumn(0).setMaxWidth(60);
-        tableData.getColumnModel().getColumn(1).setPreferredWidth(90);
-        tableData.getColumnModel().getColumn(1).setMaxWidth(150);
-        tableData.getColumnModel().getColumn(2).setPreferredWidth(40);
-        tableData.getColumnModel().getColumn(2).setMaxWidth(60);
-        tableData.getColumnModel().getColumn(3).setPreferredWidth(130);
-        tableData.getColumnModel().getColumn(3).setMaxWidth(170);
-        tableData.getColumnModel().getColumn(4).setPreferredWidth(90);
-        tableData.getColumnModel().getColumn(4).setMaxWidth(130);
-        tableData.getColumnModel().getColumn(5).setPreferredWidth(60);
-        tableData.getColumnModel().getColumn(5).setMaxWidth(120);
-        tableData.getColumnModel().getColumn(6).setPreferredWidth(70);
-        tableData.getColumnModel().getColumn(6).setMaxWidth(130);
-        tableData.getColumnModel().getColumn(7).setPreferredWidth(80);
-        tableData.getColumnModel().getColumn(7).setMaxWidth(300);
-        tableData.getColumnModel().getColumn(8).setPreferredWidth(85);
-        tableData.getColumnModel().getColumn(8).setMaxWidth(110);
-        tableData.getColumnModel().getColumn(9).setPreferredWidth(85);
-        tableData.getColumnModel().getColumn(9).setMaxWidth(110);
+        table.setModel(datos);
+        table.getColumnModel().getColumn(0).setPreferredWidth(45);
+        table.getColumnModel().getColumn(0).setMaxWidth(60);
+        table.getColumnModel().getColumn(1).setPreferredWidth(90);
+        table.getColumnModel().getColumn(1).setMaxWidth(150);
+        table.getColumnModel().getColumn(2).setPreferredWidth(40);
+        table.getColumnModel().getColumn(2).setMaxWidth(60);
+        table.getColumnModel().getColumn(3).setPreferredWidth(130);
+        table.getColumnModel().getColumn(3).setMaxWidth(170);
+        table.getColumnModel().getColumn(4).setPreferredWidth(90);
+        table.getColumnModel().getColumn(4).setMaxWidth(130);
+        table.getColumnModel().getColumn(5).setPreferredWidth(60);
+        table.getColumnModel().getColumn(5).setMaxWidth(120);
+        table.getColumnModel().getColumn(6).setPreferredWidth(70);
+        table.getColumnModel().getColumn(6).setMaxWidth(130);
+        table.getColumnModel().getColumn(7).setPreferredWidth(80);
+        table.getColumnModel().getColumn(7).setMaxWidth(300);
+        table.getColumnModel().getColumn(8).setPreferredWidth(85);
+        table.getColumnModel().getColumn(8).setMaxWidth(110);
+        table.getColumnModel().getColumn(9).setPreferredWidth(85);
+        table.getColumnModel().getColumn(9).setMaxWidth(110);
     }
     
     public void filterTable()
@@ -350,7 +350,7 @@ public final class SearchEquipment extends javax.swing.JInternalFrame {
         jLabel13 = new javax.swing.JLabel();
         boxCode = new javax.swing.JCheckBox();
         jScrollPane1 = new javax.swing.JScrollPane();
-        tableData = new javax.swing.JTable();
+        table = new javax.swing.JTable();
         ButtonExit = new javax.swing.JButton();
         fieldIp = new javax.swing.JTextField();
         boxIp = new javax.swing.JCheckBox();
@@ -413,7 +413,7 @@ public final class SearchEquipment extends javax.swing.JInternalFrame {
             }
         });
 
-        tableData.setModel(new javax.swing.table.DefaultTableModel(
+        table.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -421,7 +421,7 @@ public final class SearchEquipment extends javax.swing.JInternalFrame {
 
             }
         ));
-        jScrollPane1.setViewportView(tableData);
+        jScrollPane1.setViewportView(table);
 
         ButtonExit.setText("Salir");
         ButtonExit.addActionListener(new java.awt.event.ActionListener() {
@@ -589,7 +589,7 @@ public final class SearchEquipment extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_comboFloorActionPerformed
 
     private void buttonAceptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonAceptActionPerformed
-        int row = tableData.getSelectedRow();
+        int row = table.getSelectedRow();
         if(row < 0)
         {
             JOptionPane.showMessageDialog(null,"Seleccione la fila deseada."," ",JOptionPane.WARNING_MESSAGE);
@@ -741,6 +741,6 @@ public final class SearchEquipment extends javax.swing.JInternalFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JLabel labelInfo;
-    private javax.swing.JTable tableData;
+    private javax.swing.JTable table;
     // End of variables declaration//GEN-END:variables
 }

@@ -1,4 +1,4 @@
-package Invou;
+package invou;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -6,8 +6,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import javax.swing.JOptionPane;
-import Invou.SaveSqlFile;
-import invou.SentencesSql;
+
 
 /**
  *
@@ -16,12 +15,14 @@ import invou.SentencesSql;
 public class BackUpDataBase
 { 
     SentencesSql sensql;
+    Config config = new Config();
+    
     public BackUpDataBase(SentencesSql sensql)
     {
+        System.out.println("No entro");
         this.sensql = sensql;
+        System.out.println("aca entreeentro");
     }
-    
-    invou.Config config = new invou.Config();
     
     public void GenerarBackupMySQL()
     {           
@@ -36,7 +37,7 @@ public class BackUpDataBase
                     InputStreamReader irs;
                     BufferedReader br;
                     try (FileWriter fw = new FileWriter(backupFile)) {
-                        Process child = runtime.exec("C:\\xampp\\mysql\\bin\\mysqldump --opt --password="+config.getPassword()+" --user="+config.getUser()+" --databases invou -R");
+                        Process child = runtime.exec("C:\\xampp\\mysql\\bin\\mysqldump --opt --password=root --user=root "+ "--databases Invou -R");
                         irs = new InputStreamReader(child.getInputStream());
                         br = new BufferedReader(irs);
                         String line;

@@ -3,6 +3,6 @@ PrintPath:>\\leoasson\zebra
 PrintLeftBorder:>40
 PrintUpBorder:>40
 //Data base config
-Url:>jdbc:mysql://192.168.1.15/Invou
-User:>readWrite
-password:>33invou33
+Url:>jdbc:mysql://localhost/invou
+User:>leoasson
+password:>leoasson

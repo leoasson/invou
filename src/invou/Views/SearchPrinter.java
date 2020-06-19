@@ -50,7 +50,7 @@ public final class SearchPrinter extends javax.swing.JFrame {
         };
         fieldState.addActionListener(ActListener);
         fieldModel.addActionListener(ActListener);
-        //table.setEnabled(false);
+
     }
     
     public SearchPrinter(ChangePrint changePrint, SentencesSql sensql)
@@ -126,16 +126,21 @@ public final class SearchPrinter extends javax.swing.JFrame {
     
     private void init()
     {
+        table.setDefaultEditor(Object.class, null);
         this.setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/invou/imagenes/searchPrint16.png")));
         this.setLocationRelativeTo(null);
         table.setDefaultEditor(Object.class, null);
         fieldModel.setEnabled(false);
         fieldState.setEnabled(false);
         fieldCode.setEnabled(false);
+        fieldAvailable.setEditable(false);
+        fieldInRepair.setEditable(false);
+        fieldUsage.setEditable(false);
         completeComboState();
         completeComboModel();
         showTable();
         fieldState.setSelectedItem("DISPONIBLE");
+        filterTable();
 
     }
     
@@ -222,13 +227,22 @@ public final class SearchPrinter extends javax.swing.JFrame {
     public void filterTable()
     {
         boolean[] filter = {boxCode.isSelected(), boxModel.isSelected(), boxState.isSelected()};
-        String State, Code, Model;
+        String State, Code, Model, superConsult;
         Code = fieldCode.getText();
         Model = fieldModel.getSelectedItem().toString();
         State = fieldState.getSelectedItem().toString(); 
         tableDate = af.filterPrint(Code, Model, State, filter);
+        superConsult = af.getConsultSql();
         generateTableData(tableDate);
+        SetPrinterlabels(superConsult);
     }
+    
+   public void SetPrinterlabels(String superConsult)
+   {
+        fieldInRepair.setText(String.valueOf(af.getCountPrinter("from (" + superConsult + ") as superconsult where `estado` = 'EN REPARACION'")));
+        fieldAvailable.setText(String.valueOf(af.getCountPrinter("from (" + superConsult + ") as superconsult where `estado`= 'DISPONIBLE'")));
+        fieldUsage.setText(String.valueOf(af.getCountPrinter("from (" + superConsult + ") as superconsult where `estado` = 'EN USO'")));
+   }
     
     
     @SuppressWarnings("unchecked")
@@ -249,6 +263,12 @@ public final class SearchPrinter extends javax.swing.JFrame {
         buttonAcept = new javax.swing.JButton();
         fieldCode = new javax.swing.JTextField();
         buttonGenerate = new javax.swing.JButton();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        fieldInRepair = new javax.swing.JTextField();
+        fieldAvailable = new javax.swing.JTextField();
+        fieldUsage = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Buscar impresora");
@@ -334,6 +354,24 @@ public final class SearchPrinter extends javax.swing.JFrame {
             }
         });
 
+        jLabel2.setText("EN REPARACION");
+
+        jLabel3.setText("DISPONIBLE");
+
+        jLabel4.setText("EN USO");
+
+        fieldInRepair.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                fieldInRepairActionPerformed(evt);
+            }
+        });
+
+        fieldAvailable.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                fieldAvailableActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -349,50 +387,75 @@ public final class SearchPrinter extends javax.swing.JFrame {
                         .addComponent(buttonAcept)
                         .addGap(18, 18, 18)
                         .addComponent(ButtonExit))
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(boxCode, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(fieldCode, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(boxCode, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(fieldCode, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(18, 18, 18)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(fieldModel, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(boxModel, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(18, 18, 18)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(fieldState, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(37, 37, 37)
+                                        .addComponent(buttonFilter)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 71, Short.MAX_VALUE)
+                                        .addComponent(jLabel4))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(boxState)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING)
+                                            .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING))))))
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(fieldModel, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(boxModel, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(boxState)
-                            .addComponent(fieldState, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(buttonFilter))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 772, Short.MAX_VALUE))
+                            .addComponent(fieldUsage, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(fieldInRepair, javax.swing.GroupLayout.DEFAULT_SIZE, 31, Short.MAX_VALUE)
+                                .addComponent(fieldAvailable)))))
                 .addGap(34, 34, 34))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(29, 29, 29)
+                .addContainerGap()
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 4, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(9, 9, 9)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(buttonFilter)
+                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
+                        .addGap(11, 11, 11)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(boxState)
                             .addComponent(boxCode)
-                            .addComponent(boxModel))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(fieldCode, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(fieldState, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(fieldModel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 259, Short.MAX_VALUE)
-                .addGap(18, 18, 18)
+                            .addComponent(boxModel)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel2)
+                            .addComponent(fieldInRepair, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel3)
+                            .addComponent(fieldAvailable, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(fieldCode, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(fieldState, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(fieldModel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(buttonFilter)
+                        .addComponent(jLabel4))
+                    .addComponent(fieldUsage, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 294, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(ButtonExit)
                     .addComponent(buttonAcept)
@@ -503,6 +566,14 @@ public final class SearchPrinter extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_buttonGenerateActionPerformed
 
+    private void fieldInRepairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fieldInRepairActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_fieldInRepairActionPerformed
+
+    private void fieldAvailableActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fieldAvailableActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_fieldAvailableActionPerformed
+
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -513,10 +584,16 @@ public final class SearchPrinter extends javax.swing.JFrame {
     private javax.swing.JButton buttonAcept;
     private javax.swing.JButton buttonFilter;
     private javax.swing.JButton buttonGenerate;
+    private javax.swing.JTextField fieldAvailable;
     private javax.swing.JTextField fieldCode;
+    private javax.swing.JTextField fieldInRepair;
     private javax.swing.JComboBox<String> fieldModel;
     private javax.swing.JComboBox<String> fieldState;
+    private javax.swing.JTextField fieldUsage;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JTable table;

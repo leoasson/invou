@@ -5,8 +5,8 @@
  */
 package invou.Views;
 
-import Invou.BackUpDataBase;
 import invou.AuxiliaryFunctions;
+import invou.BackUpDataBase;
 import invou.Config;
 import invou.SentencesSql;
 import java.awt.Dimension;
@@ -24,6 +24,7 @@ public class View extends javax.swing.JFrame {
     SentencesSql sensql = new SentencesSql();
     AuxiliaryFunctions af = new AuxiliaryFunctions(sensql);
     Config conf = new Config();
+    ModifyPrinterRepair modifyRepair;
     
     public View() throws IOException 
     {
@@ -51,6 +52,21 @@ public class View extends javax.swing.JFrame {
         jDesktopPane1.add(equipment);
         equipment.show();
     }
+    
+        public void addModifyPrinterRapair(SearchPrinterRepair spp, String id_repair)
+    {
+        modifyRepair = new ModifyPrinterRepair(this, spp, id_repair, sensql);
+        Dimension desktopSize = jDesktopPane1.getSize();
+        Dimension jInternalFrameSize = modifyRepair.getSize();
+        modifyRepair.setLocation((desktopSize.width - jInternalFrameSize.width)/2,(desktopSize.height- jInternalFrameSize.height)/2);
+        jDesktopPane1.add(modifyRepair);
+        modifyRepair.show();
+    }
+        public void closeModifyPrinterRepair()
+        {
+            if(modifyRepair != null)
+                modifyRepair.dispose();
+        }
     
     public void addSearchEquipment(RegisterNewPrint rnp)
     {
@@ -138,6 +154,7 @@ public class View extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jSeparator15 = new javax.swing.JSeparator();
         jToolBar2 = new javax.swing.JToolBar();
         jButton3 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
@@ -196,8 +213,14 @@ public class View extends javax.swing.JFrame {
         printLabelMenu = new javax.swing.JMenuItem();
         print1 = new javax.swing.JMenuItem();
         monitorMenu = new javax.swing.JMenu();
-        jMenuItem4 = new javax.swing.JMenuItem();
-        jMenuItem3 = new javax.swing.JMenuItem();
+        returnMonitorRepair = new javax.swing.JMenuItem();
+        sendToRepairMonitor = new javax.swing.JMenuItem();
+        jSeparator14 = new javax.swing.JPopupMenu.Separator();
+        listMonitor = new javax.swing.JMenu();
+        listMonitorRepair = new javax.swing.JMenuItem();
+        monitor = new javax.swing.JMenuItem();
+        jSeparator16 = new javax.swing.JPopupMenu.Separator();
+        registerNewMonitor = new javax.swing.JMenuItem();
         equiposMenu = new javax.swing.JMenu();
         jMenuItem5 = new javax.swing.JMenuItem();
         jSeparator12 = new javax.swing.JPopupMenu.Separator();
@@ -637,23 +660,57 @@ public class View extends javax.swing.JFrame {
 
         monitorMenu.setText("Monitores");
 
-        jMenuItem4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/invou/imagenes/monitorAdd16 .png"))); // NOI18N
-        jMenuItem4.setText("Ingreso de Monitor");
-        jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
+        returnMonitorRepair.setIcon(new javax.swing.ImageIcon(getClass().getResource("/invou/imagenes/monitorAdd16 .png"))); // NOI18N
+        returnMonitorRepair.setText("Regreso de reparación");
+        returnMonitorRepair.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem4ActionPerformed(evt);
+                returnMonitorRepairActionPerformed(evt);
             }
         });
-        monitorMenu.add(jMenuItem4);
+        monitorMenu.add(returnMonitorRepair);
 
-        jMenuItem3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/invou/imagenes/monitorDelete16.png"))); // NOI18N
-        jMenuItem3.setText("Egreso de Monitor");
-        jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
+        sendToRepairMonitor.setIcon(new javax.swing.ImageIcon(getClass().getResource("/invou/imagenes/monitorDelete16.png"))); // NOI18N
+        sendToRepairMonitor.setText("Enviar a Reparación");
+        sendToRepairMonitor.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem3ActionPerformed(evt);
+                sendToRepairMonitorActionPerformed(evt);
             }
         });
-        monitorMenu.add(jMenuItem3);
+        monitorMenu.add(sendToRepairMonitor);
+        monitorMenu.add(jSeparator14);
+
+        listMonitor.setIcon(new javax.swing.ImageIcon(getClass().getResource("/invou/imagenes/list16.png"))); // NOI18N
+        listMonitor.setText("Listar");
+
+        listMonitorRepair.setIcon(new javax.swing.ImageIcon(getClass().getResource("/invou/imagenes/mantenimiento-16.png"))); // NOI18N
+        listMonitorRepair.setText("Reparaciones");
+        listMonitorRepair.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                listMonitorRepairActionPerformed(evt);
+            }
+        });
+        listMonitor.add(listMonitorRepair);
+
+        monitor.setIcon(new javax.swing.ImageIcon(getClass().getResource("/invou/imagenes/print-16.png"))); // NOI18N
+        monitor.setText("Monitores");
+        monitor.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                monitorActionPerformed(evt);
+            }
+        });
+        listMonitor.add(monitor);
+
+        monitorMenu.add(listMonitor);
+        monitorMenu.add(jSeparator16);
+
+        registerNewMonitor.setIcon(new javax.swing.ImageIcon(getClass().getResource("/invou/imagenes/registryEditor16.png"))); // NOI18N
+        registerNewMonitor.setText("Registrar nuevo Monitor");
+        registerNewMonitor.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                registerNewMonitorActionPerformed(evt);
+            }
+        });
+        monitorMenu.add(registerNewMonitor);
 
         jMenuBar1.add(monitorMenu);
 
@@ -798,9 +855,9 @@ public class View extends javax.swing.JFrame {
         searchIp.show();
     }//GEN-LAST:event_jButton6ActionPerformed
 
-    private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
+    private void sendToRepairMonitorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendToRepairMonitorActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jMenuItem3ActionPerformed
+    }//GEN-LAST:event_sendToRepairMonitorActionPerformed
 
     private void addTonnerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addTonnerActionPerformed
     IngressToner ing = new IngressToner(sensql);
@@ -887,7 +944,7 @@ public class View extends javax.swing.JFrame {
     }//GEN-LAST:event_registerNewPrintActionPerformed
 
     private void listPrinterRepairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_listPrinterRepairActionPerformed
-        SearchPrinterRepair repairs = new SearchPrinterRepair(sensql);
+        SearchPrinterRepair repairs = new SearchPrinterRepair(this, sensql);
         Dimension desktopSize = jDesktopPane1.getSize();
         Dimension jInternalFrameSize = repairs.getSize();
         repairs.setLocation((desktopSize.width - jInternalFrameSize.width)/2,(desktopSize.height- jInternalFrameSize.height)/2);
@@ -1063,9 +1120,9 @@ public class View extends javax.swing.JFrame {
         ip.show();
     }//GEN-LAST:event_jMenuItem8ActionPerformed
 
-    private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
+    private void returnMonitorRepairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_returnMonitorRepairActionPerformed
 
-    }//GEN-LAST:event_jMenuItem4ActionPerformed
+    }//GEN-LAST:event_returnMonitorRepairActionPerformed
 
     private void updateStock1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateStock1ActionPerformed
         PrintLabelToner toner = new PrintLabelToner(sensql);
@@ -1134,7 +1191,7 @@ public class View extends javax.swing.JFrame {
     private void backUpBDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backUpBDActionPerformed
         BackUpDataBase bkp;
         bkp = new  BackUpDataBase(sensql);
-        bkp.GenerarBackupMySQL();
+        bkp.GenerarBackupMySQL();         
     }//GEN-LAST:event_backUpBDActionPerformed
 
     private void unlinkPrintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_unlinkPrintActionPerformed
@@ -1150,6 +1207,18 @@ public class View extends javax.swing.JFrame {
         SentencesSql sensql_ = new SentencesSql();
         sensql = sensql_;
     }//GEN-LAST:event_jButton9ActionPerformed
+
+    private void registerNewMonitorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registerNewMonitorActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_registerNewMonitorActionPerformed
+
+    private void listMonitorRepairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_listMonitorRepairActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_listMonitorRepairActionPerformed
+
+    private void monitorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_monitorActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_monitorActionPerformed
 
     
     
@@ -1226,8 +1295,6 @@ public class View extends javax.swing.JFrame {
     private javax.swing.JDesktopPane jDesktopPane1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenuItem jMenuItem3;
-    private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JMenuItem jMenuItem5;
     private javax.swing.JMenuItem jMenuItem6;
     private javax.swing.JMenuItem jMenuItem7;
@@ -1237,6 +1304,9 @@ public class View extends javax.swing.JFrame {
     private javax.swing.JPopupMenu.Separator jSeparator11;
     private javax.swing.JPopupMenu.Separator jSeparator12;
     private javax.swing.JToolBar.Separator jSeparator13;
+    private javax.swing.JPopupMenu.Separator jSeparator14;
+    private javax.swing.JSeparator jSeparator15;
+    private javax.swing.JPopupMenu.Separator jSeparator16;
     private javax.swing.JPopupMenu.Separator jSeparator2;
     private javax.swing.JToolBar.Separator jSeparator3;
     private javax.swing.JToolBar.Separator jSeparator4;
@@ -1247,6 +1317,8 @@ public class View extends javax.swing.JFrame {
     private javax.swing.JPopupMenu.Separator jSeparator9;
     private javax.swing.JToolBar jToolBar2;
     private javax.swing.JMenuItem linkPrint;
+    private javax.swing.JMenu listMonitor;
+    private javax.swing.JMenuItem listMonitorRepair;
     private javax.swing.JMenuItem listPagesPrinted;
     private javax.swing.JMenuItem listPrint;
     private javax.swing.JMenu listPrinter;
@@ -1257,22 +1329,30 @@ public class View extends javax.swing.JFrame {
     private javax.swing.JMenu menu_config;
     private javax.swing.JMenu menu_proveedores;
     private javax.swing.JMenuItem modifyDeleteMenu;
+    private javax.swing.JMenuItem monitor;
     private javax.swing.JMenu monitorMenu;
     private javax.swing.JMenuItem print1;
     private javax.swing.JMenuItem printLabelMenu;
     private javax.swing.JMenu printLabeltonnerMenu;
     private javax.swing.JMenu printerMenu;
+    private javax.swing.JMenuItem registerNewMonitor;
     private javax.swing.JMenuItem registerNewPrint;
     private javax.swing.JMenuItem registerRepairMenu;
     private javax.swing.JMenuItem registrarProveedor;
     private javax.swing.JMenuItem registryTonner;
     private javax.swing.JMenuItem repairReturn;
+    private javax.swing.JMenuItem returnMonitorRepair;
     private javax.swing.JMenuItem sendPrintToRepair;
+    private javax.swing.JMenuItem sendToRepairMonitor;
     private javax.swing.JMenuItem unlinkPrint;
     private javax.swing.JMenuItem updatePagesPrinted;
     private javax.swing.JMenuItem updateStock;
     private javax.swing.JMenuItem updateStock1;
     private javax.swing.JMenuItem updateStock2;
     // End of variables declaration//GEN-END:variables
+
+    private void coach() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 
 }

@@ -25,6 +25,7 @@ public final class SearchExitEmptyToner extends javax.swing.JInternalFrame {
         initComponents();
         comboMonth.setEnabled(false);
         comboYear.setEnabled(false);
+        table.setDefaultEditor(Object.class, null);
 
         showTable();
         this.ActionModel = new ActionListener() {
@@ -64,12 +65,12 @@ public final class SearchExitEmptyToner extends javax.swing.JInternalFrame {
        System.out.println(datostabla.length);
         String[] columnas = {"N° egreso","fecha", "cantidad"};
         DefaultTableModel datos = new DefaultTableModel(datostabla,columnas);
-        jTable2.setModel(datos);
-        jTable2.getColumnModel().getColumn(1).setPreferredWidth(60);
-        jTable2.getColumnModel().getColumn(0).setMaxWidth(100);
-        jTable2.getColumnModel().getColumn(1).setPreferredWidth(100);
-        jTable2.getColumnModel().getColumn(1).setMaxWidth(500);
-        jTable2.getColumnModel().getColumn(2).setPreferredWidth(100);
+        table.setModel(datos);
+        table.getColumnModel().getColumn(1).setPreferredWidth(60);
+        table.getColumnModel().getColumn(0).setMaxWidth(100);
+        table.getColumnModel().getColumn(1).setPreferredWidth(100);
+        table.getColumnModel().getColumn(1).setMaxWidth(500);
+        table.getColumnModel().getColumn(2).setPreferredWidth(100);
 
     }
 
@@ -79,7 +80,7 @@ public final class SearchExitEmptyToner extends javax.swing.JInternalFrame {
 
         ButtonExit = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable2 = new javax.swing.JTable();
+        table = new javax.swing.JTable();
         comboMonth = new com.toedter.calendar.JMonthChooser();
         jSeparator1 = new javax.swing.JSeparator();
         jLabel1 = new javax.swing.JLabel();
@@ -101,7 +102,7 @@ public final class SearchExitEmptyToner extends javax.swing.JInternalFrame {
             }
         });
 
-        jTable2.setModel(new javax.swing.table.DefaultTableModel(
+        table.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -109,7 +110,7 @@ public final class SearchExitEmptyToner extends javax.swing.JInternalFrame {
 
             }
         ));
-        jScrollPane1.setViewportView(jTable2);
+        jScrollPane1.setViewportView(table);
 
         jLabel1.setText("Filtrar por:");
 
@@ -233,6 +234,6 @@ public final class SearchExitEmptyToner extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JTable jTable2;
+    private javax.swing.JTable table;
     // End of variables declaration//GEN-END:variables
 }

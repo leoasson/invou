@@ -23,14 +23,17 @@ public final class SearchExitsToner extends javax.swing.JInternalFrame {
     private Object[][] tableDate; 
     ActionListener ActionModel;
     PropertyChangeListener ActListener;
+    String superConsult;
     
     public SearchExitsToner(SentencesSql sensql)
     {
         af = new AuxiliaryFunctions(sensql);
         initComponents();
+        labelTotal.setEditable(false);
         comboMonth.setEnabled(false);
         comboModel.setEnabled(false);
         comboYear.setEnabled(false);
+        table.setDefaultEditor(Object.class, null);
         showTable();
         completeComboModel(); 
         this.ActionModel = new ActionListener() {
@@ -74,29 +77,34 @@ public final class SearchExitsToner extends javax.swing.JInternalFrame {
         String modelo = comboModel.getSelectedItem().toString();
         tableDate = af.filterToner("egresotonner", modelo, ano, mes, filtro);
         generateTableData(tableDate);
+        superConsult = af.getConsultSql();
+        setTotalToner(superConsult);
     }
     
+    private void setTotalToner(String superConsult)  
+    {
+       labelTotal.setText(String.valueOf(af.getTotalToner("from (" + superConsult + ") as superconsult")));
+    }
     public void generateTableData(Object [][] datostabla)
     {    
        System.out.println(datostabla.length);
         String[] columnas = {"N° egreso","Codigo", "Modelo", "Detalle","Impresoras compatibles", "fecha", "cantidad"};
         DefaultTableModel datos = new DefaultTableModel(datostabla,columnas);
-        jTable2.setModel(datos);
-        jTable2.getColumnModel().getColumn(0).setPreferredWidth(70);
-        jTable2.getColumnModel().getColumn(0).setMaxWidth(60);
-        jTable2.getColumnModel().getColumn(1).setPreferredWidth(50);
-        jTable2.getColumnModel().getColumn(1).setMaxWidth(60);
-        jTable2.getColumnModel().getColumn(2).setPreferredWidth(130);
-        jTable2.getColumnModel().getColumn(2).setMaxWidth(150);
-        jTable2.getColumnModel().getColumn(4).setPreferredWidth(200);
+        table.setModel(datos);
+        table.getColumnModel().getColumn(0).setPreferredWidth(70);
+        table.getColumnModel().getColumn(0).setMaxWidth(60);
+        table.getColumnModel().getColumn(1).setPreferredWidth(50);
+        table.getColumnModel().getColumn(1).setMaxWidth(60);
+        table.getColumnModel().getColumn(2).setPreferredWidth(130);
+        table.getColumnModel().getColumn(2).setMaxWidth(150);
+        table.getColumnModel().getColumn(4).setPreferredWidth(200);
         //jTable2.getColumnModel().getColumn(4).setMaxWidth(210);
-        jTable2.getColumnModel().getColumn(3).setPreferredWidth(120);
-        jTable2.getColumnModel().getColumn(3).setMaxWidth(130);
-        jTable2.getColumnModel().getColumn(5).setPreferredWidth(80);
-        jTable2.getColumnModel().getColumn(5).setMaxWidth(90);
-        jTable2.getColumnModel().getColumn(6).setPreferredWidth(60);
-        jTable2.getColumnModel().getColumn(6).setMaxWidth(60);
-        
+        table.getColumnModel().getColumn(3).setPreferredWidth(120);
+        table.getColumnModel().getColumn(3).setMaxWidth(130);
+        table.getColumnModel().getColumn(5).setPreferredWidth(80);
+        table.getColumnModel().getColumn(5).setMaxWidth(90);
+        table.getColumnModel().getColumn(6).setPreferredWidth(60);
+        table.getColumnModel().getColumn(6).setMaxWidth(60);   
     }
 
     @SuppressWarnings("unchecked")
@@ -105,7 +113,7 @@ public final class SearchExitsToner extends javax.swing.JInternalFrame {
 
         ButtonExit = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable2 = new javax.swing.JTable();
+        table = new javax.swing.JTable();
         comboMonth = new com.toedter.calendar.JMonthChooser();
         jSeparator1 = new javax.swing.JSeparator();
         comboModel = new javax.swing.JComboBox<>();
@@ -115,6 +123,8 @@ public final class SearchExitsToner extends javax.swing.JInternalFrame {
         boxYear = new javax.swing.JCheckBox();
         comboYear = new com.toedter.calendar.JYearChooser();
         jButton1 = new javax.swing.JButton();
+        jLabel2 = new javax.swing.JLabel();
+        labelTotal = new javax.swing.JTextField();
 
         setClosable(true);
         setIconifiable(true);
@@ -130,7 +140,7 @@ public final class SearchExitsToner extends javax.swing.JInternalFrame {
             }
         });
 
-        jTable2.setModel(new javax.swing.table.DefaultTableModel(
+        table.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -138,7 +148,7 @@ public final class SearchExitsToner extends javax.swing.JInternalFrame {
 
             }
         ));
-        jScrollPane1.setViewportView(jTable2);
+        jScrollPane1.setViewportView(table);
 
         comboModel.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
@@ -172,6 +182,8 @@ public final class SearchExitsToner extends javax.swing.JInternalFrame {
             }
         });
 
+        jLabel2.setText("Total");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -179,26 +191,35 @@ public final class SearchExitsToner extends javax.swing.JInternalFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jButton1)
-                        .addGap(18, 18, 18)
-                        .addComponent(ButtonExit))
                     .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(comboModel, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(boxModel))
-                        .addGap(55, 55, 55)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(boxMonth)
-                            .addComponent(comboMonth, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(55, 55, 55)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(boxYear)
-                            .addComponent(comboYear, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 359, Short.MAX_VALUE))
-                    .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.LEADING))
+                    .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(comboModel, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(boxModel))
+                                .addGap(55, 55, 55)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(boxMonth)
+                                    .addComponent(comboMonth, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(55, 55, 55)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(comboYear, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(0, 282, Short.MAX_VALUE))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(boxYear)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(jLabel2))))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addComponent(jButton1)))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(ButtonExit, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(labelTotal))
+                        .addGap(6, 6, 6)))
                 .addGap(25, 25, 25))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
@@ -217,14 +238,16 @@ public final class SearchExitsToner extends javax.swing.JInternalFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(boxMonth)
                     .addComponent(boxModel)
-                    .addComponent(boxYear))
+                    .addComponent(boxYear)
+                    .addComponent(jLabel2)
+                    .addComponent(labelTotal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(comboModel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                         .addComponent(comboYear, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(comboMonth, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 314, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 313, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(ButtonExit)
                     .addComponent(jButton1))
@@ -337,8 +360,12 @@ public final class SearchExitsToner extends javax.swing.JInternalFrame {
     private com.toedter.calendar.JYearChooser comboYear;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JTable jTable2;
+    private javax.swing.JTextField labelTotal;
+    private javax.swing.JTable table;
     // End of variables declaration//GEN-END:variables
+
+
 }

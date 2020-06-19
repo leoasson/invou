@@ -18,6 +18,7 @@ public final class SearchIncomeToner extends javax.swing.JInternalFrame {
     private Object[][] tableData; 
     ActionListener ActionModel;
     PropertyChangeListener ActListener;
+    String superconsult;
     
     
     public SearchIncomeToner(SentencesSql sensql)
@@ -27,6 +28,8 @@ public final class SearchIncomeToner extends javax.swing.JInternalFrame {
         comboMonth.setEnabled(false);
         comboModel.setEnabled(false);
         comboYear.setEnabled(false);
+        labelTotal.setEditable(false);
+        table.setDefaultEditor(Object.class, null);
         completeComboModel();
         generateTableData();
         this.ActionModel = new ActionListener() {
@@ -71,18 +74,24 @@ public final class SearchIncomeToner extends javax.swing.JInternalFrame {
         String modelo = comboModel.getSelectedItem().toString();
         tableData = af.filterToner("ingresotonner", modelo, ano, mes, filtro);
         generateTableData(tableData);
+        superconsult = af.getConsultSql();
+        setTotalToner(superconsult);
     }
     
-   public void generateTableData(Object [][] datostabla)
-   {          
+    private void setTotalToner(String superConsult)  
+    {
+        labelTotal.setText(String.valueOf(af.getTotalToner("from (" + superConsult + ") as superconsult")));
+    } 
+    public void generateTableData(Object [][] datostabla)
+    {          
         String[] columnas = {"N° ingreso","Codigo", "Modelo", "Detalle", "Proveedor", "fecha", "cantidad"};
         DefaultTableModel datos = new DefaultTableModel(datostabla,columnas);
-        jTable1.setModel(datos);
-        jTable1.getColumnModel().getColumn(0).setMaxWidth(60);
-        jTable1.getColumnModel().getColumn(4).setMaxWidth(80);
-        jTable1.getColumnModel().getColumn(5).setMaxWidth(70);
-        jTable1.getColumnModel().getColumn(6).setMaxWidth(60);
-   }
+        table.setModel(datos);
+        table.getColumnModel().getColumn(0).setMaxWidth(60);
+        table.getColumnModel().getColumn(4).setMaxWidth(80);
+        table.getColumnModel().getColumn(5).setMaxWidth(70);
+        table.getColumnModel().getColumn(6).setMaxWidth(60);
+    }
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -98,7 +107,9 @@ public final class SearchIncomeToner extends javax.swing.JInternalFrame {
         boxYear = new javax.swing.JCheckBox();
         comboYear = new com.toedter.calendar.JYearChooser();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        table = new javax.swing.JTable();
+        labelTotal = new javax.swing.JTextField();
+        jLabel2 = new javax.swing.JLabel();
 
         setClosable(true);
         setIconifiable(true);
@@ -139,7 +150,7 @@ public final class SearchIncomeToner extends javax.swing.JInternalFrame {
             }
         });
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        table.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {},
                 {},
@@ -150,7 +161,9 @@ public final class SearchIncomeToner extends javax.swing.JInternalFrame {
 
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(table);
+
+        jLabel2.setText("Total");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -161,28 +174,33 @@ public final class SearchIncomeToner extends javax.swing.JInternalFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(buttonExit)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(comboModel, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(boxModel))
-                                .addGap(55, 55, 55)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(boxMonth)
-                                    .addComponent(comboMonth, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(55, 55, 55)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(comboModel, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(boxModel))
+                            .addGap(55, 55, 55)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(boxMonth)
+                                .addComponent(comboMonth, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGap(55, 55, 55)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(comboYear, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGap(0, 0, Short.MAX_VALUE))
+                                .addGroup(layout.createSequentialGroup()
                                     .addComponent(boxYear)
-                                    .addComponent(comboYear, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(0, 305, Short.MAX_VALUE)))
+                                    .addGap(212, 212, 212)
+                                    .addComponent(jLabel2)
+                                    .addGap(18, 18, 18)
+                                    .addComponent(labelTotal, javax.swing.GroupLayout.DEFAULT_SIZE, 53, Short.MAX_VALUE))))
                         .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.LEADING)))
                 .addGap(25, 25, 25))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGroup(layout.createSequentialGroup()
                     .addGap(31, 31, 31)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 670, Short.MAX_VALUE)
-                    .addGap(29, 29, 29)))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 672, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(27, Short.MAX_VALUE)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -195,18 +213,20 @@ public final class SearchIncomeToner extends javax.swing.JInternalFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(boxMonth)
                     .addComponent(boxModel)
-                    .addComponent(boxYear))
+                    .addComponent(boxYear)
+                    .addComponent(jLabel2)
+                    .addComponent(labelTotal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(comboModel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                         .addComponent(comboYear, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(comboMonth, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 315, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 314, Short.MAX_VALUE)
                 .addComponent(buttonExit)
                 .addContainerGap())
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGroup(layout.createSequentialGroup()
                     .addGap(126, 126, 126)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 270, Short.MAX_VALUE)
                     .addGap(54, 54, 54)))
@@ -273,8 +293,10 @@ public final class SearchIncomeToner extends javax.swing.JInternalFrame {
     private com.toedter.calendar.JMonthChooser comboMonth;
     private com.toedter.calendar.JYearChooser comboYear;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JTextField labelTotal;
+    private javax.swing.JTable table;
     // End of variables declaration//GEN-END:variables
 }

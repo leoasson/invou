@@ -60,7 +60,7 @@ String serialNumber;
     {
         String date, code, failure;       
         Date date_ = fieldDate.getDate();
-        date = af.getDateToString(date_);
+        date = af.getStringToDate(date_);
         failure = fieldFailure.getText().toUpperCase();
         code = fieldCode.getText().toUpperCase();
         

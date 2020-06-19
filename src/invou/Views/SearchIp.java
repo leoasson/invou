@@ -35,26 +35,25 @@ public final class SearchIp extends javax.swing.JInternalFrame
     String begin,end;
     int tableLength;
     int state=0;
+    SentencesSql sensql;
     
     public SearchIp(SentencesSql sensql)
     {
-        af= new AuxiliaryFunctions(sensql);
+        this.sensql = sensql;
+        init();
         state=1;
-        initComponents();
-        tableData = af.getIp();
-        generateTableData(tableData);
         table.setEnabled(false);
         buttonAcept.setEnabled(false);
     }
 
     public SearchIp(ReserveIp reserveIp, SentencesSql sensql)
     {
-        af= new AuxiliaryFunctions(sensql);
+        this.sensql = sensql;
+        init();
         this.reserveIp=reserveIp;
         state=2;
-        initComponents();
-        tableData = af.getIp();
-        generateTableData(tableData);
+
+
         table.addMouseListener(new MouseAdapter() {
         @Override
         public void mousePressed(MouseEvent mouseEvent)
@@ -75,11 +74,22 @@ public final class SearchIp extends javax.swing.JInternalFrame
         this.dispose();
     }
     
-    public void generateTableData(Object [][] datostabla)
+   private void init ()
+   {
+        af= new AuxiliaryFunctions(sensql);
+        initComponents();
+        fieldName.setEnabled(false);
+        fieldIp.setEnabled(false);
+        tableData = af.getIp();
+        generateTableData(tableData);
+        table.setDefaultEditor(Object.class, null);
+   }
+   
+    private void generateTableData(Object [][] datostabla)
     {          
          String[] columnas = {"Ip","Nombre", "Estado"};
          datos = new DefaultTableModel(datostabla,columnas);
-         RowSorter<TableModel> sorter = new TableRowSorter<TableModel>(datos);
+         RowSorter<TableModel> sorter = new TableRowSorter<>(datos);
          table.setRowSorter(sorter);
          table.setModel(datos);
          table.getColumnModel().getColumn(0).setPreferredWidth(100);
@@ -91,7 +101,13 @@ public final class SearchIp extends javax.swing.JInternalFrame
 
     }
     
-    public boolean filter() 
+    private void cleanTable()
+    {
+        tableData = af.getIp();
+        generateTableData(tableData);
+    }
+    
+    private boolean filter() 
     {     
         boolean exist = false;
         ArrayList<String> array = ip.generateRange(begin, end);
@@ -120,9 +136,9 @@ public final class SearchIp extends javax.swing.JInternalFrame
         return false;
 }
 
-    public int verifyRange()
+    private int verifyRange()
     {
-        String value = fieldCode.getText();
+        String value = fieldIp.getText();
         if(value.equals(""))
         { 
            return -1;
@@ -152,7 +168,7 @@ public final class SearchIp extends javax.swing.JInternalFrame
         }
     }
     
-    public void filterTableForRange()
+    private void filterTableForRange()
     {
         boolean filter;
         switch(verifyRange())
@@ -160,7 +176,7 @@ public final class SearchIp extends javax.swing.JInternalFrame
             case 0:
                 tableData = af.getIp();
                 generateTableData(tableData);
-                String [] ips = fieldCode.getText().split("-");
+                String [] ips = fieldIp.getText().split("-");
                 begin = ips[0];
                 end = ips[1];
                 filter = true;  
@@ -173,7 +189,7 @@ public final class SearchIp extends javax.swing.JInternalFrame
             case 1:
                 tableData = af.getIp();
                 generateTableData(tableData);
-                begin = end = fieldCode.getText();
+                begin = end = fieldIp.getText();
                 filter = true;  
                 while(filter)
                 {
@@ -191,6 +207,13 @@ public final class SearchIp extends javax.swing.JInternalFrame
 
 }
       
+    private void filterTableForName()
+    {
+        tableData = af.filterIp(fieldName.getText());
+        generateTableData(tableData);
+    }
+    
+    
     public class StatusColumnCellRenderer extends DefaultTableCellRenderer {
      @Override
      public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int col) 
@@ -224,9 +247,11 @@ public final class SearchIp extends javax.swing.JInternalFrame
         jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         table = new javax.swing.JTable();
-        fieldCode = new javax.swing.JTextField();
-        jLabel2 = new javax.swing.JLabel();
+        fieldIp = new javax.swing.JTextField();
         buttonAcept = new javax.swing.JButton();
+        checkBoxIp = new javax.swing.JCheckBox();
+        checkBoxName = new javax.swing.JCheckBox();
+        fieldName = new javax.swing.JTextField();
 
         setClosable(true);
         setIconifiable(true);
@@ -264,18 +289,36 @@ public final class SearchIp extends javax.swing.JInternalFrame
         ));
         jScrollPane1.setViewportView(table);
 
-        fieldCode.addActionListener(new java.awt.event.ActionListener() {
+        fieldIp.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                fieldCodeActionPerformed(evt);
+                fieldIpActionPerformed(evt);
             }
         });
-
-        jLabel2.setText("Rango de Ip");
 
         buttonAcept.setText("Aceptar");
         buttonAcept.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buttonAceptActionPerformed(evt);
+            }
+        });
+
+        checkBoxIp.setText("Ip/ rango");
+        checkBoxIp.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                checkBoxIpActionPerformed(evt);
+            }
+        });
+
+        checkBoxName.setText("Nombre");
+        checkBoxName.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                checkBoxNameActionPerformed(evt);
+            }
+        });
+
+        fieldName.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                fieldNameActionPerformed(evt);
             }
         });
 
@@ -287,7 +330,9 @@ public final class SearchIp extends javax.swing.JInternalFrame
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel2)
+                        .addComponent(checkBoxIp)
+                        .addGap(208, 208, 208)
+                        .addComponent(checkBoxName)
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -302,7 +347,9 @@ public final class SearchIp extends javax.swing.JInternalFrame
                                         .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 543, Short.MAX_VALUE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 167, Short.MAX_VALUE))
                                     .addGroup(layout.createSequentialGroup()
-                                        .addComponent(fieldCode, javax.swing.GroupLayout.PREFERRED_SIZE, 222, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(fieldIp, javax.swing.GroupLayout.PREFERRED_SIZE, 222, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(57, 57, 57)
+                                        .addComponent(fieldName, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                                 .addComponent(buttonFilter))
                             .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.LEADING))
@@ -320,13 +367,17 @@ public final class SearchIp extends javax.swing.JInternalFrame
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 9, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(7, 7, 7)
-                .addComponent(jLabel2)
+                .addGap(3, 3, 3)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(checkBoxIp)
+                    .addComponent(checkBoxName))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(buttonFilter)
-                    .addComponent(fieldCode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 320, Short.MAX_VALUE)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(fieldIp, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(fieldName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 323, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(buttonExit)
                     .addComponent(buttonAcept))
@@ -346,13 +397,17 @@ public final class SearchIp extends javax.swing.JInternalFrame
     }//GEN-LAST:event_buttonExitActionPerformed
 
     private void buttonFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonFilterActionPerformed
-    filterTableForRange();
+    if(checkBoxIp.isSelected())
+        filterTableForRange();
+    else if (checkBoxName.isSelected())
+        filterTableForName();
+    else
+        cleanTable();
     }//GEN-LAST:event_buttonFilterActionPerformed
 
-    private void fieldCodeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fieldCodeActionPerformed
-    filterTableForRange();
-        //filterTableForRange();
-    }//GEN-LAST:event_fieldCodeActionPerformed
+    private void fieldIpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fieldIpActionPerformed
+        filterTableForRange();
+    }//GEN-LAST:event_fieldIpActionPerformed
 
     private void buttonAceptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonAceptActionPerformed
         int row = table.getSelectedRow();
@@ -376,13 +431,51 @@ public final class SearchIp extends javax.swing.JInternalFrame
         }
     }//GEN-LAST:event_buttonAceptActionPerformed
 
+    private void checkBoxIpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkBoxIpActionPerformed
+     if(checkBoxIp.isSelected())
+     {
+        fieldIp.setEnabled(true);
+        fieldName.setEnabled(false);
+        checkBoxName.setSelected(false);        
+     }
+     
+     else
+     {
+        fieldIp.setEnabled(false);   
+        fieldIp.setText("");
+        cleanTable();
+     }
+    }//GEN-LAST:event_checkBoxIpActionPerformed
+
+    private void checkBoxNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkBoxNameActionPerformed
+    if(checkBoxName.isSelected())
+     {
+        fieldName.setEnabled(true);
+        fieldIp.setEnabled(false);
+        checkBoxIp.setSelected(false);        
+     }
+     
+     else
+     {
+        fieldName.setEnabled(false);   
+        fieldName.setText("");
+        cleanTable();
+     }
+    }//GEN-LAST:event_checkBoxNameActionPerformed
+
+    private void fieldNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fieldNameActionPerformed
+        filterTableForName();
+    }//GEN-LAST:event_fieldNameActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonAcept;
     private javax.swing.JButton buttonExit;
     private javax.swing.JButton buttonFilter;
-    private javax.swing.JTextField fieldCode;
+    private javax.swing.JCheckBox checkBoxIp;
+    private javax.swing.JCheckBox checkBoxName;
+    private javax.swing.JTextField fieldIp;
+    private javax.swing.JTextField fieldName;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JTable table;

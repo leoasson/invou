@@ -3,10 +3,20 @@ package invou.Views;
 import javax.swing.table.DefaultTableModel;
 import invou.AuxiliaryFunctions;
 import invou.SentencesSql;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JTable;
+import javax.swing.RowSorter;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 
 /**
  *
@@ -17,30 +27,55 @@ public final class SearchPrinterRepair extends javax.swing.JInternalFrame {
     AuxiliaryFunctions af;
     private Object[][] tableData;
     PropertyChangeListener ActListener;
+    DefaultTableModel data;
+    SentencesSql sensql;
+    private final View view;
+    ModifyPrinterRepair modifyRepair;
     
-    public SearchPrinterRepair(SentencesSql sensql)
+    public SearchPrinterRepair(View view, SentencesSql sensql)
     {
+        this.view = view;
+        this.sensql = sensql;
         af = new AuxiliaryFunctions(sensql);
         initComponents();
+        init();
+    }
+    
+    public void init()
+    {
+        table.setDefaultEditor(Object.class, null);
         comboMonth.setEnabled(false);
+        fieldPrinterRepair.setEditable(false);
         comboYear.setEnabled(false);
         fieldCode.setEnabled(false);
-        generateTableData();
+        generateTableData(af.getPrintersRepair());
         this.ActListener = new PropertyChangeListener() {
             @Override
             public void propertyChange(PropertyChangeEvent pce) {
                 filterTable();
-            }
-    };
+            }};
         comboMonth.addPropertyChangeListener(ActListener);
         comboYear.addPropertyChangeListener(ActListener);
-  
+        
+        
+        table.addMouseListener(new MouseAdapter() {
+        @Override
+        public void mousePressed(MouseEvent mouseEvent) {
+        JTable table =(JTable) mouseEvent.getSource();
+        Point point = mouseEvent.getPoint();
+        int rowClicked = table.rowAtPoint(point);
+        if (mouseEvent.getClickCount() == 2 && table.getSelectedRow() != -1) 
+        {
+            String id_repair = ((String) data.getValueAt(rowClicked, 0));
+            newViewModify(id_repair);            
+        }
     }
+        });
     
-    public void generateTableData()
-    {      
-        tableData = af.getPrintersRepair();
-        generateTableData(tableData);
+    }
+    public void newViewModify(String id_repair)
+    {
+        view.addModifyPrinterRapair(this, id_repair);  
     }
     
     public void filterTable()
@@ -51,27 +86,37 @@ public final class SearchPrinterRepair extends javax.swing.JInternalFrame {
         String code = fieldCode.getText();
         tableData = af.filterPrinterRepair(code, mes, ano, filtro);
         generateTableData(tableData);
+        SetTotalPrinterRepair();
     }
     
-   public void generateTableData(Object [][] datostabla)
+   public void SetTotalPrinterRepair()
+   {
+    fieldPrinterRepair.setText(String.valueOf(af.getPrinterRepairActually()));
+   }
+   
+   public void generateTableData(Object [][] tableData)
    {          
-        String[] columnas = {"N° rep.","N° serie", "Modelo", "Salida", "Retorno", "Falla", "Detalle de reparación"};
-        DefaultTableModel datos = new DefaultTableModel(datostabla,columnas);
-        jTable1.setModel(datos);
-        jTable1.getColumnModel().getColumn(0).setPreferredWidth(50);
-        jTable1.getColumnModel().getColumn(0).setMaxWidth(60);
-        jTable1.getColumnModel().getColumn(1).setPreferredWidth(80);
-        jTable1.getColumnModel().getColumn(1).setMaxWidth(90);
-        jTable1.getColumnModel().getColumn(2).setPreferredWidth(115);
-        jTable1.getColumnModel().getColumn(2).setMaxWidth(150);
-        jTable1.getColumnModel().getColumn(3).setPreferredWidth(70);
-        jTable1.getColumnModel().getColumn(3).setMaxWidth(80);
-        jTable1.getColumnModel().getColumn(4).setPreferredWidth(70);
-        jTable1.getColumnModel().getColumn(4).setMaxWidth(80);
-        jTable1.getColumnModel().getColumn(5).setPreferredWidth(120);
-        jTable1.getColumnModel().getColumn(5).setMaxWidth(500);
-        jTable1.getColumnModel().getColumn(6).setPreferredWidth(120);
-        jTable1.getColumnModel().getColumn(6).setMaxWidth(500);
+        String[] columnas = {"N° rep.","N° serie", "Modelo", "Salida", "Retorno", "Proveedor", "Falla", "Detalle de reparación"};
+        data = new DefaultTableModel(tableData,columnas);
+        table.setModel(data);
+        RowSorter<TableModel> sorter = new TableRowSorter<>(data);
+        table.setRowSorter(sorter);
+        table.getColumnModel().getColumn(0).setPreferredWidth(50);
+        table.getColumnModel().getColumn(0).setMaxWidth(60);
+        table.getColumnModel().getColumn(1).setPreferredWidth(80);
+        table.getColumnModel().getColumn(1).setMaxWidth(90);
+        table.getColumnModel().getColumn(2).setPreferredWidth(115);
+        table.getColumnModel().getColumn(2).setMaxWidth(150);
+        table.getColumnModel().getColumn(3).setPreferredWidth(70);
+        table.getColumnModel().getColumn(3).setMaxWidth(80);
+        table.getColumnModel().getColumn(4).setPreferredWidth(70);
+        table.getColumnModel().getColumn(4).setMaxWidth(80);
+        table.getColumnModel().getColumn(4).setPreferredWidth(70);
+        table.getColumnModel().getColumn(4).setMaxWidth(80);
+        table.getColumnModel().getColumn(6).setPreferredWidth(120);
+        table.getColumnModel().getColumn(6).setMaxWidth(500);
+        table.getColumnModel().getColumn(7).setPreferredWidth(120);
+        table.getColumnModel().getColumn(7).setMaxWidth(500);
    }
 
     @SuppressWarnings("unchecked")
@@ -87,8 +132,10 @@ public final class SearchPrinterRepair extends javax.swing.JInternalFrame {
         boxYear = new javax.swing.JCheckBox();
         comboYear = new com.toedter.calendar.JYearChooser();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        table = new javax.swing.JTable();
         fieldCode = new javax.swing.JTextField();
+        jLabel3 = new javax.swing.JLabel();
+        fieldPrinterRepair = new javax.swing.JTextField();
 
         setClosable(true);
         setIconifiable(true);
@@ -127,7 +174,7 @@ public final class SearchPrinterRepair extends javax.swing.JInternalFrame {
             }
         });
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        table.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {},
                 {},
@@ -138,11 +185,19 @@ public final class SearchPrinterRepair extends javax.swing.JInternalFrame {
 
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(table);
 
         fieldCode.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 fieldCodeActionPerformed(evt);
+            }
+        });
+
+        jLabel3.setText("En reparación:");
+
+        fieldPrinterRepair.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                fieldPrinterRepairActionPerformed(evt);
             }
         });
 
@@ -155,21 +210,24 @@ public final class SearchPrinterRepair extends javax.swing.JInternalFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(buttonExit)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(boxCode)
-                                    .addComponent(fieldCode, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(26, 26, 26)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(boxMonth)
-                                    .addComponent(comboMonth, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(55, 55, 55)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(boxCode)
+                                .addComponent(fieldCode, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGap(26, 26, 26)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(boxMonth)
+                                .addComponent(comboMonth, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGap(55, 55, 55)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(comboYear, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(layout.createSequentialGroup()
                                     .addComponent(boxYear)
-                                    .addComponent(comboYear, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(0, 389, Short.MAX_VALUE)))
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 249, Short.MAX_VALUE)
+                                    .addComponent(jLabel3)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                    .addComponent(fieldPrinterRepair, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE))))
                         .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.LEADING)))
                 .addGap(25, 25, 25))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -189,13 +247,15 @@ public final class SearchPrinterRepair extends javax.swing.JInternalFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(boxMonth)
                     .addComponent(boxCode)
-                    .addComponent(boxYear))
+                    .addComponent(boxYear)
+                    .addComponent(jLabel3)
+                    .addComponent(fieldPrinterRepair, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(comboYear, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(comboMonth, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(fieldCode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 319, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 318, Short.MAX_VALUE)
                 .addComponent(buttonExit)
                 .addContainerGap())
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -209,7 +269,10 @@ public final class SearchPrinterRepair extends javax.swing.JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void buttonExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonExitActionPerformed
+    view.closeModifyPrinterRepair();
     this.dispose();
+    
+    
     }//GEN-LAST:event_buttonExitActionPerformed
 
     private void boxCodeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boxCodeActionPerformed
@@ -261,6 +324,10 @@ public final class SearchPrinterRepair extends javax.swing.JInternalFrame {
        filterTable();
     }//GEN-LAST:event_fieldCodeActionPerformed
 
+    private void fieldPrinterRepairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fieldPrinterRepairActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_fieldPrinterRepairActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox boxCode;
     private javax.swing.JCheckBox boxMonth;
@@ -269,9 +336,11 @@ public final class SearchPrinterRepair extends javax.swing.JInternalFrame {
     private com.toedter.calendar.JMonthChooser comboMonth;
     private com.toedter.calendar.JYearChooser comboYear;
     private javax.swing.JTextField fieldCode;
+    private javax.swing.JTextField fieldPrinterRepair;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JTable table;
     // End of variables declaration//GEN-END:variables
 }

@@ -32,20 +32,26 @@ public class EgressToner extends javax.swing.JInternalFrame {
         
         Date date = dateFecha.getDate();  
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
- 
+        
+        if(date == null)
+        {
+            JOptionPane.showMessageDialog(null,"Debe ingresar una fehca válida.","Advertencia",JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        
         fecha = String.valueOf(sdf.format(date));
         cantidad = fieldQuantity.getText();
         codigo = fieldCode.getText();
         
         if(!af.existTonerCode(codigo))
         {
-            JOptionPane.showMessageDialog(null,"El codigo ingresado no esta registardo en la abase de datos");
+            JOptionPane.showMessageDialog(null,"El codigo ingresado no esta registardo en la base de datos","Advertencia",JOptionPane.WARNING_MESSAGE);
             clean();
             return;
         }
         if(!af.isValidNumber(cantidad))
         {
-            JOptionPane.showMessageDialog(null,"Ingrese una cantidad valida");
+            JOptionPane.showMessageDialog(null,"Ingrese una cantidad válida","Advertencia",JOptionPane.WARNING_MESSAGE);
             return;
         }
         if(!af.esPosibleRetirar(codigo, cantidad))
@@ -68,7 +74,7 @@ public class EgressToner extends javax.swing.JInternalFrame {
             }
             else
             {
-                JOptionPane.showMessageDialog(null,"Error al ingresar el articulo","Mensaje",JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(null,"Error al ingresar el articulo","Mensaje",JOptionPane.ERROR_MESSAGE);
             }
         }
         else
@@ -82,7 +88,6 @@ public class EgressToner extends javax.swing.JInternalFrame {
        java.sql.Date Date = new java.sql.Date(System.currentTimeMillis());
        dateFecha.setDate(Date);
        fieldCode.setText("");
-       fieldQuantity.setText("1");
        fieldCode.requestFocus();
     }
     
@@ -521,10 +526,7 @@ public class EgressToner extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_jButton6ActionPerformed
 
     private void fieldCodeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fieldCodeActionPerformed
-     //fieldQuantity.setText("1");
-     buttonEgress.requestFocus();
-     //register();
-             
+     fieldQuantity.requestFocus();       
     }//GEN-LAST:event_fieldCodeActionPerformed
 
     private void ButtonSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonSalirActionPerformed

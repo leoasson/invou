@@ -1,7 +1,5 @@
-package Invou;
+package invou;
 
-import invou.AuxiliaryFunctions;
-import invou.SentencesSql;
 import java.io.File;
 import javax.swing.JFileChooser;
 import static javax.swing.JFileChooser.APPROVE_SELECTION;

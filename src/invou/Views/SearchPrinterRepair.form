@@ -47,10 +47,15 @@
                           </Group>
                           <EmptySpace min="-2" pref="55" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="boxYear" min="-2" max="-2" attributes="0"/>
-                              <Component id="comboYear" min="-2" max="-2" attributes="0"/>
+                              <Component id="comboYear" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Group type="102" alignment="0" attributes="0">
+                                  <Component id="boxYear" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace pref="249" max="32767" attributes="0"/>
+                                  <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                  <Component id="fieldPrinterRepair" min="-2" pref="62" max="-2" attributes="0"/>
+                              </Group>
                           </Group>
-                          <EmptySpace min="0" pref="389" max="32767" attributes="0"/>
                       </Group>
                       <Component id="jSeparator1" alignment="0" max="32767" attributes="0"/>
                   </Group>
@@ -78,6 +83,8 @@
                   <Component id="boxMonth" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="boxCode" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="boxYear" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jLabel3" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="fieldPrinterRepair" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace min="-2" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="1" attributes="0">
@@ -85,7 +92,7 @@
                   <Component id="comboMonth" min="-2" max="-2" attributes="0"/>
                   <Component id="fieldCode" alignment="1" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace pref="319" max="32767" attributes="0"/>
+              <EmptySpace pref="318" max="32767" attributes="0"/>
               <Component id="buttonExit" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="-2" max="-2" attributes="0"/>
           </Group>
@@ -150,7 +157,7 @@
 
       <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
       <SubComponents>
-        <Component class="javax.swing.JTable" name="jTable1">
+        <Component class="javax.swing.JTable" name="table">
           <Properties>
             <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
               <Table columnCount="0" rowCount="4"/>
@@ -168,6 +175,16 @@
     <Component class="javax.swing.JTextField" name="fieldCode">
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="fieldCodeActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JLabel" name="jLabel3">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="En reparaci&#xf3;n:"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="fieldPrinterRepair">
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="fieldPrinterRepairActionPerformed"/>
       </Events>
     </Component>
   </SubComponents>

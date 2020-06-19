@@ -213,6 +213,12 @@ Object[] proveedor;
         Date date = dateFecha.getDate();  
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
  
+        if(date == null)
+        {
+            JOptionPane.showMessageDialog(null,"Debe ingresar una fehca válida.", "Advertencia",JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        
         fecha = String.valueOf(sdf.format(date));
         proveedor =af.parseProvider(comboProvider.getSelectedItem().toString());
         cantidad = fieldQuantity.getText();
@@ -220,13 +226,13 @@ Object[] proveedor;
         
         if(!af.existTonerCode(codigo))
         {
-            JOptionPane.showMessageDialog(null,"El codigo ingresado no esta registardo en la abase de datos");
+            JOptionPane.showMessageDialog(null,"El codigo ingresado no esta registardo en la base de datos", "Advertencia",JOptionPane.WARNING_MESSAGE);
             fieldCode.requestFocus();
             return;
         }
         if(!af.isValidNumber(cantidad))
         {
-            JOptionPane.showMessageDialog(null,"Ingrese una cantidad valida");
+            JOptionPane.showMessageDialog(null,"Ingrese una cantidad válida", "Advertencia",JOptionPane.WARNING_MESSAGE);
             fieldQuantity.requestFocus();
             return;
             
@@ -242,7 +248,7 @@ Object[] proveedor;
                 }
                 else
                 {
-                    JOptionPane.showMessageDialog(null,"Error al ingresar el articulo","Mensaje",JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(null,"Error al ingresar el artículo","Advertencia",JOptionPane.ERROR_MESSAGE);
                 }
             }
         else

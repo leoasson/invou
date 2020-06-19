@@ -863,9 +863,9 @@ ActionListener actionFloor;
     
     private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
         modifyEquipment();
-        buttonExit.requestFocus();
         if(searchEquipment != null)
         searchEquipment.filterTable();
+        this.dispose();
     }//GEN-LAST:event_saveButtonActionPerformed
 
     private void fieldUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fieldUserActionPerformed

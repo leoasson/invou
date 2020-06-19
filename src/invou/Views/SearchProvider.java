@@ -22,6 +22,7 @@ SentencesSql sensql;
     {
         this.sensql=sensql;
         initComponents();
+        table.setDefaultEditor(Object.class, null);
         mostrar_tabla();
     }
     
@@ -30,7 +31,7 @@ SentencesSql sensql;
         String[] columnas = {"Identificacion","Nombre comercial","Direccion","Ciudad","Telefono"};
         datostabla = con.consulta_proveedor();
         DefaultTableModel datos = new DefaultTableModel(datostabla,columnas);
-        jTable1.setModel(datos);
+        table.setModel(datos);
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -42,13 +43,13 @@ SentencesSql sensql;
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        table = new javax.swing.JTable();
         jButton1 = new javax.swing.JButton();
 
         setTitle("Buscar proveedor");
         setFrameIcon(new javax.swing.ImageIcon(getClass().getResource("/invou/imagenes/listProvider16.png"))); // NOI18N
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        table.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {},
                 {},
@@ -59,7 +60,7 @@ SentencesSql sensql;
 
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(table);
 
         jButton1.setText("Salir");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -101,6 +102,6 @@ SentencesSql sensql;
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JTable table;
     // End of variables declaration//GEN-END:variables
 }

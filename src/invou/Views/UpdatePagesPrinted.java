@@ -43,7 +43,7 @@ AuxiliaryFunctions af;
     {
         String date, code, pages;       
         
-        date = af.getDateToString(fieldDate.getDate());
+        date = af.getStringToDate(fieldDate.getDate());
         pages = pagesPrinted.getText();
         code = fieldCode.getText().toUpperCase();
         

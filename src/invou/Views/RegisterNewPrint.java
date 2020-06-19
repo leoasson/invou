@@ -89,7 +89,7 @@ public class RegisterNewPrint extends javax.swing.JInternalFrame {
         code = fieldCode.getText().toUpperCase();
         model = fieldPart.getText().toUpperCase();
         count = fieldCount.getText();
-        date = af.getDateToString(fieldDate.getDate());
+        date = af.getStringToDate(fieldDate.getDate());
         cod_pc = fieldCodePc.getText();
     }
     

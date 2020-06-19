@@ -1,6 +1,7 @@
 package invou;
 
 import static java.lang.Math.abs;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
@@ -10,6 +11,7 @@ public class AuxiliaryFunctions
 { 
     SentencesSql sensql;
     String fecha = getActualDateString();
+    String consultSql;
     
     public AuxiliaryFunctions()
     {
@@ -154,6 +156,22 @@ public class AuxiliaryFunctions
        return Date;
     }
     
+    public Date getDateToString(String date) 
+    {
+        Date date1 = null;
+        try
+        {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            date1 = sdf.parse(date); 
+        }
+        catch(ParseException e)
+            {
+            JOptionPane.showMessageDialog(null, "Se produjo un error al momento de conocer la fecha de retorno", "error", JOptionPane.ERROR_MESSAGE); 
+            }
+       
+        return date1;
+    }
+    
     public Object[][] getExitEmptyToner()
     {
         String columnas[] = {"id_ingreso", "fecha", "cantidad"};
@@ -161,7 +179,7 @@ public class AuxiliaryFunctions
         return datos;
     }
     
-    public String getDateToString (Date date)
+    public String getStringToDate (Date date)
     {
        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
              try
@@ -196,7 +214,7 @@ public class AuxiliaryFunctions
     public Object [][] getPrinters()
     {
         String[] columnas= {"id_sn", "cod_pn","modelo","sucursal", "piso", "area", "nombrePC","cantidad","fecha", "estado"};
-        Object [][] datos = sensql.GetTable(columnas, "FROM `impresora` LEFT JOIN `modeloimpresora` ON `cod_pn` = `id_pn` LEFT JOIN `impresiones` ON `cod_impresion` = `id_impresion` LEFT JOIN `pc` on `cod_pc` = `id_pc` LEFT JOIN `area` ON `id_area` = `cod_area` LEFT JOIN `piso` ON `id_piso` = `cod_piso` LEFT JOIN `sucursal` ON `id_sucursal` = `cod_sucursal`", "ORDER BY `modelo`;");
+        Object [][] datos = sensql.GetTable(columnas, "FROM `impresora` LEFT JOIN `modeloimpresora` ON `cod_pn` = `id_pn` LEFT JOIN `impresiones` ON `cod_impresion` = `id_impresion` LEFT JOIN `pc` on `cod_pc` = `id_pc` LEFT JOIN `area` ON `id_area` = `cod_area` LEFT JOIN `piso` ON `id_piso` = `cod_piso` LEFT JOIN `sucursal` ON `id_sucursal` = `cod_sucursal`", "ORDER BY `modelo`");
         return datos;
     }
     
@@ -249,8 +267,8 @@ public class AuxiliaryFunctions
     
     public Object [][] getPrintersRepair()
     {
-        String[] columnas= {"id_reparacion","cod_impresora","modelo","fechaSalida","fechaRetorno","falla","detalleReparacion"};
-        Object [][] datos = sensql.GetTable(columnas, "FROM `reparacion` LEFT JOIN `impresora` on `cod_impresora` = `id_sn` LEFT JOIN `modeloImpresora` ON `cod_pn` = `id_pn`", "ORDER BY `id_reparacion` DESC;");
+        String[] columnas= {"id_reparacion","cod_impresora","modelo","fechaSalida","fechaRetorno","nombre_comercial","falla","detalleReparacion"};
+        Object [][] datos = sensql.GetTable(columnas, "FROM `reparacion` LEFT JOIN `impresora` on `cod_impresora` = `id_sn` LEFT JOIN `modeloImpresora` ON `cod_pn` = `id_pn` LEFT JOIN `proveedor` ON `cod_proveedor` = `id_proveedor`", "ORDER BY `id_reparacion` DESC;");
         return datos;
     }
     
@@ -386,31 +404,33 @@ public class AuxiliaryFunctions
             {
                 case "[false, false, false]":
                 datos = getPrinters();
-                return datos;
+                break;
                 case "[false, false, true]":
-                datos = sensql.GetTable(columnas, select, "WHERE `estado`='"+state+"';");
-                return datos;
+                datos = sensql.GetTable(columnas, select, "WHERE `estado`='"+state+"'");
+                break;
                 case "[false, true, false]":
-                datos = sensql.GetTable(columnas, select, "WHERE `modelo`='"+model+"';");
-                return datos;
+                datos = sensql.GetTable(columnas, select, "WHERE `modelo`='"+model+"'");
+                break;
                 case "[false, true, true]":
-                datos = sensql.GetTable(columnas, select, "WHERE `estado`='"+state+"' and `modelo`='"+model+"';");
-                return datos;
+                datos = sensql.GetTable(columnas, select, "WHERE `estado`='"+state+"' and `modelo`='"+model+"'");
+                break;
                 case "[true, false, false]":
-                datos = sensql.GetTable(columnas, select, "WHERE `id_sn`='"+code+"';");
-                return datos;
+                datos = sensql.GetTable(columnas, select, "WHERE `id_sn`='"+code+"'");
+                break;
                 case "[true, false, true]":
-                datos = sensql.GetTable(columnas, select, "WHERE `id_sn`='"+code+"' and `estado`='"+state+"';");
-                return datos;
+                datos = sensql.GetTable(columnas, select, "WHERE `id_sn`='"+code+"' and `estado`='"+state+"'");
+                break;
                 case "[true, true, false]":
-                datos = sensql.GetTable(columnas, select, "WHERE `id_sn`='"+code+"' and `modelo`='"+model+"';");
-                return datos;
+                datos = sensql.GetTable(columnas, select, "WHERE `id_sn`='"+code+"' and `modelo`='"+model+"'");
+                break;
                 case "[true, true, true]":
-                datos = sensql.GetTable(columnas, select, "WHERE `id_sn`='"+code+"' and `modelo`='"+model+"' and `estado`='"+state+"';");
-                return datos;
+                datos = sensql.GetTable(columnas, select, "WHERE `id_sn`='"+code+"' and `modelo`='"+model+"' and `estado`='"+state+"'");
+                break;
                 default:
-                return datos;
+                break;
             }
+        consultSql = sensql.getConsultSql();
+        return datos;
     }
     
     public Object[][] filterStockToner(String model)
@@ -420,76 +440,88 @@ public class AuxiliaryFunctions
     return datos;
     }
     
+    public Object[][] filterIp(String name)
+    {
+        String[] columnas= {"ip", "nombrePC", "estado"};
+        Object [][] datos = sensql.GetTable(columnas, "FROM (SELECT `id_ip`,`ip`,`nombrePc`,`estado` FROM `ip` LEFT JOIN `reservasip` on `id_ip`=`cod_ip` where `estado`='DISPONIBLE' UNION SELECT `id_ip`,`ip`,`nombrePc`, `estado` FROM `ip`,`pc` WHERE `id_ip` = `cod_ipAdm` or `id_ip` = `cod_ipImag` UNION SELECT `id_ip`,`ip`,`nombrePc`, `estado` FROM `ip`,`reservasip` where `id_ip` = `cod_ip` ORDER BY id_ip) as `result`", " where nombrePC LIKE '%"+name+"%'");
+        return datos;
+    }
+    
     public Object[][] filterToner(String tabla, String modelo, int ano, int mes, boolean [] filter)
     {
         if(tabla.equals("ingresotonner"))
         {
             String[] columnas= {"id_ingresoTonner", "cod_tonner","modelo", "detalle","nombre_comercial","fecha", "cantidad"};
-            Object [][] datos = sensql.GetTable(columnas,"FROM `ingresotonner` LEFT JOIN `proveedor` ON `id_proveedor`=`cod_proveedor` LEFT JOIN `tonner` ON `cod_tonner`=`id_tonner` ", "ORDER BY fecha DESC;");
+            Object [][] datos = sensql.GetTable(columnas,"FROM `ingresotonner` LEFT JOIN `proveedor` ON `id_proveedor`=`cod_proveedor` LEFT JOIN `tonner` ON `cod_tonner`=`id_tonner` ", "ORDER BY fecha DESC");
             switch(Arrays.toString(filter))
             {
                 case "[false, false, false]":
-                datos = sensql.GetTable(columnas, "FROM `ingresotonner` LEFT JOIN `proveedor` ON `id_proveedor`=`cod_proveedor` LEFT JOIN `tonner` ON `cod_tonner`=`id_tonner` ", " ORDER BY fecha DESC;");
-                return datos;
+                datos = sensql.GetTable(columnas, "FROM `ingresotonner` LEFT JOIN `proveedor` ON `id_proveedor`=`cod_proveedor` LEFT JOIN `tonner` ON `cod_tonner`=`id_tonner` ", " ORDER BY fecha DESC");
+                break;
                 case "[false, false, true]":
-                datos = sensql.GetTable(columnas, "FROM `ingresotonner` LEFT JOIN `proveedor` ON `id_proveedor`=`cod_proveedor` LEFT JOIN `tonner` ON `cod_tonner`=`id_tonner` ", "WHERE YEAR(fecha) = '" +ano+ "' ORDER BY fecha DESC;");
-                return datos;
+                datos = sensql.GetTable(columnas, "FROM `ingresotonner` LEFT JOIN `proveedor` ON `id_proveedor`=`cod_proveedor` LEFT JOIN `tonner` ON `cod_tonner`=`id_tonner` ", "WHERE YEAR(fecha) = '" +ano+ "' ORDER BY fecha DESC");
+                break;
                 case "[false, true, false]":
-                datos = sensql.GetTable(columnas, "FROM `ingresotonner` LEFT JOIN `proveedor` ON `id_proveedor`=`cod_proveedor` LEFT JOIN `tonner` ON `cod_tonner`=`id_tonner` ", "WHERE MONTH(fecha) = '"+mes+"' ORDER BY fecha DESC;");
-                return datos;
+                datos = sensql.GetTable(columnas, "FROM `ingresotonner` LEFT JOIN `proveedor` ON `id_proveedor`=`cod_proveedor` LEFT JOIN `tonner` ON `cod_tonner`=`id_tonner` ", "WHERE MONTH(fecha) = '"+mes+"' ORDER BY fecha DESC");
+                break;
                 case "[false, true, true]":
-                datos = sensql.GetTable(columnas, "FROM `ingresotonner` LEFT JOIN `proveedor` ON `id_proveedor`=`cod_proveedor` LEFT JOIN `tonner` ON `cod_tonner`=`id_tonner` ","WHERE MONTH(fecha) = '"+mes+"' AND YEAR(fecha) = '"+ano+"' ORDER BY fecha DESC;");
-                return datos;
+                datos = sensql.GetTable(columnas, "FROM `ingresotonner` LEFT JOIN `proveedor` ON `id_proveedor`=`cod_proveedor` LEFT JOIN `tonner` ON `cod_tonner`=`id_tonner` ","WHERE MONTH(fecha) = '"+mes+"' AND YEAR(fecha) = '"+ano+"' ORDER BY fecha DESC");
+                break;
                 case "[true, false, false]":
-                datos = sensql.GetTable(columnas, "FROM `ingresotonner` LEFT JOIN `proveedor` ON `id_proveedor`=`cod_proveedor` LEFT JOIN `tonner` ON `cod_tonner`=`id_tonner` ", "WHERE modelo = '" +modelo+ "' ORDER BY fecha DESC;");
-                return datos;
+                datos = sensql.GetTable(columnas, "FROM `ingresotonner` LEFT JOIN `proveedor` ON `id_proveedor`=`cod_proveedor` LEFT JOIN `tonner` ON `cod_tonner`=`id_tonner` ", "WHERE modelo = '" +modelo+ "' ORDER BY fecha DESC");
+                break;
                 case "[true, false, true]":
-                datos = sensql.GetTable(columnas, "FROM `ingresotonner` LEFT JOIN `proveedor` ON `id_proveedor`=`cod_proveedor` LEFT JOIN `tonner` ON `cod_tonner`=`id_tonner` ", "WHERE modelo = '" +modelo+ "' AND YEAR(fecha) = '"+ano+"' ORDER BY fecha DESC;");
-                return datos;
+                datos = sensql.GetTable(columnas, "FROM `ingresotonner` LEFT JOIN `proveedor` ON `id_proveedor`=`cod_proveedor` LEFT JOIN `tonner` ON `cod_tonner`=`id_tonner` ", "WHERE modelo = '" +modelo+ "' AND YEAR(fecha) = '"+ano+"' ORDER BY fecha DESC");
+                break;
                 case "[true, true, false]":
-                datos = sensql.GetTable(columnas, "FROM `ingresotonner` LEFT JOIN `proveedor` ON `id_proveedor`=`cod_proveedor` LEFT JOIN `tonner` ON `cod_tonner`=`id_tonner` ", "WHERE modelo = '" +modelo+ "' AND MONTH(fecha) = '"+mes+"' ORDER BY fecha DESC;");
-                return datos;
+                datos = sensql.GetTable(columnas, "FROM `ingresotonner` LEFT JOIN `proveedor` ON `id_proveedor`=`cod_proveedor` LEFT JOIN `tonner` ON `cod_tonner`=`id_tonner` ", "WHERE modelo = '" +modelo+ "' AND MONTH(fecha) = '"+mes+"' ORDER BY fecha DESC");
+                break;
                 case "[true, true, true]":
-                datos = sensql.GetTable(columnas, "FROM `ingresotonner` LEFT JOIN `proveedor` ON `id_proveedor`=`cod_proveedor` LEFT JOIN `tonner` ON `cod_tonner`=`id_tonner` ", "WHERE modelo = '" +modelo+ "' AND MONTH(fecha) = '"+mes+"' AND YEAR(fecha) = '"+ano+"' ORDER BY fecha DESC;");
-                return datos;
+                datos = sensql.GetTable(columnas, "FROM `ingresotonner` LEFT JOIN `proveedor` ON `id_proveedor`=`cod_proveedor` LEFT JOIN `tonner` ON `cod_tonner`=`id_tonner` ", "WHERE modelo = '" +modelo+ "' AND MONTH(fecha) = '"+mes+"' AND YEAR(fecha) = '"+ano+"' ORDER BY fecha DESC");
+                break;
                 default:
-                return datos;
+                break;
             }
+            consultSql = sensql.getConsultSql();
+            return datos;
         }
         else
         {
             String[] columnas= {"id_egresoTonner", "cod_tonner", "modelo", "detalle", "impresoras","fecha", "cantidad"};
-            Object [][] datos = sensql.GetTable(columnas, "from `egresotonner`,`tonner`", "where cod_tonner=id_tonner ORDER BY `fecha` DESC;");
+            Object [][] datos = sensql.GetTable(columnas, "from `egresotonner`,`tonner`", "where cod_tonner=id_tonner ORDER BY `fecha` DESC");
             switch(Arrays.toString(filter))
             {
                 case "[false, false, false]":
-                datos = sensql.GetTable(columnas, "from `egresotonner`,`tonner`", "where cod_tonner=id_tonner ORDER BY `fecha` DESC;");
-                return datos;
+                datos = sensql.GetTable(columnas, "from `egresotonner`,`tonner`", "where cod_tonner=id_tonner ORDER BY `fecha` DESC");
+                break;
                 case "[false, false, true]":
-                datos = sensql.GetTable(columnas, "from `egresotonner`,`tonner`", "where cod_tonner=id_tonner and YEAR(fecha) = '" +ano+ "';");
-                return datos; 
+                datos = sensql.GetTable(columnas, "from `egresotonner`,`tonner`", "where cod_tonner=id_tonner and YEAR(fecha) = '" +ano+ "'");
+                break;
                 case "[false, true, false]":
-                datos = sensql.GetTable(columnas, "from `egresotonner`,`tonner`", "where cod_tonner=id_tonner AND MONTH(fecha) = '"+mes+"';");
-                return datos;
+                datos = sensql.GetTable(columnas, "from `egresotonner`,`tonner`", "where cod_tonner=id_tonner AND MONTH(fecha) = '"+mes+"'");
+                break;
                 case "[false, true, true]":
-                datos = sensql.GetTable(columnas, "from `egresotonner`,`tonner`", "where cod_tonner=id_tonner AND MONTH(fecha) = '"+mes+"' AND YEAR(fecha) = '"+ano+"';");
-                return datos; 
+                datos = sensql.GetTable(columnas, "from `egresotonner`,`tonner`", "where cod_tonner=id_tonner AND MONTH(fecha) = '"+mes+"' AND YEAR(fecha) = '"+ano+"'");
+                break; 
                 case "[true, false, false]":
-                datos = sensql.GetTable(columnas, "from `egresotonner`,`tonner`", "where cod_tonner=id_tonner AND modelo = '" +modelo+ "';");
-                return datos;
+                datos = sensql.GetTable(columnas, "from `egresotonner`,`tonner`", "where cod_tonner=id_tonner AND modelo = '" +modelo+ "'");
+                break;
                 case "[true, false, true]":
-                datos = sensql.GetTable(columnas, "from `egresotonner`,`tonner`", "where cod_tonner=id_tonner AND modelo = '" +modelo+ "' AND YEAR(fecha) = '"+ano+"';");
-                return datos;
+                datos = sensql.GetTable(columnas, "from `egresotonner`,`tonner`", "where cod_tonner=id_tonner AND modelo = '" +modelo+ "' AND YEAR(fecha) = '"+ano+"'");
+                break;
                 case "[true, true, false]":
-                datos = sensql.GetTable(columnas, "from `egresotonner`,`tonner`", "where cod_tonner=id_tonner AND modelo = '" +modelo+ "' AND MONTH(fecha) = '"+mes+"';");
-                return datos;
+                datos = sensql.GetTable(columnas, "from `egresotonner`,`tonner`", "where cod_tonner=id_tonner AND modelo = '" +modelo+ "' AND MONTH(fecha) = '"+mes+"'");
+                break;
                 case "[true, true, true]":
-                datos = sensql.GetTable(columnas, "from `egresotonner`,`tonner`", "where cod_tonner=id_tonner AND modelo = '" +modelo+ "' AND MONTH(fecha) = '"+mes+"' AND YEAR(fecha) = '"+ano+"';");
-                return datos;
+                datos = sensql.GetTable(columnas, "from `egresotonner`,`tonner`", "where cod_tonner=id_tonner AND modelo = '" +modelo+ "' AND MONTH(fecha) = '"+mes+"' AND YEAR(fecha) = '"+ano+"'");
+                break;
                 default:
-                return datos;
+                break;
             }
-        }   
+            consultSql = sensql.getConsultSql();
+            return datos;
+        }
+        
     }
     
     public boolean isIpAvailable(String id_ip)
@@ -701,6 +733,11 @@ public class AuxiliaryFunctions
         return sensql.deleteRow("pc", "id_pc = "+id_equipment +";");  
     }
     
+    public boolean deletePrinterRepair(String id_repair)
+    {
+        return sensql.deleteRow("reparacion", "id_reparacion = "+id_repair +";");  
+    }
+    
     public boolean modifyEquipment(String data[])
     {
         if(deleteEquipment(data[0]))
@@ -715,6 +752,30 @@ public class AuxiliaryFunctions
             {
                     return false;
             }
+        }
+        else
+        {    
+            return false;    
+        }
+    }
+    
+    public boolean modifyPrinterRepair(String data[])
+    {
+        if(deletePrinterRepair(data[0]))
+        {
+            return sensql.insertRow(data, "insert into `reparacion`(`id_reparacion`, `cod_impresora`, `fechaSalida`, `fechaRetorno`, `cod_proveedor`, `falla`, `detalleReparacion`) values(?,?,?,?,?,?,?)");
+        }
+        else
+        {    
+            return false;    
+        }
+    }
+    
+    public boolean modifyPrinterRepairWithOutDateReturn(String data[])
+    {
+        if(deletePrinterRepair(data[0]))
+        {
+            return sensql.insertRow(data, "insert into `reparacion`(`id_reparacion`, `cod_impresora`, `fechaSalida`, `cod_proveedor`, `falla`, `detalleReparacion`) values(?,?,?,?,?,?)");
         }
         else
         {    
@@ -822,6 +883,33 @@ public class AuxiliaryFunctions
         
         return (stock-stockARetirar) >= 0;
     }
+    
+    public int getPrinterRepairActually ()
+    {
+        return sensql.getQuantityOfRow("from `reparacion` where `fechaRetorno` is null");
+    }
+    
+    /*
+    *  cuenta la cantidad de filas en una determianada tabla que conenga alguna restriccion en particular.
+    * @param consult: se debe ingresar la consulta desde from indicando la restriccion en caso que exista.
+    * por ejemplo "from `reparacion` where `fechaRetorno` is null".
+    * la funcion devuelve la cantidad de filas contadas.
+    */
+    public int getCountPrinter (String consult)
+    {
+        return sensql.getQuantityOfRow(consult);
+    }
+    
+    public int getTotalToner(String from_where)
+    {
+        return sensql.getQuantity(from_where);
+    }
+        
+    public String getConsultSql()
+    {
+        return consultSql;
+    }
+        
     
 
     
