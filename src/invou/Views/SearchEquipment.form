@@ -50,6 +50,8 @@
               <EmptySpace min="-2" pref="28" max="-2" attributes="0"/>
               <Component id="labelInfo" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="32767" attributes="0"/>
+              <Component id="buttonRdp" min="-2" max="-2" attributes="0"/>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
               <Component id="buttonGenerate" min="-2" max="-2" attributes="0"/>
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Component id="buttonAcept" min="-2" max="-2" attributes="0"/>
@@ -94,11 +96,12 @@
                           <Component id="comboFloor" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="fieldIp" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace pref="366" max="32767" attributes="0"/>
+                      <EmptySpace pref="374" max="32767" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="buttonAcept" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="ButtonExit" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="buttonGenerate" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="buttonRdp" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                   <Group type="102" alignment="1" attributes="0">
@@ -258,6 +261,14 @@
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="buttonGenerateActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JButton" name="buttonRdp">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Escritorio Remoto"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="buttonRdpActionPerformed"/>
       </Events>
     </Component>
   </SubComponents>

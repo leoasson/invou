@@ -10,7 +10,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -338,6 +340,30 @@ public final class SearchEquipment extends javax.swing.JInternalFrame {
         generateTableData(tableDate);
     }
     
+    private void executeShellCommand(String command)
+    {
+        Process p;
+        try 
+        {
+            p = Runtime.getRuntime().exec(command);
+            //printResults(p);
+        }
+        catch (IOException ioe) 
+        {
+            System.out.println (ioe);
+        } 
+    }
+    //Funcion de prueba para ver el resultado de la ejecucion del comando shell
+    public static void printResults(Process process) throws IOException 
+    {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+        String line = "";
+        while ((line = reader.readLine()) != null) 
+        {
+        System.out.println(line);
+        }
+    }
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -358,6 +384,7 @@ public final class SearchEquipment extends javax.swing.JInternalFrame {
         boxIp = new javax.swing.JCheckBox();
         labelInfo = new javax.swing.JLabel();
         buttonGenerate = new javax.swing.JButton();
+        buttonRdp = new javax.swing.JButton();
 
         setClosable(true);
         setMaximizable(true);
@@ -454,6 +481,13 @@ public final class SearchEquipment extends javax.swing.JInternalFrame {
             }
         });
 
+        buttonRdp.setText("Escritorio Remoto");
+        buttonRdp.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonRdpActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -476,6 +510,8 @@ public final class SearchEquipment extends javax.swing.JInternalFrame {
                 .addGap(28, 28, 28)
                 .addComponent(labelInfo)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(buttonRdp)
+                .addGap(18, 18, 18)
                 .addComponent(buttonGenerate)
                 .addGap(18, 18, 18)
                 .addComponent(buttonAcept)
@@ -511,11 +547,12 @@ public final class SearchEquipment extends javax.swing.JInternalFrame {
                             .addComponent(comboBranch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(comboFloor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(fieldIp, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 366, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 374, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(buttonAcept)
                             .addComponent(ButtonExit)
-                            .addComponent(buttonGenerate)))
+                            .addComponent(buttonGenerate)
+                            .addComponent(buttonRdp)))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(labelInfo)))
@@ -727,6 +764,24 @@ public final class SearchEquipment extends javax.swing.JInternalFrame {
         }        // TODO add your handling code here:
     }//GEN-LAST:event_buttonGenerateActionPerformed
 
+    private void buttonRdpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonRdpActionPerformed
+        int row = table.getSelectedRow();
+        if(row < 0)
+        {
+            JOptionPane.showMessageDialog(null,"Seleccione la fila deseada para iniciar RDP."," ",JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        
+        String server = (String) table.getValueAt(row, 8);
+        String user = (String) table.getValueAt(row, 5);
+        String pass = (String) table.getValueAt(row, 6);
+        //Guardar la credencial de gindows
+        executeShellCommand("cmdkey /generic:TERMSRV/"+server+" /user:"+user+" /pass:"+pass);
+        //ejecutar el escritorio remoto
+        executeShellCommand("mstsc /v:"+server);
+
+    }//GEN-LAST:event_buttonRdpActionPerformed
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton ButtonExit;
     private javax.swing.JCheckBox boxBranch;
@@ -735,6 +790,7 @@ public final class SearchEquipment extends javax.swing.JInternalFrame {
     private javax.swing.JCheckBox boxIp;
     private javax.swing.JButton buttonAcept;
     private javax.swing.JButton buttonGenerate;
+    private javax.swing.JButton buttonRdp;
     private javax.swing.JComboBox<String> comboBranch;
     private javax.swing.JComboBox<String> comboFloor;
     private javax.swing.JTextField fieldCode;
