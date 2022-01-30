@@ -29,8 +29,9 @@ public class View extends javax.swing.JFrame {
     public View() throws IOException 
     {
         initComponents();
-        
         listPagesPrinted.setEnabled(false);
+        JOptionPane.showMessageDialog(null, "prueba de datos", "Atención", JOptionPane.ERROR_MESSAGE);
+        
         
         if(!conf.getUser().equals("admin"))
         {
@@ -235,6 +236,7 @@ public class View extends javax.swing.JFrame {
         addMotherboard = new javax.swing.JMenuItem();
         addSector = new javax.swing.JMenuItem();
         backUpBD = new javax.swing.JMenuItem();
+        newUser = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Invou");
@@ -805,6 +807,15 @@ public class View extends javax.swing.JFrame {
         });
         menu_config.add(backUpBD);
 
+        newUser.setText("Agregar Usuario");
+        newUser.setToolTipText("Solo es posible realizar backup desde el servidor");
+        newUser.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                newUserActionPerformed(evt);
+            }
+        });
+        menu_config.add(newUser);
+
         jMenuBar1.add(menu_config);
 
         setJMenuBar(jMenuBar1);
@@ -1220,6 +1231,15 @@ public class View extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_monitorActionPerformed
 
+    private void newUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newUserActionPerformed
+        User user = new User(sensql);
+        Dimension desktopSize = jDesktopPane1.getSize();
+        Dimension jInternalFrameSize = user.getSize();
+        user.setLocation((desktopSize.width - jInternalFrameSize.width)/2,(desktopSize.height- jInternalFrameSize.height)/2);
+        jDesktopPane1.add(user);
+        user.show(); 
+    }//GEN-LAST:event_newUserActionPerformed
+
     
     
     
@@ -1331,6 +1351,7 @@ public class View extends javax.swing.JFrame {
     private javax.swing.JMenuItem modifyDeleteMenu;
     private javax.swing.JMenuItem monitor;
     private javax.swing.JMenu monitorMenu;
+    private javax.swing.JMenuItem newUser;
     private javax.swing.JMenuItem print1;
     private javax.swing.JMenuItem printLabelMenu;
     private javax.swing.JMenu printLabeltonnerMenu;
